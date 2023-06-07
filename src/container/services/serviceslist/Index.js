@@ -14,13 +14,15 @@ import {
   axiosDataDelete,
   axiosCrudGetData,
 } from '../../../redux/crud/axios/actionCreator';
+import { getServices } from '../../../redux/services/servicesSlice';
 
 const ViewPage = () => {
   const dispatch = useDispatch();
-  const { crud, isLoading } = useSelector(state => {
+  const { crud, isLoading,servicesStates } = useSelector(state => {
     return {
       crud: state.AxiosCrud.data,
       isLoading: state.AxiosCrud.loading,
+      servicesStates: state.servicesStates
     };
   });
 
@@ -93,36 +95,79 @@ const ViewPage = () => {
       });
     });
 
+  // const columns = [
+  //   {
+  //     title: 'Name',
+  //     dataIndex: 'name',
+  //     key: 'name',
+  //   },
+  //   {
+  //     title: 'Email',
+  //     dataIndex: 'email',
+  //     key: 'email',
+  //   },
+  //   {
+  //     title: 'Company',
+  //     dataIndex: 'company',
+  //     key: 'company',
+  //   },
+  //   {
+  //     title: 'Position',
+  //     dataIndex: 'position',
+  //     key: 'position',
+  //   },
+  //   {
+  //     title: 'Status',
+  //     dataIndex: 'status',
+  //     key: 'status',
+  //   },
+  //   {
+  //     title: 'Joining Date',
+  //     dataIndex: 'jdate',
+  //     key: 'jdate',
+  //   },
+  //   {
+  //     title: 'Actions',
+  //     dataIndex: 'action',
+  //     key: 'action',
+  //     width: '90px',
+  //   },
+  // ];
   const columns = [
+    {
+      title: 'Image',
+      dataIndex: 'image',
+      key: 'image',
+    },
     {
       title: 'Name',
       dataIndex: 'name',
       key: 'name',
     },
     {
-      title: 'Email',
-      dataIndex: 'email',
-      key: 'email',
+      title: 'Salon',
+      dataIndex: 'salon_name',
+      key: 'salon_name',
     },
     {
-      title: 'Company',
-      dataIndex: 'company',
-      key: 'company',
+      title: 'Price',
+      dataIndex: 'price',
+      key: 'price',
     },
     {
-      title: 'Position',
-      dataIndex: 'position',
-      key: 'position',
+      title: 'Category Name',
+      dataIndex: 'category_name',
+      key: 'category_name',
     },
     {
-      title: 'Status',
-      dataIndex: 'status',
-      key: 'status',
+      title: 'Available',
+      dataIndex: 'is_available',
+      key: 'is_available',
     },
     {
-      title: 'Joining Date',
-      dataIndex: 'jdate',
-      key: 'jdate',
+      title: 'Updated At',
+      dataIndex: 'updated_at',
+      key: 'updated_at',
     },
     {
       title: 'Actions',
@@ -134,12 +179,14 @@ const ViewPage = () => {
   const onSelectChange = selectedRowKey => {
     setState({ ...state, selectedRowKeys: selectedRowKey });
   };
-
+  console.log(servicesStates)
   const rowSelection = {
     selectedRowKeys,
     onChange: onSelectChange,
   };
-
+  useEffect(()=>{
+    dispatch(getServices())
+  },[])
   return (
     <RecordViewWrapper>
       <PageHeader
@@ -177,7 +224,7 @@ const ViewPage = () => {
                     <Table
                       rowSelection={rowSelection}
                       pagination={{ pageSize: 10, showSizeChanger: true }}
-                      dataSource={dataSource}
+                      dataSource={servicesStates?.services}
                       columns={columns}
                     />
                   </TableWrapper>

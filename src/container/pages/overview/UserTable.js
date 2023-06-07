@@ -1,6 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Table } from 'antd';
+import PropTypes from 'prop-types';
 import FeatherIcon from 'feather-icons-react';
 import { UserTableStyleWrapper } from '../style';
 import { TableWrapper } from '../../styled';
@@ -8,7 +9,7 @@ import Heading from '../../../components/heading/heading';
 import { Button } from '../../../components/buttons/buttons';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 
-function UserListTable() {
+function UserListTable({data}) {
   const { users } = useSelector((state) => {
     return {
       users: state.users,
@@ -98,18 +99,18 @@ function UserListTable() {
   const usersTableColumns2 = [
     {
       title: 'Image',
-      dataIndex: 'Image',
-      key: 'Image',
+      dataIndex: 'salon_owner',
+      key: 'salon_owner',
     },
     {
       title: 'Saloon',
-      dataIndex: 'Saloon',
-      key: 'Saloon',
+      dataIndex: 'name',
+      key: 'name',
     },
     {
       title: 'Address',
-      dataIndex: 'Address',
-      key: 'Address',
+      dataIndex: 'address',
+      key: 'address',
     },
     {
       title: 'Actions',
@@ -123,13 +124,14 @@ function UserListTable() {
       name: record.name,
     }),
   };
+  console.log(data)
   return (
     <Cards headless>
       <UserTableStyleWrapper>
         <TableWrapper className="table-responsive">
           <Table
             rowSelection={rowSelection}
-            dataSource={usersTableData}
+            dataSource={data}
             columns={usersTableColumns2}
             pagination={{
               defaultPageSize: 5,
@@ -142,5 +144,8 @@ function UserListTable() {
     </Cards>
   );
 }
-
+UserListTable.propTypes = {
+  data: PropTypes.array.isRequired,
+  // Other prop validations...
+};
 export default UserListTable;

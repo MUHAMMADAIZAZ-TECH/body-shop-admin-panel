@@ -1,12 +1,26 @@
-import axios from 'axios';
-// const headers = { 'Content-Type': 'application/json'};
+import { DataService } from '../../config/dataService/mydataService';
+
 export const getsalons = async () => {
-    try {
-      const { data } = await axios.get(`http://192.168.0.122:3001/api/v1/salons/all`);
-      console.log(data);
-      return data;
-    } catch (error) {
-      console.log("Error", error);
-      return error;
-    }
+  try {
+    const { data } = await DataService.get(`/api/v1/salons/all`);
+    return data;
+  } catch (error) {
+    return error;
   }
+}
+export const getavailibilityhours = async () => {
+  try {
+    const { data } = await DataService.get(`/api/v1/availabilityHours`);
+    return data;
+  } catch (error) {
+    return error;
+  }
+}
+export const getallreviews = async () => {
+  try {
+    const { data } = await DataService.get(`/api/v1/reviews/`);
+    return data;
+  } catch (error) {
+    return error;
+  }
+}

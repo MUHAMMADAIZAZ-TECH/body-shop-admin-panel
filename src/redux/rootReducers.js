@@ -28,8 +28,10 @@ import FileManager from './fileManager/reducers';
 import { axiosCrudReducer, axiosSingleCrudReducer } from './crud/axios/reducers';
 import authenticationSlice from './authentication/authenticationSlice';
 import salonSlice from './salon/salonSlice';
+import categorySlice from './categories/categoriesSlice';
 import { fsCrudReducer, fsSingleCrudReducer } from './firebase/firestore/reducers';
 import firebaseAuth from './firebase/auth/reducers';
+import servicesSlice from './services/servicesSlice';
 
 const rootReducers = combineReducers({
   fb: firebaseReducer,
@@ -71,7 +73,9 @@ const rootReducers = combineReducers({
   AxiosCrud: axiosCrudReducer,
   SingleAxiosCrud: axiosSingleCrudReducer,
   authenticationStates:authenticationSlice,
-  salonStates:salonSlice
+  salonStates:salonSlice,
+  categoryStates:categorySlice,
+  servicesStates:servicesSlice
 
 });
 

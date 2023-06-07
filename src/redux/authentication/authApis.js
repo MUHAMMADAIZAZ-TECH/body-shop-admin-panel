@@ -10,7 +10,7 @@ export const userLogin = async ( state ) =>{
               })
         })
         const data = await response.json();
-        localStorage.setItem('token',data.token)
+        localStorage.setItem('access_token',data.token)
         return data;
     } catch (error) {
         console.log("Error",error)

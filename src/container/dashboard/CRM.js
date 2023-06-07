@@ -1,7 +1,7 @@
 import React, { lazy, Suspense,useEffect } from 'react';
 import { Row, Col, Skeleton } from 'antd';
 import FeatherIcon from 'feather-icons-react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { CardBarChart2, EChartCard } from './style';
 import { PageHeader } from '../../components/page-headers/page-headers';
 import { Cards } from '../../components/cards/frame/cards-frame';
@@ -58,6 +58,11 @@ const chartOptions = {
 
 function CRM() {
   const dispatch = useDispatch();
+  const { salonState } = useSelector(state => {
+    return {
+      salonState: state.salonStates
+    };
+  });
   useEffect(()=>{
     dispatch(getSalons())
   },[])
@@ -235,7 +240,7 @@ function CRM() {
                 </Cards>
               }
             >
-              <UserListTable/>
+              <UserListTable data={salonState?.approvedSalons}/>
               {/* <ClosedDeals /> */}
             </Suspense>
           </Col>

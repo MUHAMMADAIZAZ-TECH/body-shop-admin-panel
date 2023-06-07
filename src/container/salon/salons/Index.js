@@ -14,13 +14,15 @@ import {
   axiosDataDelete,
   axiosCrudGetData,
 } from '../../../redux/crud/axios/actionCreator';
+import { getSalons } from '../../../redux/salon/salonSlice';
 
 const ViewPage = () => {
   const dispatch = useDispatch();
-  const { crud, isLoading } = useSelector(state => {
+  const { crud, isLoading ,salonState} = useSelector(state => {
     return {
       crud: state.AxiosCrud.data,
       isLoading: state.AxiosCrud.loading,
+      salonState: state.salonStates
     };
   });
 
@@ -100,29 +102,34 @@ const ViewPage = () => {
       key: 'name',
     },
     {
-      title: 'Email',
-      dataIndex: 'email',
-      key: 'email',
+      title: 'Phone no',
+      dataIndex: 'phone_number',
+      key: 'phone_number',
     },
     {
-      title: 'Company',
-      dataIndex: 'company',
-      key: 'company',
+      title: 'Mobile no',
+      dataIndex: 'mobile_number',
+      key: 'mobile_number',
     },
     {
-      title: 'Position',
-      dataIndex: 'position',
-      key: 'position',
+      title: 'Address',
+      dataIndex: 'address',
+      key: 'address',
     },
     {
-      title: 'Status',
-      dataIndex: 'status',
-      key: 'status',
+      title: 'Rating',
+      dataIndex: 'ratings_average',
+      key: 'ratings_average',
     },
     {
-      title: 'Joining Date',
-      dataIndex: 'jdate',
-      key: 'jdate',
+      title: 'Availibility Range',
+      dataIndex: 'availability_range',
+      key: 'availability_range',
+    },
+    {
+      title: 'Active status',
+      dataIndex: 'isActive',
+      key: 'isActive',
     },
     {
       title: 'Actions',
@@ -134,12 +141,14 @@ const ViewPage = () => {
   const onSelectChange = selectedRowKey => {
     setState({ ...state, selectedRowKeys: selectedRowKey });
   };
-
+  console.log(salonState)
   const rowSelection = {
     selectedRowKeys,
     onChange: onSelectChange,
   };
-
+  useEffect(()=>{
+    dispatch(getSalons())
+  },[])
   return (
     <RecordViewWrapper>
       <PageHeader
@@ -177,7 +186,7 @@ const ViewPage = () => {
                     <Table
                       rowSelection={rowSelection}
                       pagination={{ pageSize: 10, showSizeChanger: true }}
-                      dataSource={dataSource}
+                      dataSource={salonState?.approvedSalons}
                       columns={columns}
                     />
                   </TableWrapper>

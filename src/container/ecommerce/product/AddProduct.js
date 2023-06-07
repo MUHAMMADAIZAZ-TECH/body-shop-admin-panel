@@ -145,7 +145,7 @@ function AddProduct() {
                             </Col>
                           </Row>
                         </div>
-
+                        {/* aizaz */}
                         <div className="add-product-block">
                           <Row gutter={15}>
                             <Col xs={24}>

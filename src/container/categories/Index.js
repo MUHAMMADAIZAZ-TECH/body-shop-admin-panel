@@ -14,16 +14,18 @@ import {
   axiosDataDelete,
   axiosCrudGetData,
 } from '../../redux/crud/axios/actionCreator';
+import { getCategories } from '../../redux/categories/categoriesSlice';
 
 const ViewPage = () => {
   const dispatch = useDispatch();
-  const { crud, isLoading } = useSelector(state => {
+  const { crud, isLoading ,categoryStates} = useSelector(state => {
     return {
       crud: state.AxiosCrud.data,
       isLoading: state.AxiosCrud.loading,
+      categoryStates: state.categoryStates
     };
   });
-
+  console.log(categoryStates)
   const [state, setState] = useState({
     selectedRowKeys: [],
   });
@@ -93,36 +95,79 @@ const ViewPage = () => {
       });
     });
 
+  // const columns = [
+  //   {
+  //     title: 'Name',
+  //     dataIndex: 'name',
+  //     key: 'name',
+  //   },
+  //   {
+  //     title: 'Email',
+  //     dataIndex: 'email',
+  //     key: 'email',
+  //   },
+  //   {
+  //     title: 'Company',
+  //     dataIndex: 'company',
+  //     key: 'company',
+  //   },
+  //   {
+  //     title: 'Position',
+  //     dataIndex: 'position',
+  //     key: 'position',
+  //   },
+  //   {
+  //     title: 'Status',
+  //     dataIndex: 'status',
+  //     key: 'status',
+  //   },
+  //   {
+  //     title: 'Joining Date',
+  //     dataIndex: 'jdate',
+  //     key: 'jdate',
+  //   },
+  //   {
+  //     title: 'Actions',
+  //     dataIndex: 'action',
+  //     key: 'action',
+  //     width: '90px',
+  //   },
+  // ];
   const columns = [
+    {
+      title: 'Image',
+      dataIndex: 'image',
+      key: 'image',
+    },
     {
       title: 'Name',
       dataIndex: 'name',
       key: 'name',
     },
     {
-      title: 'Email',
-      dataIndex: 'email',
-      key: 'email',
+      title: 'Color',
+      dataIndex: 'color',
+      key: 'color',
     },
     {
-      title: 'Company',
-      dataIndex: 'company',
-      key: 'company',
+      title: 'Description',
+      dataIndex: 'description',
+      key: 'description',
     },
     {
-      title: 'Position',
-      dataIndex: 'position',
-      key: 'position',
+      title: 'Parent Category',
+      dataIndex: 'parent_category',
+      key: 'parent_category',
     },
     {
-      title: 'Status',
-      dataIndex: 'status',
-      key: 'status',
+      title: 'Created At',
+      dataIndex: 'created_at',
+      key: 'created_at',
     },
     {
-      title: 'Joining Date',
-      dataIndex: 'jdate',
-      key: 'jdate',
+      title: 'Updated At',
+      dataIndex: 'updated_at',
+      key: 'updated_at',
     },
     {
       title: 'Actions',
@@ -139,7 +184,9 @@ const ViewPage = () => {
     selectedRowKeys,
     onChange: onSelectChange,
   };
-
+  useEffect(()=>{
+    dispatch(getCategories())
+  },[])
   return (
     <RecordViewWrapper>
       <PageHeader
@@ -177,7 +224,7 @@ const ViewPage = () => {
                     <Table
                       rowSelection={rowSelection}
                       pagination={{ pageSize: 10, showSizeChanger: true }}
-                      dataSource={dataSource}
+                      dataSource={categoryStates.categories}
                       columns={columns}
                     />
                   </TableWrapper>
