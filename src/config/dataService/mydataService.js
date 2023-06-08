@@ -33,6 +33,15 @@ class DataService {
     });
   }
 
+  static postFormData(path = '', formData = {}, optionalHeader = {}) {
+    return client({
+      method: 'POST',
+      url: path,
+      data: formData,
+      headers: { ...authHeader(), ...optionalHeader,'Content-Type': 'multipart/form-data', },
+    });
+  }
+  
   static patch(path = '', data = {}) {
     return client({
       method: 'PATCH',

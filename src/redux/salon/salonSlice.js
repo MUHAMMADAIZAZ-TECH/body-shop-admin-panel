@@ -1,5 +1,5 @@
 import { createSlice,createAsyncThunk } from "@reduxjs/toolkit";
-import { getallreviews, getavailibilityhours, getsalons } from "./salonApis";
+import { createsalon, getallreviews, getavailibilityhours, getsalons } from "./salonApis";
 
 const initialState = {
     loading:false,
@@ -30,6 +30,13 @@ export const getAllReviews = createAsyncThunk(
   async () => {
       const response = await getallreviews()
       console.log(response)
+      return response;
+  }
+);
+export const createSalon = createAsyncThunk(
+  'get/createSalon',
+  async (body) => {
+      const response = await createsalon(body)
       return response;
   }
 );
@@ -84,6 +91,20 @@ const salonSlice = createSlice({
             state.salonreviews = action.payload
           })
           .addCase(getAllReviews.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.error;
+            state.message = action.error.message;
+          });
+          builder
+          .addCase(createSalon.pending, (state) => {
+            state.loading = true;
+            state.error = null;
+          })
+          .addCase(createSalon.fulfilled, (state, action) => {
+            state.loading = false;
+            state.message = action.payload;
+          })
+          .addCase(createSalon.rejected, (state, action) => {
             state.loading = false;
             state.error = action.error;
             state.message = action.error.message;
