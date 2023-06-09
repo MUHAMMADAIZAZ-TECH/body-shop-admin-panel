@@ -1,5 +1,5 @@
 import { createSlice,createAsyncThunk } from "@reduxjs/toolkit";
-import { createsalon, getallreviews, getavailibilityhours, getsalons } from "./salonApis";
+import { createsalon, deletesalon, getallreviews, getavailibilityhours, getsalon, getsalons } from "./salonApis";
 
 const initialState = {
     loading:false,
@@ -9,14 +9,57 @@ const initialState = {
     approvedSalons:[],
     unapprovedSalons:[],
     availibilityhours:[],
-    salonreviews:[]
+    salonreviews:[],
+    salon:{
+      id:0,
+      name:'',
+      address:'',
+      availability_hours:[],
+      availability_range:0,
+      created_at:'',
+      description:'',
+      document:'',
+      images:[],
+      isActive:0,
+      isApproved:1,
+      latitude:'',
+      longitude:'',
+      mobile_number:'',
+      phone_number:'',
+      ratings_average:0,
+      reservation_fees_id:0,
+      salon_owner:0,
+      updated_at:''
+    }
 }
+// salon-crud
 export const getSalons = createAsyncThunk(
     'get/getsalons',
     async (state) => {
         const response = await getsalons(state)
         return response;
     }
+);
+export const getSalon = createAsyncThunk(
+  'get/getSalon',
+  async (id) => {
+      const response = await getsalon(id)
+      return response;
+  }
+);
+export const createSalon = createAsyncThunk(
+  'post/createSalon',
+  async (body) => {
+      const response = await createsalon(body)
+      return response;
+  }
+);
+export const deleteSalon = createAsyncThunk(
+  'delete/deleteSalon',
+  async (body) => {
+      const response = await deletesalon(body)
+      return response;
+  }
 );
 export const getAvailibilityHours = createAsyncThunk(
   'get/getavailibilityhours',
@@ -33,17 +76,14 @@ export const getAllReviews = createAsyncThunk(
       return response;
   }
 );
-export const createSalon = createAsyncThunk(
-  'get/createSalon',
-  async (body) => {
-      const response = await createsalon(body)
-      return response;
-  }
-);
+
 const salonSlice = createSlice({
     name:'salonslice',
     initialState,
     reducers:{
+      selectSalon: (state,action)=>{
+        state.salon = action.payload
+      }
     },
     extraReducers: (builder) => {
         builder
@@ -61,6 +101,21 @@ const salonSlice = createSlice({
               }
           })
           .addCase(getSalons.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.error;
+            state.message = action.error.message;
+          });
+          builder
+          .addCase(getSalon.pending, (state) => {
+            state.loading = true;
+            state.error = null;
+          })
+          .addCase(getSalon.fulfilled, (state, action) => {
+            state.loading = false;
+            state.salon = action.payload.data;
+            state.message = action.payload.status;
+          })
+          .addCase(getSalon.rejected, (state, action) => {
             state.loading = false;
             state.error = action.error;
             state.message = action.error.message;
@@ -109,10 +164,24 @@ const salonSlice = createSlice({
             state.error = action.error;
             state.message = action.error.message;
           });
+          builder
+          .addCase(deleteSalon.pending, (state) => {
+            state.loading = true;
+            state.error = null;
+          })
+          .addCase(deleteSalon.fulfilled, (state, action) => {
+            state.loading = false;
+            state.message = action.payload;
+          })
+          .addCase(deleteSalon.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.error;
+            state.message = action.error.message;
+          });
       },
 })
 
 
-// export const { } = salonSlice.actions
+export const { selectSalon } = salonSlice.actions
 
 export default salonSlice.reducer;

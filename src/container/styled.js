@@ -1463,7 +1463,7 @@ const TableWrapper = Styled.div`
                         border-radius: ${({ theme }) => (!theme.rtl ? '0 10px 10px 0' : '10px 0 0 10px')} !important;
                     }
                     span{
-                        display: block;
+                        // display: block;
                     }
                     .order-id{
                         min-width: 128px;

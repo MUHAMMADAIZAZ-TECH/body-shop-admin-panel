@@ -1,9 +1,10 @@
 // eslint-disable-next-line camelcase
-import React, { useEffect, useState,useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { SearchOutlined } from '@ant-design/icons';
-import { Row, Col, Table, Spin,Avatar ,Input, Space, } from 'antd';
+import { Row, Col, Table, Spin, Avatar, Input, Space, Tag, Rate, Modal } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import moment from 'moment';
 import Highlighter from 'react-highlight-words';
 import FeatherIcon from 'feather-icons-react';
 import { RecordViewWrapper } from './Style';
@@ -11,12 +12,7 @@ import { Main, TableWrapper } from '../../styled';
 import { Button } from '../../../components/buttons/buttons';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { PageHeader } from '../../../components/page-headers/page-headers';
-import {
-  axiosDataRead,
-  axiosDataDelete,
-  axiosCrudGetData,
-} from '../../../redux/crud/axios/actionCreator';
-import { getSalons } from '../../../redux/salon/salonSlice';
+import { getSalons, deleteSalon, selectSalon } from '../../../redux/salon/salonSlice';
 
 const avatarStyle = {
   borderRadius: '4px', // Adjust the border radius as per your preference
@@ -27,19 +23,22 @@ const avatarStyle = {
 };
 const ViewPage = () => {
   const dispatch = useDispatch();
-  const { isLoading ,salonState} = useSelector(state => {
+  const { isLoading, salonState } = useSelector(state => {
     return {
       isLoading: state.AxiosCrud.loading,
       salonState: state.salonStates
     };
   });
-
+  const dataSource = [];
   const [state, setState] = useState({
     selectedRowKeys: [],
     searchText: '',
+    selectedRows: []
   });
+
   const { selectedRowKeys } = state;
   const [searchText, setSearchText] = useState('');
+  const [previewImages, setPreviewImages] = useState([]);
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef(null);
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -51,13 +50,38 @@ const ViewPage = () => {
     clearFilters();
     setSearchText('');
   };
+  // const checkOpeningHours = (openingHoursData) => {
+  //   // Get the current day and time using Moment.js
+  //   const currentDate = moment();
+  //   const currentDay = currentDate.format('dddd');
+  //   const currentTime = currentDate.format('HH:mm');
+  //   // Find the opening hours for the current day
+  //   const openingHours = openingHoursData.find(hours => hours.weekday === currentDay);
+
+  //   if (openingHours) {
+  //     const { closing_time, opening_time } = openingHours;
+
+  //     // Check if the current time is within opening hours
+  //     if (
+  //       moment(currentTime, 'HH:mm').isBetween(
+  //         moment(opening_time, 'HH:mm'),
+  //         moment(closing_time, 'HH:mm'),
+  //         null,
+  //         '[]'
+  //       ) || moment(currentTime, 'HH:mm').isBefore(moment(opening_time, 'HH:mm'))
+  //     ) {
+  //       return true
+  //     } 
+  //   } 
+  // };
+
   const getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
       <div
         style={{
           padding: 8,
         }}
-        // onKeyDown={(e) => e.stopPropagation()}
+      // onKeyDown={(e) => e.stopPropagation()}
       >
         <Input
           ref={searchInput}
@@ -83,7 +107,7 @@ const ViewPage = () => {
             Search
           </Button>
           <Button
-          
+
             onClick={() => clearFilters && handleReset(clearFilters)}
             size="small"
             style={{
@@ -146,48 +170,54 @@ const ViewPage = () => {
         text
       ),
   });
-  useEffect(() => {
-    if (axiosDataRead) {
-      dispatch(axiosDataRead());
-    }
-  }, [dispatch]);
-  const dataSource = [];
-
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewTitle, setPreviewTitle] = useState('');
+  const handleCancel = () => setPreviewOpen(false);
+  const handlePreview = async (images) => {
+    console.log(images)
+    setPreviewOpen(true);
+    setPreviewImages(images)
+    setPreviewTitle('Saloon Images');
+  };
   const handleDelete = id => {
     const confirm = window.confirm('Are you sure delete this?');
     if (confirm) {
       dispatch(
-        axiosDataDelete({
+        deleteSalon({
           id,
           getData: () => {
-            dispatch(axiosCrudGetData());
+            dispatch(getSalons());
           },
         }),
       );
     }
     return false;
   };
-
+  const handleEdit = (salon) => {
+    dispatch(selectSalon(salon))
+    console.log(salon)
+  }
   const onHandleSearch = (e) => {
     setState({ ...state, searchText: e.target.value });
   };
-  console.log(salonState?.approvedSalons)
   if (salonState?.approvedSalons?.length)
-  salonState?.approvedSalons.map((salon, key) => {
-      const { id,images, name,phone_number,mobile_number,address,ratings_average,availability_range,isActive } = salon;
+    salonState?.approvedSalons?.map((salon, key) => {
+      const { id, images, name, phone_number, mobile_number, address, ratings_average, availability_range, updated_at, isActive } = salon;
       return dataSource.push({
         key: key + 1,
-        images: (<Avatar style={avatarStyle} src={images[0]} size={60}/>),
+        images: (images && <Avatar style={avatarStyle} src={images[0]} size={60} onClick={() => handlePreview(salon.images)} />),
         name,
         phone_number,
         mobile_number,
         address,
-        ratings_average,
+        ratings_average: (<Rate disabled defaultValue={ratings_average} />),
         availability_range,
-        isActive:(isActive===1?'yes':'no'),
+        isActive: <Tag className='complete'>{isActive === 1 ? 'yes' : "no"}</Tag>,
+        // closed:checkOpeningHours(availability_hours)?'open':'closed',
+        updated_at,
         action: (
           <div className="table-actions">
-            <Link className="edit" to={`/salon/salon/edit/${id}`}>
+            <Link className="edit" to={`/admin/salon/edit/${id}`} onClick={() => handleEdit(salon)}>
               <FeatherIcon icon="edit" size={14} />
             </Link>
             &nbsp;&nbsp;&nbsp;
@@ -196,9 +226,10 @@ const ViewPage = () => {
             </Link>
           </div>
         ),
+        salon
       });
     });
-    console.log(searchText)
+
   const columns = [
     {
       title: 'Image',
@@ -209,9 +240,12 @@ const ViewPage = () => {
       title: 'Name',
       dataIndex: 'name',
       key: 'name',
+      width: 350,
       sorter: (a, b) => a.name.length - b.name.length,
       sortDirections: ['descend', 'ascend'],
       ...getColumnSearchProps('name'),
+      // render: text => <div style={{ whiteSpace: 'pre-wrap' }}>{text}</div>,
+
     },
     {
       title: 'Phone no',
@@ -219,6 +253,7 @@ const ViewPage = () => {
       key: 'phone_number',
       sorter: (a, b) => a.phone_number.length - b.phone_number.length,
       sortDirections: ['descend', 'ascend'],
+      ...getColumnSearchProps('phone_number'),
     },
     {
       title: 'Mobile no',
@@ -226,11 +261,13 @@ const ViewPage = () => {
       key: 'mobile_number',
       sorter: (a, b) => a.mobile_number.length - b.mobile_number.length,
       sortDirections: ['descend', 'ascend'],
+      ...getColumnSearchProps('mobile_number'),
     },
     {
       title: 'Address',
       dataIndex: 'address',
       key: 'address',
+      ...getColumnSearchProps('address'),
     },
     {
       title: 'Rating',
@@ -238,20 +275,42 @@ const ViewPage = () => {
       key: 'ratings_average',
       sorter: (a, b) => a.ratings_average.length - b.ratings_average.length,
       sortDirections: ['descend', 'ascend'],
+      ...getColumnSearchProps('ratings_average'),
     },
     {
       title: 'Availibility Range',
       dataIndex: 'availability_range',
       key: 'availability_range',
+      align: 'center',
       sorter: (a, b) => a.availability_range.length - b.availability_range.length,
       sortDirections: ['descend', 'ascend'],
+      ...getColumnSearchProps('availability_range'),
+      render: text => <div>{text} km</div>,
     },
     {
       title: 'Active status',
       dataIndex: 'isActive',
       key: 'isActive',
+      align: 'center',
       sorter: (a, b) => a.isActive.length - b.isActive.length,
       sortDirections: ['descend', 'ascend'],
+    },
+    // {
+    //   title: 'Closed',
+    //   dataIndex: 'closed',
+    //   key: 'closed',
+    //   align: 'center',
+    //   sorter: (a, b) => a.isActive.length - b.isActive.length,
+    //   sortDirections: ['descend', 'ascend'],
+    // },
+    {
+      title: 'Updated At',
+      dataIndex: 'updated_at',
+      key: 'updated_at',
+      align: 'center',
+      sorter: (a, b) => a.isActive.length - b.isActive.length,
+      sortDirections: ['descend', 'ascend'],
+      render: text => moment(text).fromNow(),
     },
     {
       title: 'Actions',
@@ -259,17 +318,18 @@ const ViewPage = () => {
       key: 'action',
     },
   ];
-  const onSelectChange = selectedRowKey => {
-    setState({ ...state, selectedRowKeys: selectedRowKey });
+  const onSelectChange = (selectedRowKey, rows) => {
+    setState({ ...state, selectedRowKeys: selectedRowKey, selectedRows: rows });
   };
-  console.log(salonState)
   const rowSelection = {
     selectedRowKeys,
     onChange: onSelectChange,
   };
-  useEffect(()=>{
+
+  useEffect(() => {
     dispatch(getSalons())
-  },[])
+  }, [])
+
   return (
     <RecordViewWrapper>
       <PageHeader
@@ -309,13 +369,6 @@ const ViewPage = () => {
                       pagination={{ pageSize: 10, showSizeChanger: true }}
                       dataSource={dataSource}
                       columns={columns}
-                      onChange={(pagination, filters, sorter) => {
-                        // Apply sorting
-                        console.log(pagination,filters,sorter)
-                        // const { columnKey, order } = sorter;
-                        // Handle sorting based on columnKey and order
-                        // ...
-                      }}
                     />
                   </TableWrapper>
                 </div>
@@ -324,6 +377,22 @@ const ViewPage = () => {
           </Col>
         </Row>
       </Main>
+      <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancel}>
+        {previewImages?.map((image, key) => {
+          return (
+            <div>
+              <img
+                key={key}
+                alt="example"
+                style={{
+                  width: '100%',
+                }}
+                src={image}
+              />
+            </div>
+          )})}
+
+      </Modal>
     </RecordViewWrapper>
   );
 };

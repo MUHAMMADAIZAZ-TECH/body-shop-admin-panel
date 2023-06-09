@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
-import { Row, Modal, Col, Form, Input, Select, Upload, message, } from 'antd';
+import { Row, Modal, Col, Form, Input, Select, Upload, message } from 'antd';
 import { Link } from 'react-router-dom';
 import { useSelector,useDispatch } from 'react-redux';
 import { PageHeader } from '../../../components/page-headers/page-headers';
@@ -11,6 +11,13 @@ import { createSalon } from '../../../redux/salon/salonSlice';
 
 const { Option } = Select;
 const { Dragger } = Upload;
+
+const selectAfter = (
+  <Select defaultValue="km" style={{ width: 70 }}>
+    <Option value="km">km</Option>
+    <Option value="m">m</Option>
+  </Select>
+);
 const draggerprops = {
   maxCount:1,
   name: 'document',
@@ -157,7 +164,7 @@ const AddNew = () => {
                         </Select>
                       </Form.Item>
                       <Form.Item name="availability_range" label="Availability Range" rules={[{ required: true, message: 'Please enter availibilty range' }]} >
-                        <Input placeholder="Enter Availability Range" />
+                      <Input addonAfter={selectAfter} defaultValue={0} type='number'/>
                       </Form.Item>
                     </Col>
                   </Row>

@@ -8,17 +8,9 @@ export const getsalons = async () => {
     return error;
   }
 }
-export const getavailibilityhours = async () => {
+export const getsalon = async (id) => {
   try {
-    const { data } = await DataService.get(`/api/v1/availabilityHours`);
-    return data;
-  } catch (error) {
-    return error;
-  }
-}
-export const getallreviews = async () => {
-  try {
-    const { data } = await DataService.get(`/api/v1/reviews/`);
+    const { data } = await DataService.get(`/api/v1/salons/${id}`);
     return data;
   } catch (error) {
     return error;
@@ -31,6 +23,7 @@ export const createsalon = async (body) => {
     "closing_time": "17:00 PM"
   }]
   const files = body?.files.map((file)=>file.originFileObj)
+  console.log(files)
   const formData = new FormData();
   formData.append('name', body?.name);
   formData.append('description', body?.description);
@@ -50,8 +43,33 @@ export const createsalon = async (body) => {
     console.log(`${key}: ${value}`);
   });
 
+  // try {
+  //   const { data } = await DataService.postFormData(`/api/v1/salons`,formData);
+  //   return data;
+  // } catch (error) {
+  //   return error;
+  // }
+}
+export const deletesalon = async ({id,getData}) => {
   try {
-    const { data } = await DataService.postFormData(`/api/v1/salons`,formData);
+    const { data } = await DataService.delete(`/api/v1/salons/${id}`);
+    await getData();
+    return data;
+  } catch (error) {
+    return error;
+  }
+}
+export const getavailibilityhours = async () => {
+  try {
+    const { data } = await DataService.get(`/api/v1/availabilityHours`);
+    return data;
+  } catch (error) {
+    return error;
+  }
+}
+export const getallreviews = async () => {
+  try {
+    const { data } = await DataService.get(`/api/v1/reviews/`);
     return data;
   } catch (error) {
     return error;
