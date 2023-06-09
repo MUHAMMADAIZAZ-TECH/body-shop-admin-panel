@@ -1,7 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { Row, Col, Table, Spin } from 'antd';
+import React, { useEffect, useState ,useRef} from 'react';
+import { Row, Col, Table, Spin,Input, Space } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
+import Highlighter from 'react-highlight-words';
 import { Link } from 'react-router-dom';
+import moment from 'moment';
 import FeatherIcon from 'feather-icons-react';
 import { RecordViewWrapper } from './Style';
 import { Main, TableWrapper } from '../../styled';
@@ -9,10 +12,7 @@ import { Button } from '../../../components/buttons/buttons';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { PageHeader } from '../../../components/page-headers/page-headers';
 import {
-  axiosDataRead,
   axiosDataSearch,
-  axiosDataDelete,
-  axiosCrudGetData,
 } from '../../../redux/crud/axios/actionCreator';
 import { getAvailibilityHours } from '../../../redux/salon/salonSlice';
 
@@ -25,30 +25,29 @@ const ViewPage = () => {
       salonState: state.salonStates
     };
   });
-
+  const [searchText, setSearchText] = useState('');
+  const searchInput = useRef(null);
+  const [searchedColumn, setSearchedColumn] = useState('');
   const [state, setState] = useState({
     selectedRowKeys: [],
   });
   const { selectedRowKeys } = state;
+  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
+  };
+  const handleReset = (clearFilters) => {
+    clearFilters();
+    setSearchText('');
+  };
 
-  useEffect(() => {
-    if (axiosDataRead) {
-      dispatch(axiosDataRead());
-    }
-  }, [dispatch]);
   const dataSource = [];
 
   const handleDelete = id => {
     const confirm = window.confirm('Are you sure delete this?');
     if (confirm) {
-      dispatch(
-        axiosDataDelete({
-          id,
-          getData: () => {
-            dispatch(axiosCrudGetData());
-          },
-        }),
-      );
+      console.log(id)
     }
     return false;
   };
@@ -57,30 +56,16 @@ const ViewPage = () => {
     dispatch(axiosDataSearch(e.target.value, crud));
   };
 
-  if (crud.length)
-    crud.map((person, key) => {
-      const { id, name, email, company, position, join, status, city, country, image } = person;
+  if (salonState?.availibilityhours?.length)
+  salonState?.availibilityhours?.map((availhour, key) => {
+      const { id, weekday, opening_time, closing_time, salon_id, updated_at } = availhour;
       return dataSource.push({
         key: key + 1,
-        name: (
-          <div className="record-img align-center-v">
-            <img
-              src={
-                image ? process.env.REACT_APP_BASE_URL + image : require('../../../static/img/avatar/profileImage.png')
-              }
-              alt={id}
-            />
-            <span>
-              <span>{name}</span>
-              <span className="record-location">{city && country ? `${city},${country}` : ''}</span>
-            </span>
-          </div>
-        ),
-        email,
-        company,
-        position,
-        jdate: join,
-        status: <span className={`status ${status}`}>{status}</span>,
+        weekday,
+        opening_time,
+        closing_time,
+        salon_id,
+        updated_at,
         action: (
           <div className="table-actions">
             <Link className="edit" to={`/admin/crud/edit/${id}`}>
@@ -94,50 +79,109 @@ const ViewPage = () => {
         ),
       });
     });
-
-  // const columns = [
-  //   {
-  //     title: 'Name',
-  //     dataIndex: 'name',
-  //     key: 'name',
-  //   },
-  //   {
-  //     title: 'Email',
-  //     dataIndex: 'email',
-  //     key: 'email',
-  //   },
-  //   {
-  //     title: 'Company',
-  //     dataIndex: 'company',
-  //     key: 'company',
-  //   },
-  //   {
-  //     title: 'Position',
-  //     dataIndex: 'position',
-  //     key: 'position',
-  //   },
-  //   {
-  //     title: 'Status',
-  //     dataIndex: 'status',
-  //     key: 'status',
-  //   },
-  //   {
-  //     title: 'Joining Date',
-  //     dataIndex: 'jdate',
-  //     key: 'jdate',
-  //   },
-  //   {
-  //     title: 'Actions',
-  //     dataIndex: 'action',
-  //     key: 'action',
-  //     width: '90px',
-  //   },
-  // ];
+    const getColumnSearchProps = (dataIndex) => ({
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
+        <div
+          style={{
+            padding: 8,
+          }}
+        // onKeyDown={(e) => e.stopPropagation()}
+        >
+          <Input
+            ref={searchInput}
+            placeholder={`Search ${dataIndex}`}
+            value={selectedKeys[0]}
+            onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+            onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+            style={{
+              marginBottom: 8,
+              display: 'block',
+            }}
+          />
+          <Space>
+            <Button
+              type="primary"
+              onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+              icon={<SearchOutlined />}
+              size="small"
+              style={{
+                width: 90,
+              }}
+            >
+              Search
+            </Button>
+            <Button
+  
+              onClick={() => clearFilters && handleReset(clearFilters)}
+              size="small"
+              style={{
+                width: 90,
+              }}
+            >
+              Reset
+            </Button>
+            <Button
+              type="primary"
+              size="small"
+              onClick={() => {
+                confirm({
+                  closeDropdown: false,
+                });
+                setSearchText(selectedKeys[0]);
+                setSearchedColumn(dataIndex);
+              }}
+            >
+              Filter
+            </Button>
+            <Button
+              type="primary"
+              size="small"
+              onClick={() => {
+                close();
+              }}
+            >
+              close
+            </Button>
+          </Space>
+        </div>
+      ),
+      filterIcon: (filtered) => (
+        <SearchOutlined
+          style={{
+            color: filtered ? '#1677ff' : undefined,
+          }}
+        />
+      ),
+      onFilter: (value, record) =>
+        record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+      onFilterDropdownOpenChange: (visible) => {
+        if (visible) {
+          setTimeout(() => searchInput.current?.select(), 100);
+        }
+      },
+      render: (text) =>
+        searchedColumn === dataIndex ? (
+          <Highlighter
+            highlightStyle={{
+              backgroundColor: '#ffc069',
+              padding: 0,
+            }}
+            searchWords={[searchText]}
+            autoEscape
+            textToHighlight={text ? text.toString() : ''}
+          />
+        ) : (
+          text
+        ),
+    });
   const columns = [
     {
       title: 'Day',
       dataIndex: 'weekday',
       key: 'weekday',
+      sorter: (a, b) => a.weekday.length - b.weekday.length,
+      sortDirections: ['descend', 'ascend'],
+      ...getColumnSearchProps('weekday')
     },
     {
       title: 'Start At',
@@ -150,14 +194,15 @@ const ViewPage = () => {
       key: 'closing_time',
     },
     {
-      title: 'Created At',
-      dataIndex: 'created_at',
-      key: 'created_at',
+      title: 'Salon',
+      dataIndex: 'salon_id',
+      key: 'salon_id',
     },
     {
       title: 'Updated At',
       dataIndex: 'updated_at',
       key: 'updated_at',
+      render: text => moment(text).fromNow(),
     },
     {
       title: 'Actions',
@@ -183,7 +228,7 @@ const ViewPage = () => {
         subTitle={
           <div>
             <Button className="btn-add_new" size="default" key="1" type="primary">
-              <Link to="/admin/salon/axios-add">
+              <Link to="/admin/salon/availibility-hours-add">
                 <FeatherIcon icon="plus" size={14} /> <span>Add New</span>
               </Link>
             </Button>
@@ -214,7 +259,7 @@ const ViewPage = () => {
                     <Table
                       rowSelection={rowSelection}
                       pagination={{ pageSize: 10, showSizeChanger: true }}
-                      dataSource={salonState?.availibilityhours}
+                      dataSource={dataSource}
                       columns={columns}
                     />
                   </TableWrapper>

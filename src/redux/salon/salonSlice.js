@@ -1,5 +1,5 @@
 import { createSlice,createAsyncThunk } from "@reduxjs/toolkit";
-import { createsalon, deletesalon, getallreviews, getavailibilityhours, getsalon, getsalons } from "./salonApis";
+import { createsalon, deletesalon, deletesalonreview, getallreviews, getavailibilityhours, getsalon, getsalonreview, getsalons } from "./salonApis";
 
 const initialState = {
     loading:false,
@@ -30,7 +30,8 @@ const initialState = {
       reservation_fees_id:0,
       salon_owner:0,
       updated_at:''
-    }
+    },
+    salonreview:null
 }
 // salon-crud
 export const getSalons = createAsyncThunk(
@@ -76,6 +77,22 @@ export const getAllReviews = createAsyncThunk(
       return response;
   }
 );
+export const getsalonReview = createAsyncThunk(
+  'get/getsalonReview',
+  async (id) => {
+      const response = await getsalonreview(id)
+      console.log(response)
+      return response;
+  }
+);
+export const deleteSalonReview = createAsyncThunk(
+  'get/deleteSalonReview',
+  async (body) => {
+      const response = await deletesalonreview(body)
+      console.log(response)
+      return response;
+  }
+);
 
 const salonSlice = createSlice({
     name:'salonslice',
@@ -93,9 +110,9 @@ const salonSlice = createSlice({
           })
           .addCase(getSalons.fulfilled, (state, action) => {
             state.loading = false;
-            state.salons = action.payload.data;
-            state.message = action.payload.status;
-            if(action.payload.data){
+            state.salons = action?.payload?.data;
+            state.message = action?.payload?.status;
+            if(action.payload){
               state.approvedSalons = action?.payload?.data.filter((salon) => salon.isApproved === 1);
               state.unapprovedSalons = action?.payload?.data.filter((salon) => salon.isApproved === 0);
               }
@@ -112,8 +129,8 @@ const salonSlice = createSlice({
           })
           .addCase(getSalon.fulfilled, (state, action) => {
             state.loading = false;
-            state.salon = action.payload.data;
-            state.message = action.payload.status;
+            state.salon = action?.payload?.data;
+            state.message = action?.payload?.status;
           })
           .addCase(getSalon.rejected, (state, action) => {
             state.loading = false;
@@ -127,7 +144,7 @@ const salonSlice = createSlice({
           })
           .addCase(getAvailibilityHours.fulfilled, (state, action) => {
             state.loading = false;
-            state.message = action.payload.status;
+            state.message = action?.payload?.status;
             state.availibilityhours = action.payload
           })
           .addCase(getAvailibilityHours.rejected, (state, action) => {
@@ -142,10 +159,39 @@ const salonSlice = createSlice({
           })
           .addCase(getAllReviews.fulfilled, (state, action) => {
             state.loading = false;
-            state.message = action.payload.status;
+            state.message = action?.payload?.status;
             state.salonreviews = action.payload
           })
           .addCase(getAllReviews.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.error;
+            state.message = action.error.message;
+          });
+          builder
+          .addCase(getsalonReview.pending, (state) => {
+            state.loading = true;
+            state.error = null;
+          })
+          .addCase(getsalonReview.fulfilled, (state, action) => {
+            state.loading = false;
+            state.message = action?.payload?.status;
+            state.salonreview = action.payload
+          })
+          .addCase(getsalonReview.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.error;
+            state.message = action.error.message;
+          });
+          builder
+          .addCase(deleteSalonReview.pending, (state) => {
+            state.loading = true;
+            state.error = null;
+          })
+          .addCase(deleteSalonReview.fulfilled, (state, action) => {
+            state.loading = false;
+            state.message = action?.payload?.status;
+          })
+          .addCase(deleteSalonReview.rejected, (state, action) => {
             state.loading = false;
             state.error = action.error;
             state.message = action.error.message;

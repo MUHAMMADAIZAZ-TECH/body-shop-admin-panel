@@ -2,16 +2,16 @@ import { DataService } from '../../config/dataService/mydataService';
 
 export const getsalons = async () => {
   try {
-    const { data } = await DataService.get(`/api/v1/salons/all`);
-    return data;
+    const response = await DataService.get(`/api/v1/salons/all`);
+    return response?.data;
   } catch (error) {
     return error;
   }
 }
 export const getsalon = async (id) => {
   try {
-    const { data } = await DataService.get(`/api/v1/salons/${id}`);
-    return data;
+    const response = await DataService.get(`/api/v1/salons/${id}`);
+    return response.data;
   } catch (error) {
     return error;
   }
@@ -44,33 +44,52 @@ export const createsalon = async (body) => {
   });
 
   // try {
-  //   const { data } = await DataService.postFormData(`/api/v1/salons`,formData);
-  //   return data;
+  //   const response = await DataService.postFormData(`/api/v1/salons`,formData);
+  //   return response.data;
   // } catch (error) {
   //   return error;
   // }
 }
 export const deletesalon = async ({id,getData}) => {
   try {
-    const { data } = await DataService.delete(`/api/v1/salons/${id}`);
+    const response = await DataService.delete(`/api/v1/salons/${id}`);
     await getData();
-    return data;
+    return response.data;
   } catch (error) {
     return error;
   }
 }
 export const getavailibilityhours = async () => {
   try {
-    const { data } = await DataService.get(`/api/v1/availabilityHours`);
-    return data;
+    const response = await DataService.get(`/api/v1/availabilityHours`);
+    return response.data;
   } catch (error) {
     return error;
   }
 }
 export const getallreviews = async () => {
   try {
-    const { data } = await DataService.get(`/api/v1/reviews/`);
-    return data;
+    const response = await DataService.get(`/api/v1/reviews/`);
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+}
+export const getsalonreview = async () => {
+  // try {
+  //   const response = await DataService.get(`/api/v1/reviews/${id}`);
+  //   console.log(data)
+  //   return response.data;
+  // } catch (error) {
+  //   return error;
+  // }
+}
+export const deletesalonreview = async ({id,getData}) => {
+  try {
+    const response = await DataService.delete(`/api/v1/reviews/${id}`);
+    await getData();
+    console.log(response)
+    return response.data;
   } catch (error) {
     return error;
   }

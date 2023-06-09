@@ -6,11 +6,8 @@ const SalonAdd = lazy(() => import('../../container/salon/salons/Add'));
 const SalonEdit = lazy(() => import('../../container/salon/salons/Edit'));
 
 const SalonRequestView = lazy(() => import('../../container/salon/salonrequests/Index'));
-const SalonRequestAdd = lazy(() => import('../../container/salon/salonrequests/Add'));
-const SalonRequestEdit = lazy(() => import('../../container/salon/salonrequests/Edit'));
 
 const SalonReviewView = lazy(() => import('../../container/salon/salonreviews/Index'));
-const SalonReviewAdd = lazy(() => import('../../container/salon/salonreviews/Add'));
 const SalonReviewEdit = lazy(() => import('../../container/salon/salonreviews/Edit'));
 
 const SalonAvailView = lazy(() => import('../../container/salon/availibilityhours/Index'));
@@ -31,11 +28,8 @@ const SalonRoute = () => {
       <Route exact path={`${path}/salon/edit/:id`} component={SalonEdit} />
 
       <Route path={`${path}/salon/request-view`} component={SalonRequestView} />
-      <Route path={`${path}/salon/request-add`} component={SalonRequestAdd} />
-      <Route exact path={`${path}/request/edit/:id`} component={SalonRequestEdit} />
 
       <Route path={`${path}/salon/review-view`} component={SalonReviewView} />
-      <Route path={`${path}/salon/review-add`} component={SalonReviewAdd} />
       <Route exact path={`${path}/review/edit/:id`} component={SalonReviewEdit} />
 
       <Route path={`${path}/salon/availibility-hours-view`} component={SalonAvailView} />

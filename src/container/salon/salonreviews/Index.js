@@ -1,90 +1,172 @@
-import React, { useEffect, useState } from 'react';
-import { Row, Col, Table, Spin } from 'antd';
+import React, { useEffect, useState,useRef } from 'react';
+import { Row, Col, Table, Spin, Input, Space, Rate } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import moment from 'moment';
+import Highlighter from 'react-highlight-words';
 import FeatherIcon from 'feather-icons-react';
 import { RecordViewWrapper } from './Style';
 import { Main, TableWrapper } from '../../styled';
 import { Button } from '../../../components/buttons/buttons';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { PageHeader } from '../../../components/page-headers/page-headers';
-import {
-  axiosDataRead,
-  axiosDataSearch,
-  axiosDataDelete,
-  axiosCrudGetData,
-} from '../../../redux/crud/axios/actionCreator';
-import { getAllReviews } from '../../../redux/salon/salonSlice';
+import { deleteSalonReview, getAllReviews } from '../../../redux/salon/salonSlice';
+
 
 const ViewPage = () => {
   const dispatch = useDispatch();
-  const { crud, isLoading,salonState } = useSelector(state => {
+  const { isLoading,salonState } = useSelector(state => {
     return {
       crud: state.AxiosCrud.data,
       isLoading: state.AxiosCrud.loading,
       salonState: state.salonStates
     };
   });
-
-
+  const [searchText, setSearchText] = useState('');
+  const searchInput = useRef(null);
+  const [searchedColumn, setSearchedColumn] = useState('');
   const [state, setState] = useState({
     selectedRowKeys: [],
   });
   const { selectedRowKeys } = state;
+  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
+  };
+  const handleReset = (clearFilters) => {
+    clearFilters();
+    setSearchText('');
+  };
 
-  useEffect(() => {
-    if (axiosDataRead) {
-      dispatch(axiosDataRead());
-    }
-  }, [dispatch]);
   const dataSource = [];
 
-  const handleDelete = id => {
+  const handleDelete = (id) => {
     const confirm = window.confirm('Are you sure delete this?');
     if (confirm) {
-      dispatch(
-        axiosDataDelete({
-          id,
-          getData: () => {
-            dispatch(axiosCrudGetData());
-          },
-        }),
-      );
+      dispatch(deleteSalonReview({
+        id,
+        getData: () => {
+          dispatch(getAllReviews());
+        },
+      }))
+     console.log("delete")
     }
     return false;
   };
 
-  const onHandleSearch = e => {
-    dispatch(axiosDataSearch(e.target.value, crud));
+  const onHandleSearch = () => {
+    console.log("search")
   };
+  const getColumnSearchProps = (dataIndex) => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
+      <div
+        style={{
+          padding: 8,
+        }}
+      // onKeyDown={(e) => e.stopPropagation()}
+      >
+        <Input
+          ref={searchInput}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          style={{
+            marginBottom: 8,
+            display: 'block',
+          }}
+        />
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+            icon={<SearchOutlined />}
+            size="small"
+            style={{
+              width: 90,
+            }}
+          >
+            Search
+          </Button>
+          <Button
 
-  if (crud.length)
-    crud.map((person, key) => {
-      const { id, name, email, company, position, join, status, city, country, image } = person;
+            onClick={() => clearFilters && handleReset(clearFilters)}
+            size="small"
+            style={{
+              width: 90,
+            }}
+          >
+            Reset
+          </Button>
+          <Button
+            type="primary"
+            size="small"
+            onClick={() => {
+              confirm({
+                closeDropdown: false,
+              });
+              setSearchText(selectedKeys[0]);
+              setSearchedColumn(dataIndex);
+            }}
+          >
+            Filter
+          </Button>
+          <Button
+            type="primary"
+            size="small"
+            onClick={() => {
+              close();
+            }}
+          >
+            close
+          </Button>
+        </Space>
+      </div>
+    ),
+    filterIcon: (filtered) => (
+      <SearchOutlined
+        style={{
+          color: filtered ? '#1677ff' : undefined,
+        }}
+      />
+    ),
+    onFilter: (value, record) =>
+      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+    onFilterDropdownOpenChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.current?.select(), 100);
+      }
+    },
+    render: (text) =>
+      searchedColumn === dataIndex ? (
+        <Highlighter
+          highlightStyle={{
+            backgroundColor: '#ffc069',
+            padding: 0,
+          }}
+          searchWords={[searchText]}
+          autoEscape
+          textToHighlight={text ? text.toString() : ''}
+        />
+      ) : (
+        text
+      ),
+  });
+  if (salonState?.salonreviews.length)
+  salonState?.salonreviews.map((review, key) => {
+      const { id, comment, rating, salon_id, updated_at, user_id, } = review;
       return dataSource.push({
         key: key + 1,
-        name: (
-          <div className="record-img align-center-v">
-            <img
-              src={
-                image ? process.env.REACT_APP_BASE_URL + image : require('../../../static/img/avatar/profileImage.png')
-              }
-              alt={id}
-            />
-            <span>
-              <span>{name}</span>
-              <span className="record-location">{city && country ? `${city},${country}` : ''}</span>
-            </span>
-          </div>
-        ),
-        email,
-        company,
-        position,
-        jdate: join,
-        status: <span className={`status ${status}`}>{status}</span>,
+        comment,
+        rating:(<Rate disabled defaultValue={rating} />),
+        user_id,
+        salon_id,
+        updated_at,
         action: (
           <div className="table-actions">
-            <Link className="edit" to={`/admin/crud/edit/${id}`}>
+            <Link className="edit" to={`/admin/review/edit/${id}`}>
               <FeatherIcon icon="edit" size={14} />
             </Link>
             &nbsp;&nbsp;&nbsp;
@@ -96,69 +178,43 @@ const ViewPage = () => {
       });
     });
 
-  // const columns = [
-  //   {
-  //     title: 'Name',
-  //     dataIndex: 'name',
-  //     key: 'name',
-  //   },
-  //   {
-  //     title: 'Email',
-  //     dataIndex: 'email',
-  //     key: 'email',
-  //   },
-  //   {
-  //     title: 'Company',
-  //     dataIndex: 'company',
-  //     key: 'company',
-  //   },
-  //   {
-  //     title: 'Position',
-  //     dataIndex: 'position',
-  //     key: 'position',
-  //   },
-  //   {
-  //     title: 'Status',
-  //     dataIndex: 'status',
-  //     key: 'status',
-  //   },
-  //   {
-  //     title: 'Joining Date',
-  //     dataIndex: 'jdate',
-  //     key: 'jdate',
-  //   },
-  //   {
-  //     title: 'Actions',
-  //     dataIndex: 'action',
-  //     key: 'action',
-  //     width: '90px',
-  //   },
-  // ];
   const columns = [
     {
       title: 'Review',
       dataIndex: 'comment',
       key: 'comment',
+      sorter: (a, b) => a.comment.length - b.comment.length,
+      sortDirections: ['descend', 'ascend'],
+      ...getColumnSearchProps('comment'),
     },
     {
       title: 'Rate',
       dataIndex: 'rating',
       key: 'rating',
+      sorter: (a, b) => a.rating.length - b.rating.length,
+      sortDirections: ['descend', 'ascend'],
     },
     {
       title: 'User',
       dataIndex: 'user_id',
       key: 'user_id',
+      sorter: (a, b) => a.user_id.length - b.user_id.length,
+      sortDirections: ['descend', 'ascend'],
     },
     {
       title: 'Salon',
       dataIndex: 'salon_id',
       key: 'salon_id',
+      sorter: (a, b) => a.salon_id.length - b.salon_id.length,
+      sortDirections: ['descend', 'ascend'],
     },
     {
       title: 'Updated At',
       dataIndex: 'updated_at',
       key: 'updated_at',
+      sorter: (a, b) => a.updated_at.length - b.updated_at.length,
+      sortDirections: ['descend', 'ascend'],
+      render: text => moment(text).fromNow(),
     },
     {
       title: 'Actions',
@@ -170,7 +226,6 @@ const ViewPage = () => {
   const onSelectChange = selectedRowKey => {
     setState({ ...state, selectedRowKeys: selectedRowKey });
   };
-  console.log(salonState.salonreviews)
   const rowSelection = {
     selectedRowKeys,
     onChange: onSelectChange,
@@ -181,15 +236,6 @@ const ViewPage = () => {
   return (
     <RecordViewWrapper>
       <PageHeader
-        subTitle={
-          <div>
-            <Button className="btn-add_new" size="default" key="1" type="primary">
-              <Link to="/admin/salon/axios-add">
-                <FeatherIcon icon="plus" size={14} /> <span>Add New</span>
-              </Link>
-            </Button>
-          </div>
-        }
         buttons={[
           <div key={1} className="search-box">
             <span className="search-icon">
@@ -215,7 +261,7 @@ const ViewPage = () => {
                     <Table
                       rowSelection={rowSelection}
                       pagination={{ pageSize: 10, showSizeChanger: true }}
-                      dataSource={salonState?.salonreviews}
+                      dataSource={dataSource}
                       columns={columns}
                     />
                   </TableWrapper>
