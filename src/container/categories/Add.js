@@ -112,18 +112,18 @@ const AddNew = ({ match }) => {
                           src={previewImage}
                         />
                       </Modal>
-                      <Form.Item name="name" label="Name" rules={[{ required: true, message: 'Please enter Name' }]}>
-                        <Input placeholder="Enter Name" />
+                      <Form.Item name="description" label="Description" >
+                        <Input.TextArea rows={5} placeholder="Enter Description" />
                       </Form.Item>
+                     
                     </Col>
                     <Col sm={12} xs={24} className="mb-25">
+                    <Form.Item name="name" label="Name" rules={[{ required: true, message: 'Please enter Name' }]}>
+                        <Input placeholder="Enter Name" />
+                      </Form.Item>
                     <Form.Item name="color" label="Color" rules={[{ required: true, message: 'Please enter color' }]}>
                         <Input placeholder="Enter Color" />
                       </Form.Item>
-                    <Form.Item name="description" label="Description" >
-                        <Input.TextArea rows={5} placeholder="Enter Description" />
-                      </Form.Item>
-                    
                     </Col>
                   </Row>
                   <div className="record-form-actions text-right">

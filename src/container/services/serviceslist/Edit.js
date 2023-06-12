@@ -1,6 +1,6 @@
 import React, { useEffect,useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
-import { Row, Col, Form, Input, Select, Upload,Modal } from 'antd';
+import { Row, Col, Form, Input, Select, Upload,Modal,Checkbox } from 'antd';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -133,9 +133,9 @@ const Edit = ({ match }) => {
                   <Form.Item name="description" label="Description" >
                       <Input.TextArea rows={5} placeholder="Enter Description" />
                     </Form.Item>
-                    <Form.Item name="available" label="Available" rules={[{ required: true, message: 'Please enter available' }]}>
-                      <Input placeholder="Enter Available" />
-                    </Form.Item>
+                    <Form.Item name="available" label="Available" >
+                      <Checkbox defaultChecked>Enabled</Checkbox>
+                      </Form.Item>
                   </Col>
                 </Row>
                 <div className="record-form-actions text-right">

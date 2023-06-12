@@ -96,42 +96,42 @@ const Edit = ({ match }) => {
           <BasicFormWrapper>
             <Cards title="Update Category">
               <Form name="multi-form" layout="vertical" style={{ width: '100%' }} form={form} onFinish={handleSubmit}>
-                <Row gutter={30}>
-                  <Col sm={12} xs={24} className="mb-25">
-                  <Upload
-                      listType="picture-card"
-                      fileList={files}
-                      onPreview={handlePreview}
-                      onChange={handleChange}
-                      name='files'
-                    >
-                      {files.length >= 1 ? null : uploadButton}
-                    </Upload>
-                    {/* </Form.Item> */}
-                 
-                    <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancel}>
-                      <img
-                        alt="example"
-                        style={{
-                          width: '100%',
-                        }}
-                        src={previewImage}
-                      />
-                    </Modal>
+              <Row gutter={30}>
+                    <Col sm={12} xs={24} className="mb-25">
+                    <Upload
+                        listType="picture-card"
+                        fileList={files}
+                        onPreview={handlePreview}
+                        onChange={handleChange}
+                        name='files'
+                      >
+                        {files.length >= 1 ? null : uploadButton}
+                      </Upload>
+                      {/* </Form.Item> */}
+                   
+                      <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancel}>
+                        <img
+                          alt="example"
+                          style={{
+                            width: '100%',
+                          }}
+                          src={previewImage}
+                        />
+                      </Modal>
+                      <Form.Item name="description" label="Description" >
+                        <Input.TextArea rows={5} placeholder="Enter Description" />
+                      </Form.Item>
+                     
+                    </Col>
+                    <Col sm={12} xs={24} className="mb-25">
                     <Form.Item name="name" label="Name" rules={[{ required: true, message: 'Please enter Name' }]}>
-                      <Input placeholder="Enter Name" />
-                    </Form.Item>
-                  </Col>
-                  <Col sm={12} xs={24} className="mb-25">
-                  <Form.Item name="color" label="Color" rules={[{ required: true, message: 'Please enter color' }]}>
-                      <Input placeholder="Enter Color" />
-                    </Form.Item>
-                  <Form.Item name="description" label="Description" >
-                      <Input.TextArea rows={5} placeholder="Enter Description" />
-                    </Form.Item>
-                  
-                  </Col>
-                </Row>
+                        <Input placeholder="Enter Name" />
+                      </Form.Item>
+                    <Form.Item name="color" label="Color" rules={[{ required: true, message: 'Please enter color' }]}>
+                        <Input placeholder="Enter Color" />
+                      </Form.Item>
+                    </Col>
+                  </Row>
                 <div className="record-form-actions text-right">
                   <div style={{
                     display: 'flex',

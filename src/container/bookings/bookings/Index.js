@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 import FeatherIcon from 'feather-icons-react';
 import { RecordViewWrapper } from './Style';
 import { Main, TableWrapper } from '../../styled';
-import { Button } from '../../../components/buttons/buttons';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { PageHeader } from '../../../components/page-headers/page-headers';
 import {
@@ -163,15 +162,6 @@ const ViewPage = () => {
   return (
     <RecordViewWrapper>
       <PageHeader
-        subTitle={
-          <div>
-            <Button className="btn-add_new" size="default" key="1" type="primary">
-              <Link to="/admin/bookings/bookings-add">
-                <FeatherIcon icon="plus" size={14} /> <span>Add New</span>
-              </Link>
-            </Button>
-          </div>
-        }
         buttons={[
           <div key={1} className="search-box">
             <span className="search-icon">

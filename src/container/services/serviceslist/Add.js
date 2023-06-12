@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
-import { Row, Modal, Col, Form, Input, Select, Upload } from 'antd';
+import { Row, Modal, Col, Form, Input, Select, Upload,Checkbox } from 'antd';
 import { Link } from 'react-router-dom';
 import { useSelector,useDispatch } from 'react-redux';
 import { PageHeader } from '../../../components/page-headers/page-headers';
@@ -135,8 +135,8 @@ const AddNew = () => {
                     <Form.Item name="description" label="Description" >
                         <Input.TextArea rows={5} placeholder="Enter Description" />
                       </Form.Item>
-                      <Form.Item name="available" label="Available" rules={[{ required: true, message: 'Please enter available' }]}>
-                        <Input placeholder="Enter Available" />
+                      <Form.Item name="available" label="Available" >
+                      <Checkbox defaultChecked>Enabled</Checkbox>
                       </Form.Item>
                     </Col>
                   </Row>

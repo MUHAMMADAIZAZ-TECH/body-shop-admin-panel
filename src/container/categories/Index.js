@@ -275,15 +275,6 @@ const ViewPage = () => {
   return (
     <RecordViewWrapper>
       <PageHeader
-        subTitle={
-          <div>
-            <Button className="btn-add_new" size="default" key="1" type="primary">
-              <Link to="/admin/categories/category-add">
-                <FeatherIcon icon="plus" size={14} /> <span>Add New</span>
-              </Link>
-            </Button>
-          </div>
-        }
         buttons={[
           <div key={1} className="search-box">
             <span className="search-icon">
