@@ -1,4 +1,4 @@
-import React, { useEffect,useState } from 'react';
+import React, { useState } from 'react';
 import { Row, Col, Form,Input,Upload,Modal } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
@@ -8,7 +8,7 @@ import { PageHeader } from '../../components/page-headers/page-headers';
 import { Cards } from '../../components/cards/frame/cards-frame';
 import { Button } from '../../components/buttons/buttons';
 import { Main, BasicFormWrapper } from '../styled';
-import { getSalonReview } from '../../redux/salon/salonSlice';
+import { createCategory } from '../../redux/categories/categoriesSlice';
 
 const getBase64 = (file) =>
   new Promise((resolve, reject) => {
@@ -22,14 +22,13 @@ const getBase64 = (file) =>
       <div style={{ marginTop: 8, }}>Upload</div>
     </div>
   );
-const AddNew = ({ match }) => {
+const AddNew = ({match}) => {
   const dispatch = useDispatch();
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   const [previewTitle, setPreviewTitle] = useState('');
-  const { salon, isLoading } = useSelector(state => {
+  const { isLoading } = useSelector(state => {
     return {
-      salon: state.salonStates.salon,
       isLoading: state.AxiosCrud.loading,
       url: state.AxiosCrud.url,
       salonState: state.salonStates
@@ -55,21 +54,18 @@ const AddNew = ({ match }) => {
   const handleSubmit = async values => {
     try {
       await form.validateFields(); // Validate all form fields
-      // dispatch(createSalon({ ...values, files }));
-      console.log(values)
+      dispatch(createCategory({
+        ...values,
+        file:files[0].originFileObj
+      }))
+      console.log(values,files[0].originFileObj)
+       form.resetFields();
     } catch (error) {
       console.log('Validation error:', error);
     }
-    // form.resetFields();
+   
   };
-
-  useEffect(() => {
-    // form.setFieldsValue(salon);
-    console.log(salon)
-  }, [form, salon]);
-  useEffect(() => {
-    dispatch(getSalonReview(parseInt(match.params.id, 10)))
-  }, [dispatch, match.params.id]);
+  console.log(match)
 
   return (
     <>
@@ -88,7 +84,7 @@ const AddNew = ({ match }) => {
         <Row gutter={15}>
           <Col xs={24}>
             <BasicFormWrapper>
-              <Cards title="Add Categories">
+              <Cards title="Add Category">
                 <Form name="multi-form" layout="vertical" style={{ width: '100%' }} form={form} onFinish={handleSubmit}>
                   <Row gutter={30}>
                     <Col sm={12} xs={24} className="mb-25">
@@ -101,8 +97,6 @@ const AddNew = ({ match }) => {
                       >
                         {files.length >= 1 ? null : uploadButton}
                       </Upload>
-                      {/* </Form.Item> */}
-                   
                       <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancel}>
                         <img
                           alt="example"

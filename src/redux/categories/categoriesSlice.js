@@ -1,11 +1,13 @@
 import { createSlice,createAsyncThunk } from "@reduxjs/toolkit";
-import { getcategories } from "./categoriesApis";
+import { createcategory, deletecategory, getcategories, getcategory, updatecategory } from "./categoriesApis";
 
 const initialState = {
+    success:false,
     loading:false,
     error:false,
     message:"",
-    categories:[]
+    categories:[],
+    category:null
 }
 export const getCategories = createAsyncThunk(
     'get/getcategories',
@@ -14,6 +16,39 @@ export const getCategories = createAsyncThunk(
         return response;
     }
 );
+export const getCategory = createAsyncThunk(
+  'get/getCategory',
+  async (id) => {
+      const response = await getcategory(id)
+      console.log(response)
+      return response;
+  }
+);
+export const createCategory = createAsyncThunk(
+  'post/createCategory',
+  async (body) => {
+      const response = await createcategory(body)
+      console.log(response)
+      return response;
+  }
+);
+export const updateCategory = createAsyncThunk(
+  'patch/updateCategory',
+  async (body) => {
+      const response = await updatecategory(body)
+      console.log(response)
+      return response;
+  }
+);
+export const deleteCategory = createAsyncThunk(
+  'delete/deleteCategory',
+  async (body) => {
+      const response = await deletecategory(body)
+      console.log(response)
+      return response;
+  }
+);
+
 
 const categoriesSlice = createSlice({
     name:'categoriesSlice',
@@ -34,7 +69,73 @@ const categoriesSlice = createSlice({
           .addCase(getCategories.rejected, (state, action) => {
             state.loading = false;
             state.error = action.error;
-            state.message = action.error.message;
+            state.message = "Something Went Wrong";
+          });
+          builder
+          .addCase(getCategory.pending, (state) => {
+            state.loading = true;
+            state.error = null;
+          })
+          .addCase(getCategory.fulfilled, (state, action) => {
+            state.loading = false;
+            state.message = action.payload.status;
+            state.category = action.payload.data;
+          })
+          .addCase(getCategory.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.error;
+            state.message = "Something Went Wrong";
+          });
+          builder
+          .addCase(createCategory.pending, (state) => {
+            state.loading = true;
+            state.error = null;
+            state.success = false;
+          })
+          .addCase(createCategory.fulfilled, (state) => {
+            state.loading = false;
+            state.message = "Successfully Created";
+            state.success = true;
+          })
+          .addCase(createCategory.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.error;
+            state.message = "Something Went Wrong";
+            state.success = false;
+          });
+          builder
+          .addCase(updateCategory.pending, (state) => {
+            state.loading = true;
+            state.error = null;
+            state.success = false;
+          })
+          .addCase(updateCategory.fulfilled, (state) => {
+            state.loading = false;
+            state.message = "Successfully Updated";
+            state.success = true;
+          })
+          .addCase(updateCategory.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.error;
+            state.message = "Something Went Wrong";
+            state.success = false;
+          });
+          builder
+          .addCase(deleteCategory.pending, (state) => {
+            state.loading = true;
+            state.error = null;
+            state.success = false;
+          })
+          .addCase(deleteCategory.fulfilled, (state) => {
+            state.loading = false;
+            state.message = "Successfully Deleted";
+            state.success = true;
+          })
+          .addCase(deleteCategory.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.error;
+            state.message = "Something Went Wrong";
+            state.success = false;
           });
       },
 })

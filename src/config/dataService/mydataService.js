@@ -51,6 +51,15 @@ class DataService {
     });
   }
 
+  static patchFormData(path = '', formData = {}, optionalHeader = {}) {
+    return client({
+      method: 'PATCH',
+      url: path,
+      data: formData,
+      headers: { ...authHeader(), ...optionalHeader,'Content-Type': 'multipart/form-data', },
+    });
+  }
+  
   static delete(path = '', data = {}) {
     return client({
       method: 'DELETE',

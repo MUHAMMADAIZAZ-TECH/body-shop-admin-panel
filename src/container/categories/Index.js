@@ -14,10 +14,8 @@ import { PageHeader } from '../../components/page-headers/page-headers';
 import {
   axiosDataRead,
   axiosDataSearch,
-  axiosDataDelete,
-  axiosCrudGetData,
 } from '../../redux/crud/axios/actionCreator';
-import { getCategories } from '../../redux/categories/categoriesSlice';
+import { deleteCategory, getCategories } from '../../redux/categories/categoriesSlice';
 
 const avatarStyle = {
   borderRadius: '4px', // Adjust the border radius as per your preference
@@ -158,14 +156,12 @@ const ViewPage = () => {
   const handleDelete = id => {
     const confirm = window.confirm('Are you sure delete this?');
     if (confirm) {
-      dispatch(
-        axiosDataDelete({
-          id,
-          getData: () => {
-            dispatch(axiosCrudGetData());
-          },
-        }),
-      );
+      dispatch(deleteCategory({
+        id,
+        getData:()=>{
+          dispatch(getCategories())
+        }
+      }));
     }
     return false;
   };
@@ -176,14 +172,13 @@ const ViewPage = () => {
   console.log(categoryStates)
   if (categoryStates?.categories?.length)
   categoryStates?.categories?.map((category, key) => {
-      const { id,image, name, color,description,parent_category, created_at, updated_at } = category;
+      const { id,image, name, color,description, created_at, updated_at } = category;
       return dataSource.push({
         key: key + 1,
         image: (image && <Avatar style={avatarStyle} src={image} size={60} />),
         name,
         color:(<div style={{backgroundColor:`${color}`,padding:5,borderRadius:5,textAlign:"center"}}>{color}</div>),
         description,
-        parent_category,
         created_at,
         updated_at,
         action: (
@@ -233,12 +228,6 @@ const ViewPage = () => {
       ...getColumnSearchProps('description'),
     },
     {
-      title: 'Parent Category',
-      dataIndex: 'parent_category',
-      key: 'parent_category',
-      ...getColumnSearchProps('parent_category'),
-    },
-    {
       title: 'Created At',
       dataIndex: 'created_at',
       key: 'created_at',
@@ -275,6 +264,15 @@ const ViewPage = () => {
   return (
     <RecordViewWrapper>
       <PageHeader
+        subTitle={
+          <div>
+            <Button className="btn-add_new" size="default" key="1" type="primary">
+              <Link to="/admin/categories/category-add">
+                <FeatherIcon icon="plus" size={14} /> <span>Add New</span>
+              </Link>
+            </Button>
+          </div>
+        }
         buttons={[
           <div key={1} className="search-box">
             <span className="search-icon">

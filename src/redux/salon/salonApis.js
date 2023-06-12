@@ -44,12 +44,12 @@ export const createsalon = async (body) => {
     console.log(`${key}: ${value}`);
   });
 
-  // try {
-  //   const response = await DataService.postFormData(`/api/v1/salons`,formData);
-  //   return response.data;
-  // } catch (error) {
-  //   return error;
-  // }
+  try {
+    const response = await DataService.postFormData(`/api/v1/salons`,formData);
+    return response.data;
+  } catch (error) {
+    return error;
+  }
 }
 export const updatesalon = async (body) => {
   const AvailabilityHours = [{
@@ -78,12 +78,12 @@ export const updatesalon = async (body) => {
     console.log(`${key}: ${value}`);
   });
 
-  // try {
-  //   const response = await DataService.patch(`/api/v1/salons`,formData);
-  //   return response.data;
-  // } catch (error) {
-  //   return error;
-  // }
+  try {
+    const response = await DataService.patch(`/api/v1/salons`,formData);
+    return response.data;
+  } catch (error) {
+    return error;
+  }
 }
 export const deletesalon = async ({id,getData}) => {
   try {

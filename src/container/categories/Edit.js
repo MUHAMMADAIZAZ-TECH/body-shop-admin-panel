@@ -9,6 +9,7 @@ import { Cards } from '../../components/cards/frame/cards-frame';
 import { Button } from '../../components/buttons/buttons';
 import { Main, BasicFormWrapper } from '../styled';
 import {  axiosDataSingle } from '../../redux/crud/axios/actionCreator';
+import { getCategory, updateCategory } from '../../redux/categories/categoriesSlice';
 
 const getBase64 = (file) =>
   new Promise((resolve, reject) => {
@@ -27,12 +28,12 @@ const Edit = ({ match }) => {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   const [previewTitle, setPreviewTitle] = useState('');
-  const { salon, isLoading } = useSelector(state => {
+  const { category, isLoading } = useSelector(state => {
     return {
       salon: state.salonStates.salon,
       isLoading: state.AxiosCrud.loading,
       url: state.AxiosCrud.url,
-      salonState: state.salonStates
+      category: state.categoryStates.category
     };
   });
   const [form] = Form.useForm();
@@ -55,6 +56,7 @@ const Edit = ({ match }) => {
   const handleSubmit = async values => {
     try {
       await form.validateFields(); // Validate all form fields
+      dispatch(updateCategory({id:match.params.id, ...values, file:files[0].originFileObj }))
       // dispatch(createSalon({ ...values, files }));
       console.log(values)
     } catch (error) {
@@ -64,9 +66,18 @@ const Edit = ({ match }) => {
   };
 
   useEffect(() => {
-    // form.setFieldsValue(salon);
-    console.log(salon)
-  }, [form, salon]);
+    if(category!==null){
+      form.setFieldsValue(category);
+      if(category.image!==null || category.image!==""){
+        setfiles([ {
+          uid: '-1',
+          name: 'image.png',
+          status: 'done',
+          url: category.image,
+        }])
+      }
+    }
+  }, [form, category]);
 
   useEffect(() => {
     if (axiosDataSingle) {
@@ -75,6 +86,7 @@ const Edit = ({ match }) => {
   }, [dispatch, match.params.id]);
 
   useEffect(() => {
+    dispatch(getCategory(match.params.id))
   }, [dispatch, match.params.id]);
 
   return (
