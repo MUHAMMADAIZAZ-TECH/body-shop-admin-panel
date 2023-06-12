@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Row, Col, Table, Spin } from 'antd';
+import { Row, Col, Table, Spin, Avatar } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import moment from 'moment';
 import FeatherIcon from 'feather-icons-react';
 import { RecordViewWrapper } from './Style';
 import { Main, TableWrapper } from '../styled';
@@ -16,6 +17,13 @@ import {
 } from '../../redux/crud/axios/actionCreator';
 import { getCategories } from '../../redux/categories/categoriesSlice';
 
+const avatarStyle = {
+  borderRadius: '4px', // Adjust the border radius as per your preference
+  width: '60px', // Adjust the width and height as per your preference
+  height: '60px',
+  lineHeight: '100px', // Vertically center the content
+  textAlign: 'center', // Horizontally center the content
+};
 const ViewPage = () => {
   const dispatch = useDispatch();
   const { crud, isLoading ,categoryStates} = useSelector(state => {
@@ -56,34 +64,22 @@ const ViewPage = () => {
   const onHandleSearch = e => {
     dispatch(axiosDataSearch(e.target.value, crud));
   };
-
-  if (crud.length)
-    crud.map((person, key) => {
-      const { id, name, email, company, position, join, status, city, country, image } = person;
+  console.log(categoryStates)
+  if (categoryStates?.categories?.length)
+  categoryStates?.categories?.map((category, key) => {
+      const { id,image, name, color,description,parent_category, created_at, updated_at } = category;
       return dataSource.push({
         key: key + 1,
-        name: (
-          <div className="record-img align-center-v">
-            <img
-              src={
-                image ? process.env.REACT_APP_BASE_URL + image : require('../../static/img/avatar/profileImage.png')
-              }
-              alt={id}
-            />
-            <span>
-              <span>{name}</span>
-              <span className="record-location">{city && country ? `${city},${country}` : ''}</span>
-            </span>
-          </div>
-        ),
-        email,
-        company,
-        position,
-        jdate: join,
-        status: <span className={`status ${status}`}>{status}</span>,
+        image: (image && <Avatar style={avatarStyle} src={image} size={60} />),
+        name,
+        color:(<div style={{backgroundColor:`${color}`,padding:5,borderRadius:5,textAlign:"center"}}>{color}</div>),
+        description,
+        parent_category,
+        created_at,
+        updated_at,
         action: (
           <div className="table-actions">
-            <Link className="edit" to={`/salon/salon/edit/${id}`}>
+            <Link className="edit" to={`/admin/categories/edit/${id}`}>
               <FeatherIcon icon="edit" size={14} />
             </Link>
             &nbsp;&nbsp;&nbsp;
@@ -95,44 +91,6 @@ const ViewPage = () => {
       });
     });
 
-  // const columns = [
-  //   {
-  //     title: 'Name',
-  //     dataIndex: 'name',
-  //     key: 'name',
-  //   },
-  //   {
-  //     title: 'Email',
-  //     dataIndex: 'email',
-  //     key: 'email',
-  //   },
-  //   {
-  //     title: 'Company',
-  //     dataIndex: 'company',
-  //     key: 'company',
-  //   },
-  //   {
-  //     title: 'Position',
-  //     dataIndex: 'position',
-  //     key: 'position',
-  //   },
-  //   {
-  //     title: 'Status',
-  //     dataIndex: 'status',
-  //     key: 'status',
-  //   },
-  //   {
-  //     title: 'Joining Date',
-  //     dataIndex: 'jdate',
-  //     key: 'jdate',
-  //   },
-  //   {
-  //     title: 'Actions',
-  //     dataIndex: 'action',
-  //     key: 'action',
-  //     width: '90px',
-  //   },
-  // ];
   const columns = [
     {
       title: 'Image',
@@ -163,11 +121,13 @@ const ViewPage = () => {
       title: 'Created At',
       dataIndex: 'created_at',
       key: 'created_at',
+      render: text => moment(text).fromNow(),
     },
     {
       title: 'Updated At',
       dataIndex: 'updated_at',
       key: 'updated_at',
+      render: text => moment(text).fromNow(),
     },
     {
       title: 'Actions',
@@ -224,7 +184,7 @@ const ViewPage = () => {
                     <Table
                       rowSelection={rowSelection}
                       pagination={{ pageSize: 10, showSizeChanger: true }}
-                      dataSource={categoryStates.categories}
+                      dataSource={dataSource}
                       columns={columns}
                     />
                   </TableWrapper>

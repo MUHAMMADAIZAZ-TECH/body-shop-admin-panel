@@ -7,7 +7,7 @@ import { PageHeader } from '../../../components/page-headers/page-headers';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { Button } from '../../../components/buttons/buttons';
 import { Main, BasicFormWrapper } from '../../styled';
-import { getsalonReview } from '../../../redux/salon/salonSlice';
+import { getSalonReview } from '../../../redux/salon/salonSlice';
 // import { getSalon } from '../../../redux/salon/salonSlice';
 
 const Edit = ({ match }) => {
@@ -21,7 +21,6 @@ const Edit = ({ match }) => {
     };
   });
   const [form] = Form.useForm();
-  // const [document, setdocument] = useState(null);
   const handleSubmit = async values => {
     try {
       await form.validateFields(); // Validate all form fields
@@ -42,7 +41,7 @@ const Edit = ({ match }) => {
     console.log(salon)
   }, [form, salon]);
   useEffect(() => {
-    dispatch(getsalonReview(parseInt(match.params.id,10)))
+    dispatch(getSalonReview(parseInt(match.params.id,10)))
   }, [dispatch, match.params.id]);
 
   return (
@@ -50,7 +49,7 @@ const Edit = ({ match }) => {
       <PageHeader
         buttons={[
           <Button className="btn-add_new" size="default" key="1" type="primary">
-            <Link key="1" to="/admin/crud/axios-view">
+            <Link key="1" to="/admin/salon/review-view">
               View All
             </Link>
           </Button>,
@@ -66,13 +65,13 @@ const Edit = ({ match }) => {
                 <Form name="multi-form" layout="vertical" style={{ width: '100%' }} form={form} onFinish={handleSubmit}>
                   <Row gutter={30}>
                     <Col sm={12} xs={24} className="mb-25">
-                      <Form.Item name="description" label="Description" >
+                      <Form.Item name="comment" label="Description" >
                         <Input.TextArea rows={5} placeholder="Enter Description" />
                       </Form.Item>
                     </Col>
                     <Col sm={12} xs={24} className="mb-25">
-                      <Form.Item name="availability_range" label="Availability Range" rules={[{ required: true, message: 'Please enter availibilty range' }]} >
-                        <Input placeholder="Enter Availability Range" />
+                      <Form.Item name="rating" label="Rate" rules={[{ required: true, message: 'Please enter rate' }]} >
+                        <Input placeholder="Enter Rate" />
                       </Form.Item>
                     </Col>
                   </Row>
@@ -82,16 +81,6 @@ const Edit = ({ match }) => {
                       justifyContent: 'flex-end',
                       alignItems: 'baseline'
                     }}>
-                      {/* <div style={{ marginRight: 30 }}>
-                      <Form.Item name="isApproved" >
-                      <Checkbox onChange={onChange}>Approved</Checkbox>
-                      </Form.Item>
-                      </div>
-                      <div style={{ marginRight: 30 }}>
-                      <Form.Item name="isActive" >
-                      <Checkbox onChange={onChange}>Available</Checkbox>
-                      </Form.Item>
-                      </div> */}
                       <Button
                         className="btn-cancel"
                         size="large"

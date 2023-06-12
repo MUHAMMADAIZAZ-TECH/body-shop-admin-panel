@@ -8,11 +8,11 @@ import { PageHeader } from '../../../components/page-headers/page-headers';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { Button } from '../../../components/buttons/buttons';
 import { Main, BasicFormWrapper } from '../../styled';
-import { getsalonReview } from '../../../redux/salon/salonSlice';
+import { getSalonReview } from '../../../redux/salon/salonSlice';
 // import { getSalon } from '../../../redux/salon/salonSlice';
 
 const { Option } = Select;
-const Edit = ({ match }) => {
+const AddNew = ({ match }) => {
   const dispatch = useDispatch();
   const { salon, isLoading } = useSelector(state => {
     return {
@@ -44,7 +44,7 @@ const Edit = ({ match }) => {
     console.log(salon)
   }, [form, salon]);
   useEffect(() => {
-    dispatch(getsalonReview(parseInt(match.params.id, 10)))
+    dispatch(getSalonReview(parseInt(match.params.id, 10)))
   }, [dispatch, match.params.id]);
 
   return (
@@ -52,7 +52,7 @@ const Edit = ({ match }) => {
       <PageHeader
         buttons={[
           <Button className="btn-add_new" size="default" key="1" type="primary">
-            <Link key="1" to="/admin/crud/axios-view">
+            <Link key="1" to="/admin/salon/availibility-hours-view">
               View All
             </Link>
           </Button>,
@@ -68,7 +68,7 @@ const Edit = ({ match }) => {
                 <Form name="multi-form" layout="vertical" style={{ width: '100%' }} form={form} onFinish={handleSubmit}>
                   <Row gutter={30}>
                     <Col sm={12} xs={24} className="mb-25">
-                    <Form.Item name="address" label="Day" initialValue="" rules={[{ required: true, message: 'Please select address' }]} >
+                    <Form.Item name="weekday" label="Day" initialValue="" rules={[{ required: true, message: 'Please select Day' }]} >
                         <Select size="large" className="sDash_fullwidth-select">
                           <Option value="">Please Select</Option>
                           <Option value="1">1</Option>
@@ -76,12 +76,12 @@ const Edit = ({ match }) => {
                           <Option value="3">3</Option>
                         </Select>
                       </Form.Item>
-                      <Form.Item name="description" label="Availibilty Hours" >
+                      <Form.Item name="availibility_hours" label="Availibilty Hours" >
                       <TimePicker.RangePicker className="sDash_fullwidth-select" use12Hours style={{ marginRight: '10px' }}/>
                       </Form.Item>
                     </Col>
                     <Col sm={12} xs={24} className="mb-25">
-                    <Form.Item name="address" label="Salon" initialValue="" rules={[{ required: true, message: 'Please select address' }]} >
+                    <Form.Item name="salon_id" label="Salon" initialValue="" rules={[{ required: true, message: 'Please select salon' }]} >
                         <Select size="large" className="sDash_fullwidth-select">
                           <Option value="">Please Select</Option>
                           <Option value="1">1</Option>
@@ -89,7 +89,7 @@ const Edit = ({ match }) => {
                           <Option value="3">3</Option>
                         </Select>
                       </Form.Item>
-                      <Form.Item name="name" label="Data" rules={[{ required: true, message: 'Please enter a name' }]}>
+                      <Form.Item name="name" label="Data" rules={[{ required: true, message: 'Please enter data' }]}>
                         <Input placeholder="Enter Data" />
                       </Form.Item>
                     </Col>
@@ -124,8 +124,8 @@ const Edit = ({ match }) => {
   );
 };
 
-Edit.propTypes = {
+AddNew.propTypes = {
   match: PropTypes.object,
 };
 
-export default Edit;
+export default AddNew;

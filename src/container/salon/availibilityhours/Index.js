@@ -68,7 +68,7 @@ const ViewPage = () => {
         updated_at,
         action: (
           <div className="table-actions">
-            <Link className="edit" to={`/admin/crud/edit/${id}`}>
+            <Link className="edit" to={`/admin/salon/availibility-hours/edit/${id}`}>
               <FeatherIcon icon="edit" size={14} />
             </Link>
             &nbsp;&nbsp;&nbsp;

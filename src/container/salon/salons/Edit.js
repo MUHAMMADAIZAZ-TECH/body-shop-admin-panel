@@ -100,7 +100,7 @@ const Edit = ({ match }) => {
       <PageHeader
         buttons={[
           <Button className="btn-add_new" size="default" key="1" type="primary">
-            <Link key="1" to="/admin/crud/axios-view">
+            <Link key="1" to="/admin/salon/salon-view">
               View All
             </Link>
           </Button>,

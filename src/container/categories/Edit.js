@@ -1,39 +1,72 @@
 import React, { useEffect, useState } from 'react';
-import { Row, Col, Form, Input, Select, DatePicker, Radio, Upload, Spin } from 'antd';
+import { Row, Col, Form, Input, Upload,Modal } from 'antd';
 import { Link } from 'react-router-dom';
+import { PlusOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
-import FeatherIcon from 'feather-icons-react';
-import moment from 'moment';
 import PropTypes from 'prop-types';
-import { RecordFormWrapper } from './Style';
 import { PageHeader } from '../../components/page-headers/page-headers';
 import { Cards } from '../../components/cards/frame/cards-frame';
 import { Button } from '../../components/buttons/buttons';
 import { Main, BasicFormWrapper } from '../styled';
-import { axiosDataUpdate, axiosFileUploder, axiosDataSingle } from '../../redux/crud/axios/actionCreator';
-import Heading from '../../components/heading/heading';
+import {  axiosDataSingle } from '../../redux/crud/axios/actionCreator';
 
-const { Option } = Select;
-const dateFormat = 'YYYY/MM/DD';
+const getBase64 = (file) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (error) => reject(error);
+  });
+  const uploadButton = (
+    <div><PlusOutlined />
+      <div style={{ marginTop: 8, }}>Upload</div>
+    </div>
+  );
 const Edit = ({ match }) => {
   const dispatch = useDispatch();
-
-  const { crud, isLoading, url, isFileLoading } = useSelector(state => {
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState('');
+  const [previewTitle, setPreviewTitle] = useState('');
+  const { salon, isLoading } = useSelector(state => {
     return {
-      crud: state.SingleAxiosCrud.data,
+      salon: state.salonStates.salon,
       isLoading: state.AxiosCrud.loading,
       url: state.AxiosCrud.url,
-      isFileLoading: state.AxiosCrud.fileLoading,
+      salonState: state.salonStates
     };
   });
-  const [state, setState] = useState({
-    join: null,
-  });
   const [form] = Form.useForm();
+  const [files, setfiles] = useState([]);
+  const handleCancel = () => setPreviewOpen(false);
+  const handlePreview = async (file) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj);
+    }
+    setPreviewImage(file.url || file.preview);
+    setPreviewOpen(true);
+    setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1));
+  };
+  const handleChange = ({ fileList: newFileList, }) => {
+    const fileList  = newFileList?.map((file)=>{
+      return{...file, status:'done'}
+    })
+    setfiles(fileList)
+  };
+  const handleSubmit = async values => {
+    try {
+      await form.validateFields(); // Validate all form fields
+      // dispatch(createSalon({ ...values, files }));
+      console.log(values)
+    } catch (error) {
+      console.log('Validation error:', error);
+    }
+    // form.resetFields();
+  };
 
   useEffect(() => {
-    form.setFieldsValue(crud);
-  }, [form, crud]);
+    // form.setFieldsValue(salon);
+    console.log(salon)
+  }, [form, salon]);
 
   useEffect(() => {
     if (axiosDataSingle) {
@@ -41,168 +74,91 @@ const Edit = ({ match }) => {
     }
   }, [dispatch, match.params.id]);
 
-  const handleSubmit = values => {
-    dispatch(
-      axiosDataUpdate(match.params.id, {
-        ...values,
-        image: url,
-        join: state.join,
-      }),
-    );
-  };
-
-  const onChange = (date, dateString) => {
-    setState({ join: dateString });
-  };
-
-  const props = {
-    name: 'file',
-    action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-    multiple: false,
-    showUploadList: false,
-    headers: {
-      authorization: 'authorization-text',
-    },
-    onChange(info) {
-      if (info.file.status !== 'uploading') {
-        dispatch(axiosFileUploder(info.file.originFileObj));
-      }
-      if (info.file.status === 'done') {
-        // message.success(`${info.file.name} file uploaded successfully`);
-      } else if (info.file.status === 'error') {
-        // message.error(`${info.file.name} file upload failed.`);
-      }
-    },
-  };
+  useEffect(() => {
+  }, [dispatch, match.params.id]);
 
   return (
     <>
-      <PageHeader
-        buttons={[
-          <Button className="btn-add_new" size="default" key="1" type="primary">
-            <Link key="1" to="/admin/crud/axios-view">
-              View All
-            </Link>
-          </Button>,
-        ]}
-        ghost
-        title="Update Your Recored"
-      />
-      <Main>
-        <Row gutter={15}>
-          <Col xs={24}>
-            <RecordFormWrapper>
-              <Cards headless>
-                {crud === null ? (
-                  <div className="record-spin">
-                    <Spin />
+    <PageHeader
+      buttons={[
+        <Button className="btn-add_new" size="default" key="1" type="primary">
+          <Link key="1" to="/admin/categories/category-view">
+            View All
+          </Link>
+        </Button>,
+      ]}
+      ghost
+      title="Categories | Categories Management"
+    />
+    <Main>
+      <Row gutter={15}>
+        <Col xs={24}>
+          <BasicFormWrapper>
+            <Cards title="Update Category">
+              <Form name="multi-form" layout="vertical" style={{ width: '100%' }} form={form} onFinish={handleSubmit}>
+                <Row gutter={30}>
+                  <Col sm={12} xs={24} className="mb-25">
+                  <Upload
+                      listType="picture-card"
+                      fileList={files}
+                      onPreview={handlePreview}
+                      onChange={handleChange}
+                      name='files'
+                    >
+                      {files.length >= 1 ? null : uploadButton}
+                    </Upload>
+                    {/* </Form.Item> */}
+                 
+                    <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancel}>
+                      <img
+                        alt="example"
+                        style={{
+                          width: '100%',
+                        }}
+                        src={previewImage}
+                      />
+                    </Modal>
+                    <Form.Item name="name" label="Name" rules={[{ required: true, message: 'Please enter Name' }]}>
+                      <Input placeholder="Enter Name" />
+                    </Form.Item>
+                  </Col>
+                  <Col sm={12} xs={24} className="mb-25">
+                  <Form.Item name="color" label="Color" rules={[{ required: true, message: 'Please enter color' }]}>
+                      <Input placeholder="Enter Color" />
+                    </Form.Item>
+                  <Form.Item name="description" label="Description" >
+                      <Input.TextArea rows={5} placeholder="Enter Description" />
+                    </Form.Item>
+                  
+                  </Col>
+                </Row>
+                <div className="record-form-actions text-right">
+                  <div style={{
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                    alignItems: 'baseline'
+                  }}>
+                    <Button
+                      className="btn-cancel"
+                      size="large"
+                      onClick={() => {
+                        return form.resetFields();
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                    <Button size="default" htmlType="Save" type="primary">
+                      {isLoading ? 'Loading...' : 'Submit'}
+                    </Button>
                   </div>
-                ) : (
-                  <Row justify="center">
-                    <Col xl={10} md={16} xs={24}>
-                      <figure className="pro-image align-center-v mt-25">
-                        {crud !== null && (
-                          <img
-                            src={
-                              url !== null
-                                ? `https://demo.jsnorm.com/laravel/strikingdash/${url}`
-                                : crud.image !== null
-                                ? `https://demo.jsnorm.com/laravel/strikingdash/${crud.image}`
-                                : require('../../static/img/avatar/profileImage.png')
-                            }
-                            alt={crud.id}
-                          />
-                        )}
-
-                        <figcaption>
-                          <Upload {...props}>
-                            <Link className="upload-btn" to="#">
-                              <FeatherIcon icon="camera" size={16} />
-                            </Link>
-                          </Upload>
-                          <div className="info">
-                            <Heading as="h4">Profile Photo</Heading>
-                          </div>
-                          {isFileLoading && (
-                            <div className="isUploadSpain">
-                              <Spin />
-                            </div>
-                          )}
-                        </figcaption>
-                      </figure>
-                      <BasicFormWrapper>
-                        {crud.name !== undefined ? (
-                          <Form
-                            className="add-record-form"
-                            style={{ width: '100%' }}
-                            layout="vertical"
-                            form={form}
-                            name="edit"
-                            onFinish={handleSubmit}
-                            initialValues={crud}
-                          >
-                            <Form.Item name="name" label="Name">
-                              <Input />
-                            </Form.Item>
-                            <Form.Item name="email" rules={[{ type: 'email' }]} label="Email">
-                              <Input />
-                            </Form.Item>
-                            <Form.Item name="country" label="Country">
-                              <Select style={{ width: '100%' }}>
-                                <Option value="">Please Select</Option>
-                                <Option value="bangladesh">Bangladesh</Option>
-                                <Option value="india">India</Option>
-                                <Option value="pakistan">Pakistan</Option>
-                                <Option value="srilanka">Srilanka</Option>
-                              </Select>
-                            </Form.Item>
-                            <Form.Item name="city" label="City">
-                              <Select style={{ width: '100%' }}>
-                                <Option value="">Please Select</Option>
-                                <Option value="dhaka">Dhaka</Option>
-                                <Option value="mymensingh">Mymensingh</Option>
-                                <Option value="khulna">Khulna</Option>
-                                <Option value="barisal">Barisal</Option>
-                              </Select>
-                            </Form.Item>
-                            <Form.Item name="company" label="Company">
-                              <Input />
-                            </Form.Item>
-                            <Form.Item name="position" label="Position">
-                              <Input />
-                            </Form.Item>
-                            <Form.Item label="Joining Date">
-                              <DatePicker
-                                defaultValue={moment(`${state.join === null ? crud.join : state.join}`, dateFormat)}
-                                onChange={onChange}
-                                style={{ width: '100%' }}
-                                format={dateFormat}
-                              />
-                            </Form.Item>
-                            <Form.Item name="status" label="Status">
-                              <Radio.Group>
-                                <Radio value="active">Active</Radio>
-                                <Radio value="deactivated">Deactivated</Radio>
-                                <Radio value="blocked">Blocked</Radio>
-                              </Radio.Group>
-                            </Form.Item>
-                            <div className="record-form-actions text-right">
-                              <Button htmlType="submit" type="primary">
-                                {isLoading ? 'Loading...' : 'Update'}
-                              </Button>
-                            </div>
-                          </Form>
-                        ) : null}
-                      </BasicFormWrapper>
-                    </Col>
-                  </Row>
-                )}
-              </Cards>
-            </RecordFormWrapper>
-          </Col>
-        </Row>
-      </Main>
-    </>
+                </div>
+              </Form>
+            </Cards>
+          </BasicFormWrapper>
+        </Col>
+      </Row>
+    </Main>
+  </>
   );
 };
 
