@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
-import { Row, Modal, Col, Form, Input, Select, Upload,Checkbox } from 'antd';
+import { Row, Modal, Col, Form, Input, Select, Upload,Checkbox, TimePicker } from 'antd';
 import { Link } from 'react-router-dom';
 import { useSelector,useDispatch } from 'react-redux';
 import { PageHeader } from '../../../components/page-headers/page-headers';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { Button } from '../../../components/buttons/buttons';
 import { Main, BasicFormWrapper } from '../../styled';
-import { createSalon } from '../../../redux/salon/salonSlice';
+import { getSalons } from '../../../redux/salon/salonSlice';
+import { getCategories } from '../../../redux/categories/categoriesSlice';
 
 const { Option } = Select;
 
@@ -21,32 +22,30 @@ const getBase64 = (file) =>
 const AddNew = () => {
   const dispatch = useDispatch();
   const [previewOpen, setPreviewOpen] = useState(false);
+  const [is_available, setis_available] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   const [previewTitle, setPreviewTitle] = useState('');
-  const { isLoading } = useSelector(state => {
+  const { isLoading,salonState,categoryState } = useSelector(state => {
     return {
       isLoading: state.AxiosCrud.loading,
       url: state.AxiosCrud.url,
       isFileLoading: state.AxiosCrud.fileLoading,
+      salonState:state.salonStates,
+      categoryState:state.categoryStates
     };
   });
-
+  console.log(salonState)
   const [form] = Form.useForm();
   const [files, setfiles] = useState([]);
-  // const [document, setdocument] = useState(null);
   const handleSubmit = async values => {
     try {
       await form.validateFields(); // Validate all form fields
-      dispatch(createSalon({ ...values, files }));
+      console.log(values,files[0].originFileObj,is_available)
     } catch (error) {
       console.log('Validation error:', error);
     }
     // form.resetFields();
   };
-
-  // const onChange = (date, value) => {
-  //   console.log(value)
-  // };
 
   const handleCancel = () => setPreviewOpen(false);
   const handlePreview = async (file) => {
@@ -68,7 +67,15 @@ const AddNew = () => {
       <div style={{ marginTop: 8, }}>Upload</div>
     </div>
   );
-
+  const onChange = (e) => {
+    setis_available(e.target.checked)
+  };
+  console.log(categoryState)
+    useEffect(()=>{
+      
+      dispatch(getSalons())
+      dispatch(getCategories())
+    },[])
   return (
     <>
       <PageHeader
@@ -88,7 +95,6 @@ const AddNew = () => {
                 <Form name="multi-form" layout="vertical" style={{ width: '100%' }} form={form} onFinish={handleSubmit}>
                   <Row gutter={30}>
                     <Col sm={12} xs={24} className="mb-25">
-                    {/* <Form.Item name="image" label="Images" rules={[{ required: true, message: 'Please select images' }]}> */}
                     <Upload
                         listType="picture-card"
                         fileList={files}
@@ -96,9 +102,8 @@ const AddNew = () => {
                         onChange={handleChange}
                         name='files'
                       >
-                        {files.length >= 5 ? null : uploadButton}
+                        {files.length >= 1 ? null : uploadButton}
                       </Upload>
-                      {/* </Form.Item> */}
                    
                       <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancel}>
                         <img
@@ -112,31 +117,32 @@ const AddNew = () => {
                       <Form.Item name="name" label="Name" rules={[{ required: true, message: 'Please enter a name' }]}>
                         <Input placeholder="Enter Name" />
                       </Form.Item>
-                      <Form.Item name="salon" label="Salon" rules={[{ required: true, message: 'Please enter salon' }]}>
-                        <Input placeholder="Enter Salon" />
+                      <Form.Item name="salon_id" label="Salon" rules={[{ required: true, message: 'Please select salon' }]}>
+                      <Select size="large" className="sDash_fullwidth-select">
+                          <Option value="">Please Select</Option>
+                         {salonState.approvedSalons && salonState.approvedSalons.length>0 && salonState.approvedSalons?.map((salon)=><Option value={salon.id}>{salon.name}</Option>) }
+                        </Select>
                       </Form.Item>
                      
                       <Form.Item name="price" label="Price" rules={[{ required: true, message: 'Please enter price' }]}>
-                        <Input placeholder="Enter Price" />
+                        <Input placeholder="Enter Price" type='number' addonAfter="$" />
                       </Form.Item>
                     </Col>
                     <Col sm={12} xs={24} className="mb-25">
-                    <Form.Item name="category" label="Category" initialValue="" rules={[{ required: true, message: 'Please enter Category' }]} >
+                    <Form.Item name="category_id" label="Category" initialValue="" rules={[{ required: true, message: 'Please enter Category' }]} >
                         <Select size="large" className="sDash_fullwidth-select">
                           <Option value="">Please Select</Option>
-                          <Option value="1">1</Option>
-                          <Option value="2">2</Option>
-                          <Option value="3">3</Option>
+                          {categoryState.categories && categoryState.categories.length>0 && categoryState.categories?.map((category)=><Option value={category.id}>{category.name}</Option>) }
                         </Select>
                       </Form.Item>
-                      <Form.Item name="duration" label="Duration" rules={[{ required: true, message: 'Please enter duration' }]}>
-                        <Input placeholder="Enter Duration" />
+                      <Form.Item name="duration" label="Duration" rules={[{ required: true, message: 'Please select duration' }]}>
+                      <TimePicker style={{ marginRight: '10px' }} className="sDash_fullwidth-select"/>
                       </Form.Item>
                     <Form.Item name="description" label="Description" >
                         <Input.TextArea rows={5} placeholder="Enter Description" />
                       </Form.Item>
-                      <Form.Item name="available" label="Available" >
-                      <Checkbox defaultChecked>Enabled</Checkbox>
+                      <Form.Item name="is_available" label="Available" >
+                      <Checkbox value={is_available} name="is_available" onChange={onChange}>Enabled</Checkbox>
                       </Form.Item>
                     </Col>
                   </Row>
