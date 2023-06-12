@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { Row, Col, Table, Spin, Avatar } from 'antd';
+import React, { useEffect, useState,useRef } from 'react';
+import { Row, Col, Table, Spin, Avatar,Input,Space } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { SearchOutlined } from '@ant-design/icons';
 import moment from 'moment';
+import Highlighter from 'react-highlight-words';
 import FeatherIcon from 'feather-icons-react';
 import { RecordViewWrapper } from './Style';
 import { Main, TableWrapper } from '../styled';
@@ -25,6 +27,113 @@ const avatarStyle = {
   textAlign: 'center', // Horizontally center the content
 };
 const ViewPage = () => {
+  const [searchText, setSearchText] = useState('');
+  const [searchedColumn, setSearchedColumn] = useState('');
+  const searchInput = useRef(null);
+  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
+  };
+  const handleReset = (clearFilters) => {
+    clearFilters();
+    setSearchText('');
+  };
+  const getColumnSearchProps = (dataIndex) => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
+      <div
+        style={{
+          padding: 8,
+        }}
+      // onKeyDown={(e) => e.stopPropagation()}
+      >
+        <Input
+          ref={searchInput}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          style={{
+            marginBottom: 8,
+            display: 'block',
+          }}
+        />
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+            icon={<SearchOutlined />}
+            size="small"
+            style={{
+              width: 90,
+            }}
+          >
+            Search
+          </Button>
+          <Button
+
+            onClick={() => clearFilters && handleReset(clearFilters)}
+            size="small"
+            style={{
+              width: 90,
+            }}
+          >
+            Reset
+          </Button>
+          <Button
+            type="primary"
+            size="small"
+            onClick={() => {
+              confirm({
+                closeDropdown: false,
+              });
+              setSearchText(selectedKeys[0]);
+              setSearchedColumn(dataIndex);
+            }}
+          >
+            Filter
+          </Button>
+          <Button
+            type="primary"
+            size="small"
+            onClick={() => {
+              close();
+            }}
+          >
+            close
+          </Button>
+        </Space>
+      </div>
+    ),
+    filterIcon: (filtered) => (
+      <SearchOutlined
+        style={{
+          color: filtered ? '#1677ff' : undefined,
+        }}
+      />
+    ),
+    onFilter: (value, record) =>
+      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+    onFilterDropdownOpenChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.current?.select(), 100);
+      }
+    },
+    render: (text) =>
+      searchedColumn === dataIndex ? (
+        <Highlighter
+          highlightStyle={{
+            backgroundColor: '#ffc069',
+            padding: 0,
+          }}
+          searchWords={[searchText]}
+          autoEscape
+          textToHighlight={text ? text.toString() : ''}
+        />
+      ) : (
+        text
+      ),
+  });
   const dispatch = useDispatch();
   const { crud, isLoading ,categoryStates} = useSelector(state => {
     return {
@@ -96,37 +205,53 @@ const ViewPage = () => {
       title: 'Image',
       dataIndex: 'image',
       key: 'image',
+      sorter: (a, b) => a.image.length - b.image.length,
+      sortDirections: ['descend', 'ascend'],
     },
     {
       title: 'Name',
       dataIndex: 'name',
       key: 'name',
+      sorter: (a, b) => a.name.length - b.name.length,
+      sortDirections: ['descend', 'ascend'],
+      ...getColumnSearchProps('name'),
     },
     {
       title: 'Color',
       dataIndex: 'color',
       key: 'color',
+      sorter: (a, b) => a.color.length - b.color.length,
+      sortDirections: ['descend', 'ascend'],
+      ...getColumnSearchProps('color'),
     },
     {
       title: 'Description',
       dataIndex: 'description',
       key: 'description',
+      sorter: (a, b) => a.description.length - b.description.length,
+      sortDirections: ['descend', 'ascend'],
+      ...getColumnSearchProps('description'),
     },
     {
       title: 'Parent Category',
       dataIndex: 'parent_category',
       key: 'parent_category',
+      ...getColumnSearchProps('parent_category'),
     },
     {
       title: 'Created At',
       dataIndex: 'created_at',
       key: 'created_at',
+      sorter: (a, b) => a.created_at.length - b.created_at.length,
+      sortDirections: ['descend', 'ascend'],
       render: text => moment(text).fromNow(),
     },
     {
       title: 'Updated At',
       dataIndex: 'updated_at',
       key: 'updated_at',
+      sorter: (a, b) => a.updated_at.length - b.updated_at.length,
+      sortDirections: ['descend', 'ascend'],
       render: text => moment(text).fromNow(),
     },
     {

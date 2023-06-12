@@ -95,34 +95,34 @@ const ViewPage = () => {
 
   const columns = [
     {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
+      title: 'Code',
+      dataIndex: 'code',
+      key: 'code',
     },
     {
-      title: 'Email',
-      dataIndex: 'email',
-      key: 'email',
+      title: 'Discount',
+      dataIndex: 'discount',
+      key: 'discount',
     },
     {
-      title: 'Company',
-      dataIndex: 'company',
-      key: 'company',
+      title: 'Description',
+      dataIndex: 'description',
+      key: 'description',
     },
     {
-      title: 'Position',
-      dataIndex: 'position',
-      key: 'position',
+      title: 'Expires At',
+      dataIndex: 'expire_at',
+      key: 'expire_at',
     },
     {
-      title: 'Status',
-      dataIndex: 'status',
-      key: 'status',
+      title: 'Enabled',
+      dataIndex: 'enabled',
+      key: 'enabled',
     },
     {
-      title: 'Joining Date',
-      dataIndex: 'jdate',
-      key: 'jdate',
+      title: 'Updated At',
+      dataIndex: 'updatedAt',
+      key: 'updatedAt',
     },
     {
       title: 'Actions',

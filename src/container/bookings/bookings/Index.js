@@ -95,34 +95,54 @@ const ViewPage = () => {
 
   const columns = [
     {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
+      title: 'ID',
+      dataIndex: 'id',
+      key: 'id',
     },
     {
-      title: 'Email',
-      dataIndex: 'email',
-      key: 'email',
+      title: 'Services',
+      dataIndex: 'serviceName',
+      key: 'serviceName',
     },
     {
-      title: 'Company',
-      dataIndex: 'company',
-      key: 'company',
+      title: 'Salon',
+      dataIndex: 'salon_id',
+      key: 'salon_id',
     },
     {
-      title: 'Position',
-      dataIndex: 'position',
-      key: 'position',
+      title: 'Customer',
+      dataIndex: 'user_name',
+      key: 'user_name',
     },
     {
-      title: 'Status',
-      dataIndex: 'status',
-      key: 'status',
+      title: 'Address',
+      dataIndex: 'salon_address',
+      key: 'salon_address',
     },
     {
-      title: 'Joining Date',
-      dataIndex: 'jdate',
-      key: 'jdate',
+      title: 'Booking Status',
+      dataIndex: 'booking_status',
+      key: 'bookingstatus',
+    },
+    {
+      title: 'Payment Status',
+      dataIndex: 'is_paid',
+      key: 'is_paid',
+    },
+    {
+      title: 'Coupon',
+      dataIndex: 'couponCode',
+      key: 'couponCode',
+    },
+    {
+      title: 'Total',
+      dataIndex: 'total_amount',
+      key: 'total_amount',
+    },
+    {
+      title: 'Booking At',
+      dataIndex: 'appointmentDate',
+      key: 'appointmentDate',
     },
     {
       title: 'Actions',

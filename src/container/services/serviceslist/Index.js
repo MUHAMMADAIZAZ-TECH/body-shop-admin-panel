@@ -82,8 +82,8 @@ const ViewPage = () => {
 
   console.log(servicesStates?.services)
   if (servicesStates?.services?.length)
-  servicesStates?.services?.map((salon, key) => {
-    const { id, image, name, salon_name, price, category_name, is_available, updated_at } = salon;
+  servicesStates?.services?.map((services, key) => {
+    const { id, image, name, salon_name, price, category_name, is_available, updated_at } = services;
     return dataSource.push({
       key: key + 1,
       image: (image && <Avatar style={avatarStyle} src={image} size={60}/>),
@@ -95,7 +95,7 @@ const ViewPage = () => {
       updated_at,
       action: (
         <div className="table-actions">
-          <Link className="edit" to={`/admin/salon/edit/${id}`} onClick={() => handleEdit(salon)}>
+          <Link className="edit" to={`/admin/services/edit/${id}`} onClick={() => handleEdit(services)}>
             <FeatherIcon icon="edit" size={14} />
           </Link>
           &nbsp;&nbsp;&nbsp;
@@ -104,7 +104,7 @@ const ViewPage = () => {
           </Link>
         </div>
       ),
-      salon
+      services
     });
   });
   const getColumnSearchProps = (dataIndex) => ({
