@@ -8,7 +8,6 @@ import { PageHeader } from '../../components/page-headers/page-headers';
 import { Cards } from '../../components/cards/frame/cards-frame';
 import { Button } from '../../components/buttons/buttons';
 import { Main, BasicFormWrapper } from '../styled';
-import {  axiosDataSingle } from '../../redux/crud/axios/actionCreator';
 import { getCategory, updateCategory } from '../../redux/categories/categoriesSlice';
 
 const getBase64 = (file) =>
@@ -78,12 +77,6 @@ const Edit = ({ match }) => {
       }
     }
   }, [form, category]);
-
-  useEffect(() => {
-    if (axiosDataSingle) {
-      dispatch(axiosDataSingle(parseInt(match.params.id, 10)));
-    }
-  }, [dispatch, match.params.id]);
 
   useEffect(() => {
     dispatch(getCategory(match.params.id))

@@ -2,10 +2,12 @@ import { createSlice,createAsyncThunk } from "@reduxjs/toolkit";
 import { getservvices,getservice,createservice,deleteservice,updateservice } from "./servicesApis";
 
 const initialState = {
+    success:false,
     loading:false,
     error:false,
     message:"",
-    services:[]
+    services:[],
+    service:null
 }
 export const getServices = createAsyncThunk(
     'get/getServices',
@@ -18,7 +20,6 @@ export const getService = createAsyncThunk(
   'get/getService',
   async (id) => {
       const response = await getservice(id)
-      console.log(response)
       return response;
   }
 );
@@ -51,6 +52,7 @@ const servicesSlice = createSlice({
     name:'servicesSlice',
     initialState,
     reducers:{
+      
     },
     extraReducers: (builder) => {
         builder
@@ -60,7 +62,6 @@ const servicesSlice = createSlice({
           })
           .addCase(getServices.fulfilled, (state, action) => {
             state.loading = false;
-            state.message = action.payload.status;
             state.services = action.payload.data;
           })
           .addCase(getServices.rejected, (state, action) => {
@@ -75,8 +76,7 @@ const servicesSlice = createSlice({
           })
           .addCase(getService.fulfilled, (state, action) => {
             state.loading = false;
-            state.message = action.payload.status;
-            state.category = action.payload.data;
+            state.service = action.payload.data;
           })
           .addCase(getService.rejected, (state, action) => {
             state.loading = false;
@@ -108,6 +108,7 @@ const servicesSlice = createSlice({
           })
           .addCase(updateService.fulfilled, (state) => {
             state.loading = false;
+            state.service = null;
             state.message = "Successfully Updated";
             state.success = true;
           })

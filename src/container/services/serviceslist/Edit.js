@@ -1,14 +1,17 @@
-import React, { useEffect,useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
-import { Row, Col, Form, Input, Select, Upload,Modal,Checkbox } from 'antd';
+import { Row, Col, Form, Input, Select, Upload, Modal, Checkbox, TimePicker } from 'antd';
 import { Link } from 'react-router-dom';
+import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { PageHeader } from '../../../components/page-headers/page-headers';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { Button } from '../../../components/buttons/buttons';
 import { Main, BasicFormWrapper } from '../../styled';
-import {  axiosDataSingle } from '../../../redux/crud/axios/actionCreator';
+import { getService, updateService } from '../../../redux/services/servicesSlice';
+import { getSalons } from '../../../redux/salon/salonSlice';
+import { getCategories } from '../../../redux/categories/categoriesSlice';
 
 const { Option } = Select;
 const getBase64 = (file) =>
@@ -20,32 +23,42 @@ const getBase64 = (file) =>
   });
 const Edit = ({ match }) => {
   const dispatch = useDispatch();
+  const [is_available, setis_available] = useState(false);
+  const [enable_customer_booking, setenable_customer_booking] = useState(false);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   const [previewTitle, setPreviewTitle] = useState('');
-  const { crud, isLoading } = useSelector(state => {
+  const { isLoading, servicesStates, salonState, categoryState } = useSelector(state => {
     return {
-      crud: state.SingleAxiosCrud.data,
       isLoading: state.AxiosCrud.loading,
       url: state.AxiosCrud.url,
       isFileLoading: state.AxiosCrud.fileLoading,
+      servicesStates: state.servicesStates,
+      salonState: state.salonStates,
+      categoryState: state.categoryStates
     };
   });
+  console.log(servicesStates)
   const [form] = Form.useForm();
   const [files, setfiles] = useState([]);
-  useEffect(() => {
-    form.setFieldsValue(crud);
-  }, [form, crud]);
 
-  useEffect(() => {
-    if (axiosDataSingle) {
-      dispatch(axiosDataSingle(parseInt(match.params.id, 10)));
+  const handleSubmit = async values => {
+    try {
+      await form.validateFields(); // Validate all form fields
+      console.log(values,files[0].originFileObj,is_available)
+      dispatch(updateService({
+        id:match.params.id,
+        ...values,
+        duration:values.duration.format('HH:mm:ss'),
+        file:files[0].originFileObj,
+        is_available,
+        enable_customer_booking
+      }))
+      // form.resetFields();
+    } catch (error) {
+      console.log('Validation error:', error);
     }
-  }, [dispatch, match.params.id]);
 
-  const handleSubmit = values => {
-   console.log(values)
-   
   };
   const handleCancel = () => setPreviewOpen(false);
   const handlePreview = async (file) => {
@@ -57,8 +70,8 @@ const Edit = ({ match }) => {
     setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1));
   };
   const handleChange = ({ fileList: newFileList, }) => {
-    const fileList  = newFileList?.map((file)=>{
-      return{...file, status:'done'}
+    const fileList = newFileList?.map((file) => {
+      return { ...file, status: 'done' }
     })
     setfiles(fileList)
   };
@@ -67,104 +80,135 @@ const Edit = ({ match }) => {
       <div style={{ marginTop: 8, }}>Upload</div>
     </div>
   );
+  useEffect(() => {
+    if (servicesStates.service !== null) {
+      form.setFieldsValue(servicesStates.service);
+      if (servicesStates.service.duration) {
+        const durationMoment = moment.duration(servicesStates.service.duration);
+        const durationAsMoment = moment.utc().startOf('day').add(durationMoment);
+        form.setFieldsValue({ duration: durationAsMoment });
+      }
+      if (servicesStates.service.image !== null || servicesStates.service.image !== "") {
+        setfiles([{
+          uid: '-1',
+          name: 'image.png',
+          status: 'done',
+          url: servicesStates.service.image,
+        }])
+      }
+    }
+  }, [form, servicesStates.service]);
+  useEffect(() => {
+    dispatch(getService(match.params.id))
+    dispatch(getSalons())
+    dispatch(getCategories())
+  }, [dispatch, match.params.id])
+  console.log(is_available)
   return (
     <>
-    <PageHeader
-      buttons={[
-        <Button className="btn-add_new" size="default" key="1" type="primary">
-          <Link to="/admin/services/services-list-view">View All</Link>
-        </Button>,
-      ]}
-      ghost
-      title="Services | Services Management"
-    />
-    <Main>
-      <Row gutter={15}>
-        <Col xs={24}>
-          <BasicFormWrapper>
-            <Cards title="Update Service">
-              <Form name="multi-form" layout="vertical" style={{ width: '100%' }} form={form} onFinish={handleSubmit}>
-                <Row gutter={30}>
-                  <Col sm={12} xs={24} className="mb-25">
-                  {/* <Form.Item name="image" label="Images" rules={[{ required: true, message: 'Please select images' }]}> */}
-                  <Upload
-                      listType="picture-card"
-                      fileList={files}
-                      onPreview={handlePreview}
-                      onChange={handleChange}
-                      name='files'
-                    >
-                      {files.length >= 5 ? null : uploadButton}
-                    </Upload>
-                    {/* </Form.Item> */}
-                 
-                    <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancel}>
-                      <img
-                        alt="example"
-                        style={{
-                          width: '100%',
+      <PageHeader
+        buttons={[
+          <Button className="btn-add_new" size="default" key="1" type="primary">
+            <Link to="/admin/services/services-list-view">View All</Link>
+          </Button>,
+        ]}
+        ghost
+        title="Services | Services Management"
+      />
+      <Main>
+        <Row gutter={15}>
+          <Col xs={24}>
+            <BasicFormWrapper>
+              <Cards title="Update Service">
+                <Form name="multi-form" layout="vertical" style={{ width: '100%' }} form={form} onFinish={handleSubmit}>
+                  <Row gutter={30}>
+                    <Col sm={12} xs={24} className="mb-25">
+                      <Upload
+                        listType="picture-card"
+                        fileList={files}
+                        onPreview={handlePreview}
+                        onChange={handleChange}
+                        name='files'
+                      >
+                        {files.length >= 1 ? null : uploadButton}
+                      </Upload>
+
+                      <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancel}>
+                        <img
+                          alt="example"
+                          style={{
+                            width: '100%',
+                          }}
+                          src={previewImage}
+                        />
+                      </Modal>
+                      <Form.Item name="name" label="Name" rules={[{ required: true, message: 'Please enter a name' }]}>
+                        <Input placeholder="Enter Name" />
+                      </Form.Item>
+                      <Form.Item name="salon_id" label="Salon" rules={[{ required: true, message: 'Please select salon' }]}>
+                        <Select size="large" className="sDash_fullwidth-select">
+                          <Option value="">Please Select</Option>
+                          {salonState.approvedSalons && salonState.approvedSalons.length > 0 && salonState.approvedSalons?.map((salon) => <Option value={salon.id}>{salon.name}</Option>)}
+                        </Select>
+                      </Form.Item>
+
+                      <Form.Item name="price" label="Price" rules={[{ required: true, message: 'Please enter price' }]}>
+                        <Input placeholder="Enter Price" type='number' addonAfter="$" />
+                      </Form.Item>
+                    </Col>
+                    <Col sm={12} xs={24} className="mb-25">
+                      <Form.Item name="category_id" label="Category" initialValue="" rules={[{ required: true, message: 'Please enter Category' }]} >
+                        <Select size="large" className="sDash_fullwidth-select">
+                          <Option value="">Please Select</Option>
+                          {categoryState.categories && categoryState.categories.length > 0 && categoryState.categories?.map((category) => <Option value={category.id}>{category.name}</Option>)}
+                        </Select>
+                      </Form.Item>
+                      <Form.Item name="duration" label="Duration" rules={[{ required: true, message: 'Please select duration' }]}>
+                        <TimePicker style={{ marginRight: '10px' }} className="sDash_fullwidth-select" format="HH:mm:ss" onChange={(time) => {
+                          form.setFieldsValue({ duration: time });
+                        }} />
+                      </Form.Item>
+                      <Form.Item name="description" label="Description" >
+                        <Input.TextArea rows={5} placeholder="Enter Description" />
+                      </Form.Item>
+                      <div style={{display:'flex'}}>
+                      <Form.Item name="is_available" valuePropName="checked" >
+                      <Checkbox value={is_available} defaultChecked={servicesStates?.service?.is_available === 1} name="is_available" onChange={(e)=>setis_available(e.target.checked)}>Available</Checkbox>
+                      </Form.Item>
+                      <Form.Item name="enable_customer_booking" valuePropName="checked">
+                      <Checkbox value={enable_customer_booking} defaultChecked={servicesStates?.service?.enable_customer_booking === 1} name="enable_customer_booking" onChange={(e)=>setenable_customer_booking(e.target.checked)}>Enabled</Checkbox>
+                      </Form.Item>
+                      </div>
+                     
+                    </Col>
+                  </Row>
+                  <div className="record-form-actions text-right">
+                    <div style={{
+                      display: 'flex',
+                      justifyContent: 'flex-end',
+                      alignItems: 'baseline'
+                    }}>
+                      <Button
+                        className="btn-cancel"
+                        size="large"
+                        onClick={() => {
+                          return form.resetFields();
                         }}
-                        src={previewImage}
-                      />
-                    </Modal>
-                    <Form.Item name="name" label="Name" rules={[{ required: true, message: 'Please enter a name' }]}>
-                      <Input placeholder="Enter Name" />
-                    </Form.Item>
-                    <Form.Item name="salon" label="Salon" rules={[{ required: true, message: 'Please enter salon' }]}>
-                      <Input placeholder="Enter Salon" />
-                    </Form.Item>
-                   
-                    <Form.Item name="price" label="Price" rules={[{ required: true, message: 'Please enter price' }]}>
-                      <Input placeholder="Enter Price" />
-                    </Form.Item>
-                  </Col>
-                  <Col sm={12} xs={24} className="mb-25">
-                  <Form.Item name="category" label="Category" initialValue="" rules={[{ required: true, message: 'Please enter Category' }]} >
-                      <Select size="large" className="sDash_fullwidth-select">
-                        <Option value="">Please Select</Option>
-                        <Option value="1">1</Option>
-                        <Option value="2">2</Option>
-                        <Option value="3">3</Option>
-                      </Select>
-                    </Form.Item>
-                    <Form.Item name="duration" label="Duration" rules={[{ required: true, message: 'Please enter duration' }]}>
-                        <Input placeholder="Enter Duration" />
-                      </Form.Item>
-                  <Form.Item name="description" label="Description" >
-                      <Input.TextArea rows={5} placeholder="Enter Description" />
-                    </Form.Item>
-                    <Form.Item name="available" label="Available" >
-                      <Checkbox defaultChecked>Enabled</Checkbox>
-                      </Form.Item>
-                  </Col>
-                </Row>
-                <div className="record-form-actions text-right">
-                  <div style={{
-                    display: 'flex',
-                    justifyContent: 'flex-end',
-                    alignItems: 'baseline'
-                  }}>
-                    <Button
-                      className="btn-cancel"
-                      size="large"
-                      onClick={() => {
-                        return form.resetFields();
-                      }}
-                    >
-                      Cancel
-                    </Button>
-                    <Button size="default" htmlType="Save" type="primary">
-                      {isLoading ? 'Loading...' : 'Submit'}
-                    </Button>
+                      >
+                        Cancel
+                      </Button>
+                      <Button size="default" htmlType="Save" type="primary">
+                        {isLoading ? 'Loading...' : 'Submit'}
+                      </Button>
+                    </div>
                   </div>
-                </div>
-              </Form>
-            </Cards>
-          </BasicFormWrapper>
-        </Col>
-      </Row>
-    </Main>
-  </>
+                </Form>
+              </Cards>
+            </BasicFormWrapper>
+          </Col>
+        </Row>
+      </Main>
+    </>
   );
 };
 

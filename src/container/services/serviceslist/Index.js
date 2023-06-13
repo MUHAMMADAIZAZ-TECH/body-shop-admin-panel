@@ -14,10 +14,8 @@ import { PageHeader } from '../../../components/page-headers/page-headers';
 import {
   axiosDataRead,
   axiosDataSearch,
-  axiosDataDelete,
-  axiosCrudGetData,
 } from '../../../redux/crud/axios/actionCreator';
-import { getServices } from '../../../redux/services/servicesSlice';
+import { deleteService, getServices } from '../../../redux/services/servicesSlice';
 
 const avatarStyle = {
   borderRadius: '4px', // Adjust the border radius as per your preference
@@ -63,19 +61,16 @@ const ViewPage = () => {
     const confirm = window.confirm('Are you sure delete this?');
     if (confirm) {
       dispatch(
-        axiosDataDelete({
+        deleteService({
           id,
           getData: () => {
-            dispatch(axiosCrudGetData());
+            dispatch(getServices());
           },
         }),
       );
     }
     return false;
   };
-  const handleEdit = (salon) => {
-    console.log(salon)
-  }
   const onHandleSearch = e => {
     dispatch(axiosDataSearch(e.target.value, crud));
   };
@@ -95,7 +90,7 @@ const ViewPage = () => {
       updated_at,
       action: (
         <div className="table-actions">
-          <Link className="edit" to={`/admin/services/edit/${id}`} onClick={() => handleEdit(services)}>
+          <Link className="edit" to={`/admin/services/edit/${id}`}>
             <FeatherIcon icon="edit" size={14} />
           </Link>
           &nbsp;&nbsp;&nbsp;

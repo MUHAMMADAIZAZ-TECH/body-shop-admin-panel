@@ -9,6 +9,7 @@ import { Button } from '../../../components/buttons/buttons';
 import { Main, BasicFormWrapper } from '../../styled';
 import { getSalons } from '../../../redux/salon/salonSlice';
 import { getCategories } from '../../../redux/categories/categoriesSlice';
+import { createService } from '../../../redux/services/servicesSlice';
 
 const { Option } = Select;
 
@@ -23,28 +24,34 @@ const AddNew = () => {
   const dispatch = useDispatch();
   const [previewOpen, setPreviewOpen] = useState(false);
   const [is_available, setis_available] = useState(false);
+  const [enable_customer_booking, setenable_customer_booking] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   const [previewTitle, setPreviewTitle] = useState('');
   const { isLoading,salonState,categoryState } = useSelector(state => {
     return {
       isLoading: state.AxiosCrud.loading,
-      url: state.AxiosCrud.url,
-      isFileLoading: state.AxiosCrud.fileLoading,
       salonState:state.salonStates,
       categoryState:state.categoryStates
     };
   });
-  console.log(salonState)
   const [form] = Form.useForm();
   const [files, setfiles] = useState([]);
   const handleSubmit = async values => {
     try {
       await form.validateFields(); // Validate all form fields
       console.log(values,files[0].originFileObj,is_available)
+      dispatch(createService({
+        ...values,
+        duration:values.duration.format('HH:mm:ss'),
+        file:files[0].originFileObj,
+        is_available,
+        enable_customer_booking
+      }))
+      form.resetFields();
     } catch (error) {
       console.log('Validation error:', error);
     }
-    // form.resetFields();
+   
   };
 
   const handleCancel = () => setPreviewOpen(false);
@@ -67,10 +74,7 @@ const AddNew = () => {
       <div style={{ marginTop: 8, }}>Upload</div>
     </div>
   );
-  const onChange = (e) => {
-    setis_available(e.target.checked)
-  };
-  console.log(categoryState)
+  
     useEffect(()=>{
       
       dispatch(getSalons())
@@ -136,13 +140,20 @@ const AddNew = () => {
                         </Select>
                       </Form.Item>
                       <Form.Item name="duration" label="Duration" rules={[{ required: true, message: 'Please select duration' }]}>
-                      <TimePicker style={{ marginRight: '10px' }} className="sDash_fullwidth-select"/>
+                      <TimePicker style={{ marginRight: '10px' }} className="sDash_fullwidth-select"  
+                         onChange={(time) => {
+                          form.setFieldsValue({ duration: time });
+                        }}
+                      />
                       </Form.Item>
                     <Form.Item name="description" label="Description" >
                         <Input.TextArea rows={5} placeholder="Enter Description" />
                       </Form.Item>
                       <Form.Item name="is_available" label="Available" >
-                      <Checkbox value={is_available} name="is_available" onChange={onChange}>Enabled</Checkbox>
+                      <Checkbox value={is_available} name="is_available" onChange={(e)=>setis_available(e.target.checked)}>Available</Checkbox>
+                      </Form.Item>
+                      <Form.Item name="enable_customer_booking" label="Enabled" >
+                      <Checkbox value={enable_customer_booking} name="enable_customer_booking" onChange={(e)=>setenable_customer_booking(e.target.checked)}>Enabled</Checkbox>
                       </Form.Item>
                     </Col>
                   </Row>
