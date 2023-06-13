@@ -11,10 +11,6 @@ import { Main, TableWrapper } from '../../styled';
 import { Button } from '../../../components/buttons/buttons';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { PageHeader } from '../../../components/page-headers/page-headers';
-import {
-  axiosDataRead,
-  axiosDataSearch,
-} from '../../../redux/crud/axios/actionCreator';
 import { deleteService, getServices } from '../../../redux/services/servicesSlice';
 
 const avatarStyle = {
@@ -26,7 +22,7 @@ const avatarStyle = {
 };
 const ViewPage = () => {
   const dispatch = useDispatch();
-  const { crud, isLoading,servicesStates } = useSelector(state => {
+  const { isLoading,servicesStates } = useSelector(state => {
     return {
       crud: state.AxiosCrud.data,
       isLoading: state.AxiosCrud.loading,
@@ -49,12 +45,6 @@ const ViewPage = () => {
     selectedRowKeys: [],
   });
   const { selectedRowKeys } = state;
-
-  useEffect(() => {
-    if (axiosDataRead) {
-      dispatch(axiosDataRead());
-    }
-  }, [dispatch]);
   const dataSource = [];
 
   const handleDelete = id => {
@@ -71,8 +61,8 @@ const ViewPage = () => {
     }
     return false;
   };
-  const onHandleSearch = e => {
-    dispatch(axiosDataSearch(e.target.value, crud));
+  const onHandleSearch = () => {
+   
   };
 
   console.log(servicesStates?.services)

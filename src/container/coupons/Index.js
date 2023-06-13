@@ -1,87 +1,173 @@
-import React, { useEffect, useState } from 'react';
-import { Row, Col, Table, Spin } from 'antd';
+import React, { useEffect, useState,useRef } from 'react';
+import { Row, Col, Table, Spin,Input,Space } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import Highlighter from 'react-highlight-words';
+import { SearchOutlined } from '@ant-design/icons';
+import moment from 'moment';
 import FeatherIcon from 'feather-icons-react';
 import { RecordViewWrapper } from './Style';
 import { Main, TableWrapper } from '../styled';
 import { Button } from '../../components/buttons/buttons';
 import { Cards } from '../../components/cards/frame/cards-frame';
 import { PageHeader } from '../../components/page-headers/page-headers';
-import {
-  axiosDataRead,
-  axiosDataSearch,
-  axiosDataDelete,
-  axiosCrudGetData,
-} from '../../redux/crud/axios/actionCreator';
+import { deleteCoupon, getCoupons } from '../../redux/coupons/couponSlice';
 
 const ViewPage = () => {
   const dispatch = useDispatch();
-  const { crud, isLoading } = useSelector(state => {
+  const { isLoading,couponStates } = useSelector(state => {
     return {
       crud: state.AxiosCrud.data,
       isLoading: state.AxiosCrud.loading,
+      couponStates:state.couponStates
     };
   });
-
   const [state, setState] = useState({
     selectedRowKeys: [],
   });
   const { selectedRowKeys } = state;
+  const [searchText, setSearchText] = useState('');
+  const [searchedColumn, setSearchedColumn] = useState('');
+  const searchInput = useRef(null);
+  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
+  };
+  const handleReset = (clearFilters) => {
+    clearFilters();
+    setSearchText('');
+  };
 
-  useEffect(() => {
-    if (axiosDataRead) {
-      dispatch(axiosDataRead());
-    }
-  }, [dispatch]);
   const dataSource = [];
 
   const handleDelete = id => {
     const confirm = window.confirm('Are you sure delete this?');
     if (confirm) {
       dispatch(
-        axiosDataDelete({
+        deleteCoupon({
           id,
           getData: () => {
-            dispatch(axiosCrudGetData());
+            dispatch(getCoupons());
           },
         }),
       );
     }
     return false;
   };
+  const getColumnSearchProps = (dataIndex) => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
+      <div
+        style={{
+          padding: 8,
+        }}
+      // onKeyDown={(e) => e.stopPropagation()}
+      >
+        <Input
+          ref={searchInput}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          style={{
+            marginBottom: 8,
+            display: 'block',
+          }}
+        />
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+            icon={<SearchOutlined />}
+            size="small"
+            style={{
+              width: 90,
+            }}
+          >
+            Search
+          </Button>
+          <Button
 
-  const onHandleSearch = e => {
-    dispatch(axiosDataSearch(e.target.value, crud));
+            onClick={() => clearFilters && handleReset(clearFilters)}
+            size="small"
+            style={{
+              width: 90,
+            }}
+          >
+            Reset
+          </Button>
+          <Button
+            type="primary"
+            size="small"
+            onClick={() => {
+              confirm({
+                closeDropdown: false,
+              });
+              setSearchText(selectedKeys[0]);
+              setSearchedColumn(dataIndex);
+            }}
+          >
+            Filter
+          </Button>
+          <Button
+            type="primary"
+            size="small"
+            onClick={() => {
+              close();
+            }}
+          >
+            close
+          </Button>
+        </Space>
+      </div>
+    ),
+    filterIcon: (filtered) => (
+      <SearchOutlined
+        style={{
+          color: filtered ? '#1677ff' : undefined,
+        }}
+      />
+    ),
+    onFilter: (value, record) =>
+      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+    onFilterDropdownOpenChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.current?.select(), 100);
+      }
+    },
+    render: (text) =>
+      searchedColumn === dataIndex ? (
+        <Highlighter
+          highlightStyle={{
+            backgroundColor: '#ffc069',
+            padding: 0,
+          }}
+          searchWords={[searchText]}
+          autoEscape
+          textToHighlight={text ? text.toString() : ''}
+        />
+      ) : (
+        text
+      ),
+  });
+  const onHandleSearch = () => {
+   
   };
-
-  if (crud.length)
-    crud.map((person, key) => {
-      const { id, name, email, company, position, join, status, city, country, image } = person;
+  console.log(couponStates?.coupons)
+  if (couponStates?.coupons?.length)
+  couponStates?.coupons?.map((coupon, key) => {
+      const { id, code, discount_value,discount_type,redeemed_count,max_redemptions, end_date, updated_at, } = coupon;
       return dataSource.push({
         key: key + 1,
-        name: (
-          <div className="record-img align-center-v">
-            <img
-              src={
-                image ? process.env.REACT_APP_BASE_URL + image : require('../../static/img/avatar/profileImage.png')
-              }
-              alt={id}
-            />
-            <span>
-              <span>{name}</span>
-              <span className="record-location">{city && country ? `${city},${country}` : ''}</span>
-            </span>
-          </div>
-        ),
-        email,
-        company,
-        position,
-        jdate: join,
-        status: <span className={`status ${status}`}>{status}</span>,
+        code,
+        discount_value:(discount_type==='percentage'?`${discount_value} %` :`${discount_value} $`  ),
+        max_redemptions,
+        redeemed_count,
+        end_date,
+        updated_at,
         action: (
           <div className="table-actions">
-            <Link className="edit" to={`/salon/salon/edit/${id}`}>
+            <Link className="edit" to={`/admin/coupons/edit/${id}`}>
               <FeatherIcon icon="edit" size={14} />
             </Link>
             &nbsp;&nbsp;&nbsp;
@@ -98,31 +184,47 @@ const ViewPage = () => {
       title: 'Code',
       dataIndex: 'code',
       key: 'code',
+      sorter: (a, b) => a.code.length - b.code.length,
+      sortDirections: ['descend', 'ascend'],
+      ...getColumnSearchProps('code'),
     },
     {
       title: 'Discount',
-      dataIndex: 'discount',
-      key: 'discount',
+      dataIndex: 'discount_value',
+      key: 'discount_value',
+      sorter: (a, b) => a.discount_value.length - b.discount_value.length,
+      sortDirections: ['descend', 'ascend'],
+      ...getColumnSearchProps('discount_value'),
     },
     {
-      title: 'Description',
-      dataIndex: 'description',
-      key: 'description',
+      title: 'Max Redeems',
+      dataIndex: 'max_redemptions',
+      key: 'max_redemptions',
+      sorter: (a, b) => a.max_redemptions.length - b.max_redemptions.length,
+      sortDirections: ['descend', 'ascend'],
+      ...getColumnSearchProps('max_redemptions'),
+    },
+    {
+      title: 'Redeems',
+      dataIndex: 'redeemed_count',
+      key: 'redeemed_count',
+      sorter: (a, b) => a.redeemed_count.length - b.redeemed_count.length,
+      sortDirections: ['descend', 'ascend'],
+      ...getColumnSearchProps('redeemed_count'),
     },
     {
       title: 'Expires At',
-      dataIndex: 'expire_at',
-      key: 'expire_at',
-    },
-    {
-      title: 'Enabled',
-      dataIndex: 'enabled',
-      key: 'enabled',
+      dataIndex: 'end_date',
+      key: 'end_date',
+      sorter: (a, b) => a.end_date.length - b.end_date.length,
+      sortDirections: ['descend', 'ascend'],
+      render: text => moment(text).format('YYYY/MM/DD'),
     },
     {
       title: 'Updated At',
-      dataIndex: 'updatedAt',
-      key: 'updatedAt',
+      dataIndex: 'updated_at',
+      key: 'updated_at',
+      render: text => moment(text).fromNow(),
     },
     {
       title: 'Actions',
@@ -139,7 +241,9 @@ const ViewPage = () => {
     selectedRowKeys,
     onChange: onSelectChange,
   };
-
+  useEffect(() => {
+    dispatch(getCoupons());
+  }, [dispatch]);
   return (
     <RecordViewWrapper>
       <PageHeader

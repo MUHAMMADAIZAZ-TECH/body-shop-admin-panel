@@ -32,6 +32,7 @@ import categorySlice from './categories/categoriesSlice';
 import { fsCrudReducer, fsSingleCrudReducer } from './firebase/firestore/reducers';
 import firebaseAuth from './firebase/auth/reducers';
 import servicesSlice from './services/servicesSlice';
+import couponSlice from './coupons/couponSlice';
 
 const rootReducers = combineReducers({
   fb: firebaseReducer,
@@ -75,7 +76,8 @@ const rootReducers = combineReducers({
   authenticationStates:authenticationSlice,
   salonStates:salonSlice,
   categoryStates:categorySlice,
-  servicesStates:servicesSlice
+  servicesStates:servicesSlice,
+  couponStates:couponSlice
 
 });
 

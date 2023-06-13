@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { Row, Col, Form,Input,Select,DatePicker,Checkbox } from 'antd';
+import React, { useEffect,  } from 'react';
+import { Row, Col, Form,Input,Select,DatePicker, } from 'antd';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -7,41 +7,38 @@ import { PageHeader } from '../../components/page-headers/page-headers';
 import { Cards } from '../../components/cards/frame/cards-frame';
 import { Button } from '../../components/buttons/buttons';
 import { Main, BasicFormWrapper } from '../styled';
-import { getSalonReview } from '../../redux/salon/salonSlice';
+import { getSalons } from '../../redux/salon/salonSlice';
+import { createCoupon } from '../../redux/coupons/couponSlice';
 
 const { Option } = Select;
 const dateFormat = 'YYYY/MM/DD';
 const AddNew = ({ match }) => {
   const dispatch = useDispatch();
-
-  const { salon, isLoading } = useSelector(state => {
+  const { isLoading ,salonState} = useSelector(state => {
     return {
-      salon: state.salonStates.salon,
       isLoading: state.AxiosCrud.loading,
-      url: state.AxiosCrud.url,
-      salonState: state.salonStates
+      salonState: state.salonStates,
     };
   });
+ 
   const [form] = Form.useForm();
-
   const handleSubmit = async values => {
+    console.log(values)
     try {
       await form.validateFields(); // Validate all form fields
-      // dispatch(createSalon({ ...values, files }));
-      console.log(values)
+      dispatch(createCoupon({
+         ...values,
+        created_by:1,
+        start_date:values.start_date.format("YYYY/MM/DD"),
+        end_date:values.end_date.format("YYYY/MM/DD") }));
+        form.resetFields();
     } catch (error) {
       console.log('Validation error:', error);
     }
-    // form.resetFields();
   };
-
   useEffect(() => {
-    // form.setFieldsValue(salon);
-    console.log(salon)
-  }, [form, salon]);
-  useEffect(() => {
-    dispatch(getSalonReview(parseInt(match.params.id, 10)))
-  }, [dispatch, match.params.id]);
+    dispatch(getSalons())
+  }, [dispatch,match.params.id]);
 
   return (
     <>
@@ -67,56 +64,32 @@ const AddNew = ({ match }) => {
                       <Form.Item name="code" label="Code" rules={[{ required: true, message: 'Please enter code' }]}>
                         <Input placeholder="Enter Code" />
                       </Form.Item>
-                      <Form.Item name="discounttype" initialValue="" label="Discount Type">
+                      <Form.Item name="discount_type" initialValue="" label="Discount Type">
                           <Select style={{ width: '100%' }}>
                             <Option value="">Please Select</Option>
-                            <Option value="bangladesh">Bangladesh</Option>
-                            <Option value="india">India</Option>
-                            <Option value="pakistan">Pakistan</Option>
-                            <Option value="srilanka">Srilanka</Option>
+                            <Option value="percentage">Percentage</Option>
+                            <Option value="fixed">Fixed</Option>
                           </Select>
                         </Form.Item>
-                      <Form.Item name="discount" label="Discount" rules={[{ required: true, message: 'Please enter discount' }]}>
-                        <Input placeholder="Enter Color" type='number'/>
+                      <Form.Item name="discount_value" label="Discount" rules={[{ required: true, message: 'Please enter discount' }]}>
+                        <Input placeholder="Enter discount" type='number'/>
                       </Form.Item>
-                    <Form.Item name="description" label="Description" >
-                        <Input.TextArea rows={5} placeholder="Enter Description" />
+                      <Form.Item name="max_redemptions" label="Max Redeem" rules={[{ required: true, message: 'Please enter max redeem' }]}>
+                        <Input placeholder="Enter discount" type='number'/>
                       </Form.Item>
                     </Col>
                     <Col sm={12} xs={24} className="mb-25">
-                      
-                    <Form.Item name="services" label="Services" rules={[{ required: true, message: 'Please enter services' }]}>
-                    <Select style={{ width: '100%' }}>
-                            <Option value="">Please Select</Option>
-                            <Option value="bangladesh">Bangladesh</Option>
-                            <Option value="india">India</Option>
-                            <Option value="pakistan">Pakistan</Option>
-                            <Option value="srilanka">Srilanka</Option>
-                          </Select>
-                      </Form.Item>
-                      <Form.Item name="salon" label="Salon" rules={[{ required: true, message: 'Please enter salon' }]}>
+                      <Form.Item name="salon_id" label="Salon" initialValue="" rules={[{ required: true, message: 'Please select salon' }]}>
                       <Select style={{ width: '100%' }}>
                             <Option value="">Please Select</Option>
-                            <Option value="bangladesh">Bangladesh</Option>
-                            <Option value="india">India</Option>
-                            <Option value="pakistan">Pakistan</Option>
-                            <Option value="srilanka">Srilanka</Option>
+                            {salonState.approvedSalons && salonState.approvedSalons.length>0 && salonState.approvedSalons?.map((salon)=><Option value={salon.id}>{salon.name}</Option>) }
                           </Select>
                       </Form.Item>
-                      <Form.Item name="category" label="Category" rules={[{ required: true, message: 'Please enter category' }]}>
-                      <Select style={{ width: '100%' }}>
-                            <Option value="">Please Select</Option>
-                            <Option value="bangladesh">Bangladesh</Option>
-                            <Option value="india">India</Option>
-                            <Option value="pakistan">Pakistan</Option>
-                            <Option value="srilanka">Srilanka</Option>
-                          </Select>
-                      </Form.Item>
-                      <Form.Item name="expireat" label="ExpireAt" rules={[{ required: true, message: 'Please enter expireAt' }]}>
+                      <Form.Item name="start_date" label="Start Date" rules={[{ required: true, message: 'Please select start date' }]}>
                       <DatePicker style={{ width: '100%' }} format={dateFormat} />
                       </Form.Item>
-                      <Form.Item name="enabled" label="Enabled" >
-                      <Checkbox defaultChecked>Enabled</Checkbox>
+                      <Form.Item name="end_date" label="End Date" rules={[{ required: true, message: 'Please select end date' }]}>
+                      <DatePicker style={{ width: '100%' }} format={dateFormat} />
                       </Form.Item>
                     </Col>
                   </Row>

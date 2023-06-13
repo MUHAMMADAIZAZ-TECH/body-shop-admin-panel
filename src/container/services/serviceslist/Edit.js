@@ -96,6 +96,12 @@ const Edit = ({ match }) => {
           url: servicesStates.service.image,
         }])
       }
+      if (servicesStates.service.is_available===1) {
+        setis_available(true)
+      }
+      if (servicesStates.service.enable_customer_booking===1) {
+        setenable_customer_booking(true)
+      }
     }
   }, [form, servicesStates.service]);
   useEffect(() => {
