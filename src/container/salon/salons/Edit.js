@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
-import { Row, Col, Form, Input, Select, Upload,message,Modal } from 'antd';
+import { Row, Col, Form, Input, Select, Upload,Modal } from 'antd';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -8,27 +8,27 @@ import { PageHeader } from '../../../components/page-headers/page-headers';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { Button } from '../../../components/buttons/buttons';
 import { Main, BasicFormWrapper } from '../../styled';
-import { getSalon } from '../../../redux/salon/salonSlice';
+import { getSalon, updateSalon } from '../../../redux/salon/salonSlice';
 
 const { Option } = Select;
-const { Dragger } = Upload;
-const draggerprops = {
-  maxCount:1,
-  name: 'document',
-  multiple: false,
-  action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-  onChange(info) {
-    const { status } = info.file;
-    if (status !== 'uploading') {
-      // console.log(info.file, info.fileList);
-    }
-    if (status === 'done') {
-      message.success(`${info.file.name} file uploaded successfully.`);
-    } else if (status === 'error') {
-      message.error(`${info.file.name} file upload failed.`);
-    }
-  },
-};
+// const { Dragger } = Upload;
+// const draggerprops = {
+//   maxCount:1,
+//   name: 'document',
+//   multiple: false,
+//   action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
+//   onChange(info) {
+//     const { status } = info.file;
+//     if (status !== 'uploading') {
+//       // console.log(info.file, info.fileList);
+//     }
+//     if (status === 'done') {
+//       message.success(`${info.file.name} file uploaded successfully.`);
+//     } else if (status === 'error') {
+//       message.error(`${info.file.name} file upload failed.`);
+//     }
+//   },
+// };
 const getBase64 = (file) =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -51,21 +51,16 @@ const Edit = ({ match }) => {
   });
   const [form] = Form.useForm();
   const [files, setfiles] = useState([]);
-  // const [document, setdocument] = useState(null);
+  
   const handleSubmit = async values => {
     try {
       await form.validateFields(); // Validate all form fields
-      // dispatch(createSalon({ ...values, files }));
-      console.log(values)
+      dispatch(updateSalon({id: match.params.id,...values, files }));
     } catch (error) {
       console.log('Validation error:', error);
     }
     // form.resetFields();
   };
-
-  // const onChange = (date, value) => {
-  //   console.log(value)
-  // };
 
   const handleCancel = () => setPreviewOpen(false);
   const handlePreview = async (file) => {
@@ -89,7 +84,17 @@ const Edit = ({ match }) => {
   );
   useEffect(() => {
     form.setFieldsValue(salon);
-    console.log(salon)
+    if(salon?.images?.length>0){
+      const array = salon?.images?.map((image)=>{
+        return{
+          uid: '-1',
+          name: 'image.png',
+          status: 'done',
+          url: image,
+        }
+      })
+    setfiles(array)
+    }
   }, [form, salon]);
   useEffect(() => {
     dispatch(getSalon(parseInt(match.params.id,10)))
@@ -106,13 +111,13 @@ const Edit = ({ match }) => {
           </Button>,
         ]}
         ghost
-        title="Update Your Recored"
+        title="Salons | Salons Management"
       />
       <Main>
         <Row gutter={15}>
           <Col xs={24}>
             <BasicFormWrapper>
-              <Cards title="Create Salon">
+              <Cards title="Update Salon">
                 <Form name="multi-form" layout="vertical" style={{ width: '100%' }} form={form} onFinish={handleSubmit}>
                   <Row gutter={30}>
                     <Col sm={12} xs={24} className="mb-25">
@@ -143,13 +148,13 @@ const Edit = ({ match }) => {
                       <Form.Item name="description" label="Description" >
                         <Input.TextArea rows={5} placeholder="Enter Description" />
                       </Form.Item>
-                      <div className="sDash_uploader-list">
+                      {/* <div className="sDash_uploader-list">
                       <Form.Item name="document" label="Document" rules={[{ required: true, message: 'Please select document' }]} >
                       <Dragger {...draggerprops}>
                           <p className="ant-upload-text">Drop files here to upload</p>
                         </Dragger>
                       </Form.Item>
-                      </div>
+                      </div> */}
                     </Col>
                     <Col sm={12} xs={24} className="mb-25">
 

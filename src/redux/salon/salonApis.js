@@ -11,7 +11,7 @@ export const getsalons = async () => {
 }
 export const getsalon = async (id) => {
   try {
-    const response = await DataService.get(`/api/v1/salons/${id}`);
+    const response = await DataService.get(`/api/v1/salons/admin/${id}`);
     return response.data;
   } catch (error) {
     return error;
@@ -58,7 +58,6 @@ export const updatesalon = async (body) => {
     "closing_time": "17:00 PM"
   }]
   const files = body?.files.map((file)=>file.originFileObj)
-  console.log(files)
   const formData = new FormData();
   formData.append('name', body?.name);
   formData.append('description', body?.description);
@@ -69,17 +68,12 @@ export const updatesalon = async (body) => {
   formData.append('latitude', '33');
   formData.append('availability_range', body?.availability_range.toString());
   formData.append('availability_hours', JSON.stringify(AvailabilityHours));
-  formData.append('document', body?.document.file.originFileObj);
   files.forEach((file) => {
     formData.append(`files`, file); // Append each file with a unique field name
   });
-  
-  [...formData.entries()].forEach(([key, value]) => {
-    console.log(`${key}: ${value}`);
-  });
-
   try {
-    const response = await DataService.patch(`/api/v1/salons`,formData);
+    const response = await DataService.patchFormData(`/api/v1/salons/${body.id}`,formData);
+    console.log(response)
     return response.data;
   } catch (error) {
     return error;
@@ -91,6 +85,7 @@ export const deletesalon = async ({id,getData}) => {
     await getData();
     return response.data;
   } catch (error) {
+    console.log(error)
     return error;
   }
 }

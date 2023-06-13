@@ -194,3 +194,6 @@ const darkTheme = {
 };
 
 export { theme, darkTheme };
+
+// const primaryColor = '#09594B';
+// const primaryHover = '#178470';
