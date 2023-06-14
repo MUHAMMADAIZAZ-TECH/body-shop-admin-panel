@@ -14,7 +14,7 @@ import { PageHeader } from '../../../components/page-headers/page-headers';
 import {
   axiosDataSearch,
 } from '../../../redux/crud/axios/actionCreator';
-import { getAvailibilityHours } from '../../../redux/salon/salonSlice';
+import { deleteAvailibilityHours, getAvailibilityHours } from '../../../redux/salon/salonSlice';
 
 const ViewPage = () => {
   const dispatch = useDispatch();
@@ -47,7 +47,14 @@ const ViewPage = () => {
   const handleDelete = id => {
     const confirm = window.confirm('Are you sure delete this?');
     if (confirm) {
-      console.log(id)
+      dispatch(
+        deleteAvailibilityHours({
+          id,
+          getData: () => {
+            dispatch(getAvailibilityHours());
+          },
+        }),
+      );
     }
     return false;
   };
@@ -56,15 +63,15 @@ const ViewPage = () => {
     dispatch(axiosDataSearch(e.target.value, crud));
   };
 
-  if (salonState?.availibilityhours?.length)
-  salonState?.availibilityhours?.map((availhour, key) => {
-      const { id, weekday, opening_time, closing_time, salon_id, updated_at } = availhour;
+  if (salonState?.availibilityhours?.data?.length)
+  salonState?.availibilityhours?.data?.map((availhour, key) => {
+      const { id, weekday, opening_time, closing_time, salon_name, updated_at } = availhour;
       return dataSource.push({
         key: key + 1,
         weekday,
         opening_time,
         closing_time,
-        salon_id,
+        salon_name,
         updated_at,
         action: (
           <div className="table-actions">
@@ -195,8 +202,11 @@ const ViewPage = () => {
     },
     {
       title: 'Salon',
-      dataIndex: 'salon_id',
-      key: 'salon_id',
+      dataIndex: 'salon_name',
+      key: 'salon_name',
+      sorter: (a, b) => a.salon_name.length - b.salon_name.length,
+      sortDirections: ['descend', 'ascend'],
+      ...getColumnSearchProps('salon_name')
     },
     {
       title: 'Updated At',

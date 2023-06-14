@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Row, Col, Form,TimePicker,Select,Input } from 'antd';
+import { Row, Col, Form,TimePicker,Select } from 'antd';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -8,15 +8,14 @@ import { PageHeader } from '../../../components/page-headers/page-headers';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { Button } from '../../../components/buttons/buttons';
 import { Main, BasicFormWrapper } from '../../styled';
-import { getSalonReview } from '../../../redux/salon/salonSlice';
+import { createAvailibilityHours, getSalons } from '../../../redux/salon/salonSlice';
 // import { getSalon } from '../../../redux/salon/salonSlice';
 
 const { Option } = Select;
 const AddNew = ({ match }) => {
   const dispatch = useDispatch();
-  const { salon, isLoading } = useSelector(state => {
+  const {salonState, isLoading } = useSelector(state => {
     return {
-      salon: state.salonStates.salon,
       isLoading: state.AxiosCrud.loading,
       url: state.AxiosCrud.url,
       salonState: state.salonStates
@@ -27,24 +26,20 @@ const AddNew = ({ match }) => {
   const handleSubmit = async values => {
     try {
       await form.validateFields(); // Validate all form fields
-      // dispatch(createSalon({ ...values, files }));
-      console.log(values)
+      dispatch(createAvailibilityHours({ 
+        salonId:values.salon_id,
+        closingTime:values.closingTime.format('HH:mm:ss'),
+        openingTime:values.openingTime.format('HH:mm:ss'),
+        weekday:values.weekday 
+      }));
+        form.resetFields();
     } catch (error) {
       console.log('Validation error:', error);
     }
-    // form.resetFields();
+   
   };
-
-  // const onChange = (date, value) => {
-  //   console.log(value)
-  // };
-
   useEffect(() => {
-    // form.setFieldsValue(salon);
-    console.log(salon)
-  }, [form, salon]);
-  useEffect(() => {
-    dispatch(getSalonReview(parseInt(match.params.id, 10)))
+    dispatch(getSalons())
   }, [dispatch, match.params.id]);
 
   return (
@@ -71,26 +66,36 @@ const AddNew = ({ match }) => {
                     <Form.Item name="weekday" label="Day" initialValue="" rules={[{ required: true, message: 'Please select Day' }]} >
                         <Select size="large" className="sDash_fullwidth-select">
                           <Option value="">Please Select</Option>
-                          <Option value="1">1</Option>
-                          <Option value="2">2</Option>
-                          <Option value="3">3</Option>
+                          <Option value="Sunday">Sunday</Option>
+                          <Option value="Monday">Monday</Option>
+                          <Option value="Tuesday">Tuesday</Option>
+                          <Option value="Wednesday">Wednesday</Option>
+                          <Option value="Thursday">Thursday</Option>
+                          <Option value="Friday">Friday</Option>
+                          <Option value="Saturday">Saturday</Option>
                         </Select>
                       </Form.Item>
-                      <Form.Item name="availibility_hours" label="Availibilty Hours" >
-                      <TimePicker.RangePicker className="sDash_fullwidth-select" use12Hours style={{ marginRight: '10px' }}/>
-                      </Form.Item>
-                    </Col>
-                    <Col sm={12} xs={24} className="mb-25">
-                    <Form.Item name="salon_id" label="Salon" initialValue="" rules={[{ required: true, message: 'Please select salon' }]} >
+                      <Form.Item name="salon_id" label="Salon" initialValue="" rules={[{ required: true, message: 'Please select salon' }]} >
                         <Select size="large" className="sDash_fullwidth-select">
                           <Option value="">Please Select</Option>
-                          <Option value="1">1</Option>
-                          <Option value="2">2</Option>
-                          <Option value="3">3</Option>
+                          {salonState.approvedSalons && salonState.approvedSalons.length>0 && salonState.approvedSalons?.map((salon)=><Option value={salon.id}>{salon.name}</Option>) }
                         </Select>
                       </Form.Item>
-                      <Form.Item name="name" label="Data" rules={[{ required: true, message: 'Please enter data' }]}>
-                        <Input placeholder="Enter Data" />
+                      </Col>
+                    <Col sm={12} xs={24} className="mb-25">
+                    <Form.Item name="openingTime" label="Start At" rules={[{ required: true, message: 'Please select start at' }]}>
+                      <TimePicker style={{ marginRight: '10px' }} className="sDash_fullwidth-select"  
+                         onChange={(time) => {
+                          form.setFieldsValue({ openingTime: time });
+                        }}
+                      />
+                      </Form.Item>   
+                      <Form.Item name="closingTime" label="End At" rules={[{ required: true, message: 'Please select end at' }]}>
+                      <TimePicker style={{ marginRight: '10px' }} className="sDash_fullwidth-select"  
+                         onChange={(time) => {
+                          form.setFieldsValue({ closingTime: time });
+                        }}
+                      />
                       </Form.Item>
                     </Col>
                   </Row>

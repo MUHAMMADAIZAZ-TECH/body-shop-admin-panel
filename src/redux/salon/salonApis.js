@@ -103,25 +103,36 @@ export const getavailibilityhours = async () => {
     return error;
   }
 }
-export const createavailibityhours = async (body) => {
+export const getavailibilityhour = async (id) => {
   try {
-    const response = await DataService.post(`/api/v1/availabilityHours`,body);
+    const response = await DataService.get(`/api/v1/availabilityHours/${id}`);
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+}
+export const createavailibityhours = async (data) => {
+  console.log(data)
+  try {
+    const response = await DataService.post(`/api/v1/availabilityHours`,data);
     return response.data;
   } catch (error) {
     return error;
   }
 }
 export const updateavailibityhours = async (body) => {
+  console.log(body)
   try {
-    const response = await DataService.patch(`/api/v1/availabilityHours`,body);
+    const response = await DataService.patch(`/api/v1/availabilityHours/${body.id}`,body);
     return response.data;
   } catch (error) {
     return error;
   }
 }
-export const deleteavailibityhours = async (id) => {
+export const deleteavailibityhours = async (body) => {
   try {
-    const response = await DataService.delete(`/api/v1/availabilityHours${id}`);
+    const response = await DataService.delete(`/api/v1/availabilityHours/${body.id}`);
+    body.getData();
     return response.data;
   } catch (error) {
     return error;

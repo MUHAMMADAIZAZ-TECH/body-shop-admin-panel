@@ -1,5 +1,5 @@
 import { createSlice,createAsyncThunk } from "@reduxjs/toolkit";
-import { createaddress, createavailibityhours, createsalon, deleteaddress, deleteavailibityhours, deletesalon, deletesalonreview, getaddress, getallreviews, getavailibilityhours, getsalon, getsalonreview, getsalons, updateaddress, updateavailibityhours, updatesalon, updatesalonreview } from "./salonApis";
+import { createaddress, createavailibityhours, createsalon, deleteaddress, deleteavailibityhours, deletesalon, deletesalonreview, getaddress, getallreviews, getavailibilityhour, getavailibilityhours, getsalon, getsalonreview, getsalons, updateaddress, updateavailibityhours, updatesalon, updatesalonreview } from "./salonApis";
 
 const initialState = {
     status:false,
@@ -11,6 +11,7 @@ const initialState = {
     approvedSalons:[],
     unapprovedSalons:[],
     availibilityhours:[],
+    availibilityhour:null,
     salonreviews:[],
     salonreview:null,
     addresses:[],
@@ -59,6 +60,13 @@ export const getAvailibilityHours = createAsyncThunk(
       return response;
   }
 );
+export const getAvailibilityHour = createAsyncThunk(
+  'get/getAvailibilityHour',
+  async (id) => {
+      const response = await getavailibilityhour(id)
+      return response;
+  }
+);
 export const createAvailibilityHours = createAsyncThunk(
   'post/createAvailibilityHours',
   async (body) => {
@@ -75,8 +83,8 @@ export const updateAvailibilityHours = createAsyncThunk(
 );
 export const deleteAvailibilityHours = createAsyncThunk(
   'delete/deleteAvailibilityHours',
-  async (id) => {
-      const response = await deleteavailibityhours(id)
+  async (body) => {
+      const response = await deleteavailibityhours(body)
       return response;
   }
 );
@@ -251,6 +259,24 @@ const salonSlice = createSlice({
             state.availibilityhours = action.payload
           })
           .addCase(getAvailibilityHours.rejected, (state, action) => {
+            state.status = false;
+            state.loading = false;
+            state.error = action.error;
+            state.message = 'Something went wrong';
+          });
+          builder
+          .addCase(getAvailibilityHour.pending, (state) => {
+            state.status = false;
+            state.loading = true;
+            state.error = null;
+            state.message = null;
+          })
+          .addCase(getAvailibilityHour.fulfilled, (state, action) => {
+            state.status = true;
+            state.loading = false;
+            state.availibilityhour = action.payload.data
+          })
+          .addCase(getAvailibilityHour.rejected, (state, action) => {
             state.status = false;
             state.loading = false;
             state.error = action.error;
