@@ -51,11 +51,12 @@ const Edit = ({ match }) => {
   });
   const [form] = Form.useForm();
   const [files, setfiles] = useState([]);
+  const [removeIds, setremoveIds] = useState([]);
   
   const handleSubmit = async values => {
     try {
       await form.validateFields(); // Validate all form fields
-      dispatch(updateSalon({id: match.params.id,...values, files }));
+      dispatch(updateSalon({id: match.params.id,...values, files,deletedImageIds:removeIds }));
     } catch (error) {
       console.log('Validation error:', error);
     }
@@ -82,15 +83,21 @@ const Edit = ({ match }) => {
       <div style={{ marginTop: 8, }}>Upload</div>
     </div>
   );
+  const handleRemove = (removedFile) => {
+    const removedImageId = removedFile.uid;
+    const uniqueArray = [...new Set([...removeIds,removedImageId])];
+    localStorage.setItem('removeitemsid',JSON.stringify(uniqueArray))
+    setremoveIds(uniqueArray)
+  };
   useEffect(() => {
     form.setFieldsValue(salon);
     if(salon?.images?.length>0){
       const array = salon?.images?.map((image)=>{
         return{
-          uid: '-1',
+          uid: image.image_id,
           name: 'image.png',
           status: 'done',
-          url: image,
+          url: image.image_url,
         }
       })
     setfiles(array)
@@ -127,6 +134,7 @@ const Edit = ({ match }) => {
                         fileList={files}
                         onPreview={handlePreview}
                         onChange={handleChange}
+                        onRemove={handleRemove}
                         name='files'
                       >
                         {files.length >= 5 ? null : uploadButton}

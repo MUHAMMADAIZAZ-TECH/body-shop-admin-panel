@@ -71,9 +71,14 @@ export const updatesalon = async (body) => {
   files.forEach((file) => {
     formData.append(`files`, file); // Append each file with a unique field name
   });
+  if(body.deletedImageIds.length>0){
+    formData.append('deletedImageIds', JSON.stringify(body.deletedImageIds));
+  }
+  [...formData.entries()].forEach(([key, value]) => {
+    console.log(`${key}: ${value}`);
+  });
   try {
     const response = await DataService.patchFormData(`/api/v1/salons/${body.id}`,formData);
-    console.log(response)
     return response.data;
   } catch (error) {
     return error;
