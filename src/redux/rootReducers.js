@@ -33,6 +33,7 @@ import { fsCrudReducer, fsSingleCrudReducer } from './firebase/firestore/reducer
 import firebaseAuth from './firebase/auth/reducers';
 import servicesSlice from './services/servicesSlice';
 import couponSlice from './coupons/couponSlice';
+import transactionSlice from './transactions/transactionSlice';
 
 const rootReducers = combineReducers({
   fb: firebaseReducer,
@@ -77,7 +78,8 @@ const rootReducers = combineReducers({
   salonStates:salonSlice,
   categoryStates:categorySlice,
   servicesStates:servicesSlice,
-  couponStates:couponSlice
+  couponStates:couponSlice,
+  transactionStates:transactionSlice
 
 });
 

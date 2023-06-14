@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Row, Col, Table, Spin } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import moment from 'moment';
 import FeatherIcon from 'feather-icons-react';
 import { RecordViewWrapper } from './Style';
 import { Main, TableWrapper } from '../../styled';
@@ -9,110 +10,58 @@ import { Button } from '../../../components/buttons/buttons';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { PageHeader } from '../../../components/page-headers/page-headers';
 import {
-  axiosDataRead,
   axiosDataSearch,
-  axiosDataDelete,
-  axiosCrudGetData,
 } from '../../../redux/crud/axios/actionCreator';
+import { getTransactions } from '../../../redux/transactions/transactionSlice';
 
 const ViewPage = () => {
   const dispatch = useDispatch();
-  const { crud, isLoading } = useSelector(state => {
+  const { crud, isLoading ,TransactionStates} = useSelector(state => {
     return {
       crud: state.AxiosCrud.data,
       isLoading: state.AxiosCrud.loading,
+      TransactionStates:state.transactionStates
     };
   });
-
+console.log(TransactionStates.transactions);
   const [state, setState] = useState({
     selectedRowKeys: [],
   });
   const { selectedRowKeys } = state;
 
   useEffect(() => {
-    if (axiosDataRead) {
-      dispatch(axiosDataRead());
-    }
+    dispatch(getTransactions());
   }, [dispatch]);
   const dataSource = [];
-
-  const handleDelete = id => {
-    const confirm = window.confirm('Are you sure delete this?');
-    if (confirm) {
-      dispatch(
-        axiosDataDelete({
-          id,
-          getData: () => {
-            dispatch(axiosCrudGetData());
-          },
-        }),
-      );
-    }
-    return false;
-  };
 
   const onHandleSearch = e => {
     dispatch(axiosDataSearch(e.target.value, crud));
   };
 
-  if (crud.length)
-    crud.map((person, key) => {
-      const { id, name, email, company, position, join, status, city, country, image } = person;
+  if (TransactionStates?.transactions?.length)
+  TransactionStates?.transactions?.map((transaction, key) => {
+      const { booking_id, amount, status, created_at, updated_at } = transaction;
       return dataSource.push({
         key: key + 1,
-        name: (
-          <div className="record-img align-center-v">
-            <img
-              src={
-                image ? process.env.REACT_APP_BASE_URL + image : require('../../../static/img/avatar/profileImage.png')
-              }
-              alt={id}
-            />
-            <span>
-              <span>{name}</span>
-              <span className="record-location">{city && country ? `${city},${country}` : ''}</span>
-            </span>
-          </div>
-        ),
-        email,
-        company,
-        position,
-        jdate: join,
-        status: <span className={`status ${status}`}>{status}</span>,
-        action: (
-          <div className="table-actions">
-            <Link className="edit" to={`/admin/crud/edit/${id}`}>
-              <FeatherIcon icon="edit" size={14} />
-            </Link>
-            &nbsp;&nbsp;&nbsp;
-            <Link className="delete" onClick={() => handleDelete(id)} to="#">
-              <FeatherIcon icon="trash-2" size={14} />
-            </Link>
-          </div>
-        ),
+        booking_id,
+        amount,
+        status,
+        created_at,
+        updated_at
       });
     });
 
   const columns = [
     {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
+      title: 'Booking ID',
+      dataIndex: 'booking_id',
+      key: 'booking_id',
     },
     {
-      title: 'Email',
-      dataIndex: 'email',
-      key: 'email',
-    },
-    {
-      title: 'Company',
-      dataIndex: 'company',
-      key: 'company',
-    },
-    {
-      title: 'Position',
-      dataIndex: 'position',
-      key: 'position',
+      title: 'Amount',
+      dataIndex: 'amount',
+      key: 'amount',
+      render: text => <div>{text} $</div>,
     },
     {
       title: 'Status',
@@ -120,9 +69,16 @@ const ViewPage = () => {
       key: 'status',
     },
     {
-      title: 'Joining Date',
-      dataIndex: 'jdate',
-      key: 'jdate',
+      title: 'Created At',
+      dataIndex: 'created_at',
+      key: 'created_at',
+      render: text => moment(text).format('YYYY/MM/DD'),
+    },
+    {
+      title: 'Updated',
+      dataIndex: 'updated_at',
+      key: 'updated_at',
+      render: text => moment(text).fromNow(),
     },
     {
       title: 'Actions',

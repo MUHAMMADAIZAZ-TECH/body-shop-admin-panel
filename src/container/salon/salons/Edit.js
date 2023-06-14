@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
-import { Row, Col, Form, Input, Select, Upload,Modal } from 'antd';
+import { Row, Col, Form, Input, Select, Upload,Modal ,Checkbox} from 'antd';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -56,11 +56,13 @@ const Edit = ({ match }) => {
   const handleSubmit = async values => {
     try {
       await form.validateFields(); // Validate all form fields
+      console.log(values)
       dispatch(updateSalon({id: match.params.id,...values, files,deletedImageIds:removeIds }));
+     form.resetFields();
     } catch (error) {
       console.log('Validation error:', error);
     }
-    // form.resetFields();
+   
   };
 
   const handleCancel = () => setPreviewOpen(false);
@@ -103,6 +105,7 @@ const Edit = ({ match }) => {
     setfiles(array)
     }
   }, [form, salon]);
+  console.log(salon)
   useEffect(() => {
     dispatch(getSalon(parseInt(match.params.id,10)))
   }, [dispatch, match.params.id]);
@@ -128,7 +131,6 @@ const Edit = ({ match }) => {
                 <Form name="multi-form" layout="vertical" style={{ width: '100%' }} form={form} onFinish={handleSubmit}>
                   <Row gutter={30}>
                     <Col sm={12} xs={24} className="mb-25">
-                    {/* <Form.Item name="image" label="Images" rules={[{ required: true, message: 'Please select images' }]}> */}
                     <Upload
                         listType="picture-card"
                         fileList={files}
@@ -139,8 +141,6 @@ const Edit = ({ match }) => {
                       >
                         {files.length >= 5 ? null : uploadButton}
                       </Upload>
-                      {/* </Form.Item> */}
-                   
                       <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancel}>
                         <img
                           alt="example"
@@ -156,13 +156,6 @@ const Edit = ({ match }) => {
                       <Form.Item name="description" label="Description" >
                         <Input.TextArea rows={5} placeholder="Enter Description" />
                       </Form.Item>
-                      {/* <div className="sDash_uploader-list">
-                      <Form.Item name="document" label="Document" rules={[{ required: true, message: 'Please select document' }]} >
-                      <Dragger {...draggerprops}>
-                          <p className="ant-upload-text">Drop files here to upload</p>
-                        </Dragger>
-                      </Form.Item>
-                      </div> */}
                     </Col>
                     <Col sm={12} xs={24} className="mb-25">
 
@@ -191,16 +184,22 @@ const Edit = ({ match }) => {
                       justifyContent: 'flex-end',
                       alignItems: 'baseline'
                     }}>
-                      {/* <div style={{ marginRight: 30 }}>
+                      <div style={{ marginRight: 30 }}>
                       <Form.Item name="isApproved" >
-                      <Checkbox onChange={onChange}>Approved</Checkbox>
+                      <Checkbox  
+                      onChange={(e) => {form.setFieldsValue({ isApproved: e.target.checked })}}
+                      checked={salon?.isApproved === 1}
+                      >Approved</Checkbox>
                       </Form.Item>
                       </div>
                       <div style={{ marginRight: 30 }}>
                       <Form.Item name="isActive" >
-                      <Checkbox onChange={onChange}>Available</Checkbox>
+                      <Checkbox 
+                      onChange={(e) => {form.setFieldsValue({ isActive: e.target.checked })}}
+                      checked={salon?.isActive === 1}
+                      >Available</Checkbox>
                       </Form.Item>
-                      </div> */}
+                      </div>
                       <Button
                         className="btn-cancel"
                         size="large"

@@ -27,7 +27,40 @@ function MenuItems({ darkMode, toggleCollapsed, topMenu, events }) {
   const onClick = (item) => {
     if (item.keyPath.length === 1) setOpenKeys([]);
   };
-
+  const subMenuArray = [
+    {
+      key: "salon",
+      icon: !topMenu && <FeatherIcon icon="database" />,
+      title: "Salons",
+      items: [
+        {
+          key: "salon-view",
+          link: `${path}/salon/salon-view`,
+          label: "Salons",
+        },
+        {
+          key: "salon-request",
+          link: `${path}/salon/request-view`,
+          label: "Salon Requests",
+        },
+        {
+          key: "salon-reviews",
+          link: `${path}/salon/review-view`,
+          label: "Salon Reviews",
+        },
+        {
+          key: "salon-hours",
+          link: `${path}/salon/availibility-hours-view`,
+          label: "Availability hours",
+        },
+        {
+          key: "salon-addresses",
+          link: `${path}/salon/address-view`,
+          label: "Addresses",
+        },
+      ],
+    },
+  ];
   return (
     <Menu
       onOpenChange={onOpenChange}
@@ -38,26 +71,25 @@ function MenuItems({ darkMode, toggleCollapsed, topMenu, events }) {
       defaultSelectedKeys={
         !topMenu
           ? [
-              `${
-                mainPathSplit.length === 1 ? 'home' : mainPathSplit.length === 2 ? mainPathSplit[1] : mainPathSplit[2]
-              }`,
-            ]
+            `${mainPathSplit.length === 1 ? 'home' : mainPathSplit.length === 2 ? mainPathSplit[1] : mainPathSplit[2]
+            }`,
+          ]
           : []
       }
       defaultOpenKeys={!topMenu ? [`${mainPathSplit.length > 2 ? mainPathSplit[1] : 'dashboard'}`] : []}
       overflowedIndicator={<FeatherIcon icon="more-vertical" />}
       openKeys={openKeys}
     >
-          <Menu.Item
+      <Menu.Item
         icon={!topMenu && <FeatherIcon icon="home" />}
         key="dashboard"
       >
         <NavLink onClick={toggleCollapsed} to={`${path}`}>
-        Dashboard
+          Dashboard
         </NavLink>
       </Menu.Item>
       {/* <SubMenu key="dashboard" icon={!topMenu && <FeatherIcon icon="home" />} title="Dashboard"> */}
-        {/* <Menu.Item key="home">
+      {/* <Menu.Item key="home">
           <NavLink onClick={toggleCollapsed} to={`${path}`}>
             Social Media
           </NavLink>
@@ -77,51 +109,33 @@ function MenuItems({ darkMode, toggleCollapsed, topMenu, events }) {
             Ecommerce
           </NavLink>
         </Menu.Item> */}
-        {/* <Menu.Item key="crm">
+      {/* <Menu.Item key="crm">
           <NavLink onClick={toggleCollapsed} to={`${path}/crm`}>
             CRM
           </NavLink>
         </Menu.Item> */}
-        {/* <Menu.Item key="sales">
+      {/* <Menu.Item key="sales">
           <NavLink onClick={toggleCollapsed} to={`${path}/sales`}>
             Sales Performance
           </NavLink>
         </Menu.Item> */}
       {/* </SubMenu> */}
       {!topMenu && <NavTitle className="sidebar-nav-title">App Management</NavTitle>}
-      <SubMenu key="salon" icon={!topMenu && <FeatherIcon icon="database" />} title="Salons">
-        <Menu.Item key="salon-view">
-          <NavLink to={`${path}/salon/salon-view`}>
-            Salons
-          </NavLink>
-        </Menu.Item>
-        <Menu.Item key="salon-request">
-          <NavLink to={`${path}/salon/request-view`}>
-            Salon Requests
-          </NavLink>
-        </Menu.Item>
-        <Menu.Item key="salon-reviews">
-          <NavLink to={`${path}/salon/review-view`}>
-            Salon Reviews
-          </NavLink>
-        </Menu.Item>
-        <Menu.Item key="salon-hours">
-          <NavLink to={`${path}/salon/availibility-hours-view`}>
-            Availibilty hours
-          </NavLink>
-        </Menu.Item>
-        <Menu.Item key="salon-addresses">
-          <NavLink to={`${path}/salon/address-view`}>
-            Addresses
-          </NavLink>
-        </Menu.Item>
-      </SubMenu>
+      {subMenuArray && subMenuArray.map((submenu) => (
+        <SubMenu key={submenu.key} icon={submenu.icon} title={submenu.title}>
+          {submenu.items.map((item) => (
+            <Menu.Item key={item.key}>
+              <NavLink to={item.link}>{item.label}</NavLink>
+            </Menu.Item>
+          ))}
+        </SubMenu>
+      ))}
       <Menu.Item
-       icon={!topMenu && <FeatherIcon icon="database" />}
+        icon={!topMenu && <FeatherIcon icon="database" />}
         key="Categories"
       >
         <NavLink to={`${path}/categories/category-view`}>
-        Categories
+          Categories
         </NavLink>
       </Menu.Item>
       <SubMenu key="services" icon={!topMenu && <FeatherIcon icon="database" />} title="Services">
@@ -139,22 +153,22 @@ function MenuItems({ darkMode, toggleCollapsed, topMenu, events }) {
         </Menu.Item>
       </SubMenu>
       <Menu.Item
-       icon={!topMenu && <FeatherIcon icon="database" />}
+        icon={!topMenu && <FeatherIcon icon="database" />}
         key="Coupons"
       >
-        <NavLink  to={`${path}/coupons/coupons-view`}>
-        Coupons
+        <NavLink to={`${path}/coupons/coupons-view`}>
+          Coupons
         </NavLink>
       </Menu.Item>
       <SubMenu key="faq" icon={!topMenu && <FeatherIcon icon="database" />} title="Faqs">
         <Menu.Item key="faq-categories">
-          <NavLink  to={`${path}/faq-admin/faqcategories-view`}>
+          <NavLink to={`${path}/faq-admin/faqcategories-view`}>
             Faq Categories
           </NavLink>
         </Menu.Item>
         <Menu.Item key="Faqs">
           <NavLink to={`${path}/faq-admin/faqs-view`}>
-          Faqs
+            Faqs
           </NavLink>
         </Menu.Item>
       </SubMenu>
@@ -162,41 +176,31 @@ function MenuItems({ darkMode, toggleCollapsed, topMenu, events }) {
       <SubMenu key="Payments" icon={!topMenu && <FeatherIcon icon="database" />} title="Payments">
         <Menu.Item key="Payments-paymentlist">
           <NavLink to={`${path}/payment/paymentlist-view`}>
-          Payment List
-          </NavLink>
-        </Menu.Item>
-        <Menu.Item key="Payments-paymentmethod">
-          <NavLink to={`${path}/payment/paymentmethod-view`}>
-          Payment Methods
-          </NavLink>
-        </Menu.Item>
-        <Menu.Item key="Payments-paymentstatus">
-          <NavLink to={`${path}/payment/paymentstatus-view`}>
-          Payment Statuses
+            Payment List
           </NavLink>
         </Menu.Item>
       </SubMenu>
       <Menu.Item
-       icon={!topMenu && <FeatherIcon icon="database" />}
+        icon={!topMenu && <FeatherIcon icon="database" />}
         key="Earnings"
       >
         <NavLink onClick={toggleCollapsed} to={`${path}/earnings/earning-view`}>
-        Earnings
+          Earnings
         </NavLink>
       </Menu.Item>
       {!topMenu && <NavTitle className="sidebar-nav-title">Settings</NavTitle>}
       <Menu.Item
-       icon={!topMenu && <FeatherIcon icon="database" />}
+        icon={!topMenu && <FeatherIcon icon="database" />}
         key="Packages"
       >
         <NavLink onClick={toggleCollapsed} to={`${path}`}>
-        Medias Library
+          Medias Library
         </NavLink>
       </Menu.Item>
       <SubMenu key="crud" icon={!topMenu && <FeatherIcon icon="database" />} title="Mobile App Settings">
         <Menu.Item key="axios-view">
           <NavLink onClick={toggleCollapsed} to={`${path}/crud/axios-view`}>
-           Global Settings
+            Global Settings
           </NavLink>
         </Menu.Item>
         <Menu.Item key="axios-add">
@@ -232,70 +236,70 @@ function MenuItems({ darkMode, toggleCollapsed, topMenu, events }) {
           </NavLink>
         </Menu.Item>
         <SubMenu key="crud" icon={!topMenu && <FeatherIcon icon="database" />} title="Roles & Permissions">
-        <Menu.Item key="axios-view">
-          <NavLink onClick={toggleCollapsed} to={`${path}/crud/axios-view`}>
-          Permissions List
+          <Menu.Item key="axios-view">
+            <NavLink onClick={toggleCollapsed} to={`${path}/crud/axios-view`}>
+              Permissions List
+            </NavLink>
+          </Menu.Item>
+          <Menu.Item key="axios-add">
+            <NavLink onClick={toggleCollapsed} to={`${path}/crud/axios-add`}>
+              Create Permission
+            </NavLink>
+          </Menu.Item>
+          <Menu.Item key="axios-add">
+            <NavLink onClick={toggleCollapsed} to={`${path}/crud/axios-add`}>
+              Roles List
+            </NavLink>
+          </Menu.Item>
+          <Menu.Item key="axios-add">
+            <NavLink onClick={toggleCollapsed} to={`${path}/crud/axios-add`}>
+              Create Role
+            </NavLink>
+          </Menu.Item>
+        </SubMenu>
+        <Menu.Item key="axios-add">
+          <NavLink onClick={toggleCollapsed} to={`${path}/crud/axios-add`}>
+            Custom Fields
           </NavLink>
         </Menu.Item>
         <Menu.Item key="axios-add">
           <NavLink onClick={toggleCollapsed} to={`${path}/crud/axios-add`}>
-            Create Permission
+            Localisation
           </NavLink>
         </Menu.Item>
         <Menu.Item key="axios-add">
           <NavLink onClick={toggleCollapsed} to={`${path}/crud/axios-add`}>
-            Roles List
+            Translation
           </NavLink>
         </Menu.Item>
         <Menu.Item key="axios-add">
           <NavLink onClick={toggleCollapsed} to={`${path}/crud/axios-add`}>
-            Create Role
-          </NavLink>
-        </Menu.Item>
-      </SubMenu>
-        <Menu.Item key="axios-add">
-          <NavLink onClick={toggleCollapsed} to={`${path}/crud/axios-add`}>
-           Custom Fields
+            Currencies
           </NavLink>
         </Menu.Item>
         <Menu.Item key="axios-add">
           <NavLink onClick={toggleCollapsed} to={`${path}/crud/axios-add`}>
-           Localisation
+            Taxes
           </NavLink>
         </Menu.Item>
         <Menu.Item key="axios-add">
           <NavLink onClick={toggleCollapsed} to={`${path}/crud/axios-add`}>
-           Translation
+            Payment
           </NavLink>
         </Menu.Item>
         <Menu.Item key="axios-add">
           <NavLink onClick={toggleCollapsed} to={`${path}/crud/axios-add`}>
-           Currencies
+            Social Authentication
           </NavLink>
         </Menu.Item>
         <Menu.Item key="axios-add">
           <NavLink onClick={toggleCollapsed} to={`${path}/crud/axios-add`}>
-           Taxes
+            Push Notifications
           </NavLink>
         </Menu.Item>
         <Menu.Item key="axios-add">
           <NavLink onClick={toggleCollapsed} to={`${path}/crud/axios-add`}>
-           Payment
-          </NavLink>
-        </Menu.Item>
-        <Menu.Item key="axios-add">
-          <NavLink onClick={toggleCollapsed} to={`${path}/crud/axios-add`}>
-           Social Authentication
-          </NavLink>
-        </Menu.Item>
-        <Menu.Item key="axios-add">
-          <NavLink onClick={toggleCollapsed} to={`${path}/crud/axios-add`}>
-           Push Notifications
-          </NavLink>
-        </Menu.Item>
-        <Menu.Item key="axios-add">
-          <NavLink onClick={toggleCollapsed} to={`${path}/crud/axios-add`}>
-           Mail
+            Mail
           </NavLink>
         </Menu.Item>
       </SubMenu>
@@ -632,7 +636,7 @@ function MenuItems({ darkMode, toggleCollapsed, topMenu, events }) {
           <span className="badge badge-success">New</span>
         </NavLink>
       </Menu.Item>
-    
+
       {!topMenu && <NavTitle className="sidebar-nav-title">CRUD</NavTitle>}
       <SubMenu key="crud" icon={!topMenu && <FeatherIcon icon="database" />} title="Axios">
         <Menu.Item key="axios-view">

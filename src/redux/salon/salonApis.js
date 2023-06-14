@@ -36,6 +36,7 @@ export const createsalon = async (body) => {
   formData.append('availability_range', body?.availability_range.toString());
   formData.append('availability_hours', JSON.stringify(AvailabilityHours));
   formData.append('document', body?.document.file.originFileObj);
+  formData.append('isApproved', JSON.stringify(true));
   files.forEach((file) => {
     formData.append(`files`, file); // Append each file with a unique field name
   });
@@ -68,6 +69,8 @@ export const updatesalon = async (body) => {
   formData.append('latitude', '33');
   formData.append('availability_range', body?.availability_range.toString());
   formData.append('availability_hours', JSON.stringify(AvailabilityHours));
+  formData.append('isApproved', body.isApproved);
+  formData.append('isActive', body.isActive);
   files.forEach((file) => {
     formData.append(`files`, file); // Append each file with a unique field name
   });

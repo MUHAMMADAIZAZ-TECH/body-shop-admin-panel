@@ -112,7 +112,6 @@ const AddNew = () => {
                 <Form name="multi-form" layout="vertical" style={{ width: '100%' }} form={form} onFinish={handleSubmit}>
                   <Row gutter={30}>
                     <Col sm={12} xs={24} className="mb-25">
-                    {/* <Form.Item name="image" label="Images" rules={[{ required: true, message: 'Please select images' }]}> */}
                     <Upload
                         listType="picture-card"
                         fileList={files}
@@ -122,8 +121,6 @@ const AddNew = () => {
                       >
                         {files.length >= 5 ? null : uploadButton}
                       </Upload>
-                      {/* </Form.Item> */}
-                   
                       <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancel}>
                         <img
                           alt="example"
@@ -174,16 +171,6 @@ const AddNew = () => {
                       justifyContent: 'flex-end',
                       alignItems: 'baseline'
                     }}>
-                      {/* <div style={{ marginRight: 30 }}>
-                      <Form.Item name="isApproved" >
-                      <Checkbox onChange={onChange}>Approved</Checkbox>
-                      </Form.Item>
-                      </div>
-                      <div style={{ marginRight: 30 }}>
-                      <Form.Item name="isActive" >
-                      <Checkbox onChange={onChange}>Available</Checkbox>
-                      </Form.Item>
-                      </div> */}
                       <Button
                         className="btn-cancel"
                         size="large"
