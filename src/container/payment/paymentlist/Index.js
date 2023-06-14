@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { Row, Col, Table, Spin } from 'antd';
+import React, { useEffect, useState,useRef } from 'react';
+import { Row, Col, Table, Spin,Input,Space } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
+import Highlighter from 'react-highlight-words';
+import { SearchOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
 import FeatherIcon from 'feather-icons-react';
@@ -28,7 +30,18 @@ console.log(TransactionStates.transactions);
     selectedRowKeys: [],
   });
   const { selectedRowKeys } = state;
-
+  const [searchText, setSearchText] = useState('');
+  const [searchedColumn, setSearchedColumn] = useState('');
+  const searchInput = useRef(null);
+  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
+  };
+  const handleReset = (clearFilters) => {
+    clearFilters();
+    setSearchText('');
+  };
   useEffect(() => {
     dispatch(getTransactions());
   }, [dispatch]);
@@ -40,51 +53,162 @@ console.log(TransactionStates.transactions);
 
   if (TransactionStates?.transactions?.length)
   TransactionStates?.transactions?.map((transaction, key) => {
-      const { booking_id, amount, status, created_at, updated_at } = transaction;
+      const { booking_id, amount, status,user_name, created_at, updated_at } = transaction;
       return dataSource.push({
         key: key + 1,
         booking_id,
         amount,
         status,
+        user_name,
         created_at,
         updated_at
       });
     });
-
+    const getColumnSearchProps = (dataIndex) => ({
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
+        <div
+          style={{
+            padding: 8,
+          }}
+        // onKeyDown={(e) => e.stopPropagation()}
+        >
+          <Input
+            ref={searchInput}
+            placeholder={`Search ${dataIndex}`}
+            value={selectedKeys[0]}
+            onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+            onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+            style={{
+              marginBottom: 8,
+              display: 'block',
+            }}
+          />
+          <Space>
+            <Button
+              type="primary"
+              onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+              icon={<SearchOutlined />}
+              size="small"
+              style={{
+                width: 90,
+              }}
+            >
+              Search
+            </Button>
+            <Button
+  
+              onClick={() => clearFilters && handleReset(clearFilters)}
+              size="small"
+              style={{
+                width: 90,
+              }}
+            >
+              Reset
+            </Button>
+            <Button
+              type="primary"
+              size="small"
+              onClick={() => {
+                confirm({
+                  closeDropdown: false,
+                });
+                setSearchText(selectedKeys[0]);
+                setSearchedColumn(dataIndex);
+              }}
+            >
+              Filter
+            </Button>
+            <Button
+              type="primary"
+              size="small"
+              onClick={() => {
+                close();
+              }}
+            >
+              close
+            </Button>
+          </Space>
+        </div>
+      ),
+      filterIcon: (filtered) => (
+        <SearchOutlined
+          style={{
+            color: filtered ? '#1677ff' : undefined,
+          }}
+        />
+      ),
+      onFilter: (value, record) =>
+        record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+      onFilterDropdownOpenChange: (visible) => {
+        if (visible) {
+          setTimeout(() => searchInput.current?.select(), 100);
+        }
+      },
+      render: (text) =>
+        searchedColumn === dataIndex ? (
+          <Highlighter
+            highlightStyle={{
+              backgroundColor: '#ffc069',
+              padding: 0,
+            }}
+            searchWords={[searchText]}
+            autoEscape
+            textToHighlight={text ? text.toString() : ''}
+          />
+        ) : (
+          text
+        ),
+    });
   const columns = [
     {
       title: 'Booking ID',
       dataIndex: 'booking_id',
       key: 'booking_id',
+      sorter: (a, b) => a.booking_id.length - b.booking_id.length,
+      sortDirections: ['descend', 'ascend'],
+      ...getColumnSearchProps('booking_id'),
     },
     {
       title: 'Amount',
       dataIndex: 'amount',
       key: 'amount',
+      sorter: (a, b) => a.amount.length - b.amount.length,
+      sortDirections: ['descend', 'ascend'],
+      ...getColumnSearchProps('amount'),
       render: text => <div>{text} $</div>,
     },
     {
       title: 'Status',
       dataIndex: 'status',
       key: 'status',
+      sorter: (a, b) => a.status.length - b.status.length,
+      sortDirections: ['descend', 'ascend'],
+      ...getColumnSearchProps('status'),
+    },
+    {
+      title: 'User',
+      dataIndex: 'user_name',
+      key: 'user_name',
+      sorter: (a, b) => a.user_name.length - b.user_name.length,
+      sortDirections: ['descend', 'ascend'],
+      ...getColumnSearchProps('user_name'),
     },
     {
       title: 'Created At',
       dataIndex: 'created_at',
       key: 'created_at',
+      sorter: (a, b) => a.created_at.length - b.created_at.length,
+      sortDirections: ['descend', 'ascend'],
       render: text => moment(text).format('YYYY/MM/DD'),
     },
     {
-      title: 'Updated',
+      title: 'Updated At',
       dataIndex: 'updated_at',
       key: 'updated_at',
-      render: text => moment(text).fromNow(),
-    },
-    {
-      title: 'Actions',
-      dataIndex: 'action',
-      key: 'action',
       width: '90px',
+      sorter: (a, b) => a.updated_at.length - b.updated_at.length,
+      sortDirections: ['descend', 'ascend'],
+      render: text => moment(text).fromNow(),
     },
   ];
   const onSelectChange = selectedRowKey => {
