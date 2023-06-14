@@ -361,7 +361,7 @@ const salonSlice = createSlice({
           .addCase(getSalonReview.fulfilled, (state, action) => {
             state.status = true;
             state.loading = false;
-            state.salonreview = action.payload
+            state.salonreview = action.payload.data
           })
           .addCase(getSalonReview.rejected, (state, action) => {
             state.loading = false;

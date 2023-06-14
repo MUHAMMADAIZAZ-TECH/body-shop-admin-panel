@@ -154,15 +154,16 @@ const ViewPage = () => {
         text
       ),
   });
-  if (salonState?.salonreviews.length)
-  salonState?.salonreviews.map((review, key) => {
-      const { id, comment, rating, salon_id, updated_at, user_id, } = review;
+  console.log(salonState)
+  if (salonState?.salonreviews?.data?.length)
+  salonState?.salonreviews?.data?.map((review, key) => {
+      const { id, comment, rating, salon_name, updated_at, user_name, } = review;
       return dataSource.push({
         key: key + 1,
         comment,
         rating:(<Rate disabled defaultValue={rating} />),
-        user_id,
-        salon_id,
+        user_name,
+        salon_name,
         updated_at,
         action: (
           <div className="table-actions">
@@ -196,17 +197,19 @@ const ViewPage = () => {
     },
     {
       title: 'User',
-      dataIndex: 'user_id',
-      key: 'user_id',
-      sorter: (a, b) => a.user_id.length - b.user_id.length,
+      dataIndex: 'user_name',
+      key: 'user_name',
+      sorter: (a, b) => a.user_name.length - b.user_name.length,
       sortDirections: ['descend', 'ascend'],
+      ...getColumnSearchProps('user_name'),
     },
     {
       title: 'Salon',
-      dataIndex: 'salon_id',
-      key: 'salon_id',
-      sorter: (a, b) => a.salon_id.length - b.salon_id.length,
+      dataIndex: 'salon_name',
+      key: 'salon_name',
+      sorter: (a, b) => a.salon_name.length - b.salon_name.length,
       sortDirections: ['descend', 'ascend'],
+      ...getColumnSearchProps('salon_name'),
     },
     {
       title: 'Updated At',

@@ -150,18 +150,18 @@ export const getallreviews = async () => {
     return error;
   }
 }
-export const getsalonreview = async () => {
-  // try {
-  //   const response = await DataService.get(`/api/v1/reviews/${id}`);
-  //   console.log(data)
-  //   return response.data;
-  // } catch (error) {
-  //   return error;
-  // }
+export const getsalonreview = async (id) => {
+  try {
+    const response = await DataService.get(`/api/v1/reviews/${id}`);
+    return response.data;
+  } catch (error) {
+    return error;
+  }
 }
 export const updatesalonreview = async (body) => {
+  console.log(body);
   try {
-    const response = await DataService.patch(`/api/v1/reviews/`,body);
+    const response = await DataService.patch(`/api/v1/reviews/${body.id}`,body);
     return response.data;
   } catch (error) {
     return error;
