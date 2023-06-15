@@ -78,6 +78,7 @@ const Edit = ({ match }) => {
     const fileList  = newFileList?.map((file)=>{
       return{...file, status:'done'}
     })
+    console.log(fileList)
     setfiles(fileList)
   };
   const uploadButton = (

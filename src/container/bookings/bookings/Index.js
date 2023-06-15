@@ -2,91 +2,71 @@ import React, { useEffect, useState } from 'react';
 import { Row, Col, Table, Spin } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import moment from 'moment';
 import FeatherIcon from 'feather-icons-react';
 import { RecordViewWrapper } from './Style';
 import { Main, TableWrapper } from '../../styled';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { PageHeader } from '../../../components/page-headers/page-headers';
 import {
-  axiosDataRead,
   axiosDataSearch,
-  axiosDataDelete,
-  axiosCrudGetData,
 } from '../../../redux/crud/axios/actionCreator';
+import { getBookings } from '../../../redux/bookings/bookingSlice';
 
 const ViewPage = () => {
   const dispatch = useDispatch();
-  const { crud, isLoading } = useSelector(state => {
+  const { crud, isLoading,bookingStates } = useSelector(state => {
     return {
       crud: state.AxiosCrud.data,
       isLoading: state.AxiosCrud.loading,
+      bookingStates:state.bookingStates
     };
   });
-
+  console.log(bookingStates)
   const [state, setState] = useState({
     selectedRowKeys: [],
   });
   const { selectedRowKeys } = state;
 
   useEffect(() => {
-    if (axiosDataRead) {
-      dispatch(axiosDataRead());
-    }
+   dispatch(getBookings())
   }, [dispatch]);
   const dataSource = [];
-
-  const handleDelete = id => {
-    const confirm = window.confirm('Are you sure delete this?');
-    if (confirm) {
-      dispatch(
-        axiosDataDelete({
-          id,
-          getData: () => {
-            dispatch(axiosCrudGetData());
-          },
-        }),
-      );
-    }
-    return false;
-  };
 
   const onHandleSearch = e => {
     dispatch(axiosDataSearch(e.target.value, crud));
   };
 
-  if (crud.length)
-    crud.map((person, key) => {
-      const { id, name, email, company, position, join, status, city, country, image } = person;
+  if (bookingStates?.Bookings?.length)
+  bookingStates?.Bookings?.map((booking, key) => {
+      const { id, serviceName, salon_id, user_name, salon_address,
+        booking_status, coupon,is_paid,total_amount,appointmentDate,booking_date } = booking;
       return dataSource.push({
         key: key + 1,
-        name: (
-          <div className="record-img align-center-v">
-            <img
-              src={
-                image ? process.env.REACT_APP_BASE_URL + image : require('../../../static/img/avatar/profileImage.png')
-              }
-              alt={id}
-            />
-            <span>
-              <span>{name}</span>
-              <span className="record-location">{city && country ? `${city},${country}` : ''}</span>
-            </span>
-          </div>
-        ),
-        email,
-        company,
-        position,
-        jdate: join,
-        status: <span className={`status ${status}`}>{status}</span>,
+        id,
+        serviceName,
+        salon_id,
+        user_name,
+        salon_address,
+        booking_status,
+        is_paid:is_paid===1?'Paid':'UnPaid',
+        code:coupon.code,
+        total_amount,
+        booking_date,
+        appointmentDate,
         action: (
           <div className="table-actions">
-            <Link className="edit" to={`/salon/salon/edit/${id}`}>
-              <FeatherIcon icon="edit" size={14} />
+             <Link className="edit" to='#'>
+              <FeatherIcon icon="eye" size={14} />
             </Link>
             &nbsp;&nbsp;&nbsp;
-            <Link className="delete" onClick={() => handleDelete(id)} to="#">
-              <FeatherIcon icon="trash-2" size={14} />
+            <Link className="edit" to={`/admin/bookings/edit/${id}`}>
+              <FeatherIcon icon="edit" size={14} />
             </Link>
+            {/* &nbsp;&nbsp;&nbsp; */}
+            {/* <Link className="delete" onClick={() => handleDelete(id)} to="#">
+              <FeatherIcon icon="trash-2" size={14} />
+            </Link> */}
           </div>
         ),
       });
@@ -94,9 +74,10 @@ const ViewPage = () => {
 
   const columns = [
     {
-      title: 'ID',
+      title: 'Booking ID',
       dataIndex: 'id',
       key: 'id',
+      render:(text)=><div>#{text}</div>
     },
     {
       title: 'Services',
@@ -130,18 +111,26 @@ const ViewPage = () => {
     },
     {
       title: 'Coupon',
-      dataIndex: 'couponCode',
-      key: 'couponCode',
+      dataIndex: 'code',
+      key: 'code',
     },
     {
       title: 'Total',
       dataIndex: 'total_amount',
       key: 'total_amount',
+      render:(text)=><div>{text} $</div>
     },
     {
       title: 'Booking At',
+      dataIndex: 'booking_date',
+      key: 'booking_date',
+      render:(text)=>moment(text).format('DD/MM/YY')
+    },
+    {
+      title: 'Appointment Date',
       dataIndex: 'appointmentDate',
       key: 'appointmentDate',
+      render:(text)=>moment(text).format('DD/MM/YY')
     },
     {
       title: 'Actions',
