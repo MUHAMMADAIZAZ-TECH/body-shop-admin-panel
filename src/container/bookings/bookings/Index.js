@@ -165,7 +165,7 @@ const ViewPage = () => {
         appointmentDate,
         action: (
           <div className="table-actions">
-             <Link className="edit" to='#'>
+             <Link className="edit" to={`/admin/bookings/view/${id}`}>
               <FeatherIcon icon="eye" size={14} />
             </Link>
             &nbsp;&nbsp;&nbsp;
