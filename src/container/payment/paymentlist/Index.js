@@ -55,7 +55,7 @@ console.log(TransactionStates.transactions);
       const { booking_id, amount, status,user_name, created_at, updated_at } = transaction;
       return dataSource.push({
         key: key + 1,
-        booking_id,
+        booking_id:<div>#{booking_id}</div>,
         amount,
         status,
         user_name,

@@ -213,7 +213,7 @@ const ThemeLayout = (WrappedComponent) => {
                       <img src={require(`../static/img/icon/${collapsed ? 'right.svg' : 'left.svg'}`)} alt="menu" />
                     </Button>
                   ) : null}
-                  <Link
+                  {/* <Link
                     className={topMenu && window.innerWidth > 991 ? 'striking-logo top-menu' : 'striking-logo'}
                     to="/"
                   >
@@ -225,6 +225,24 @@ const ThemeLayout = (WrappedComponent) => {
                       }
                       alt=""
                     />
+                  </Link> */}
+                  <Link
+                    className={topMenu && window.innerWidth > 991 ? 'striking-logo top-menu' : 'striking-logo'}
+                    to="/"
+                  >
+                    <img
+                      src={
+                        !darkMode
+                          ? require(`../static/img/Body-shop-logo.png`)
+                          : require(`../static/img/logo-second.png`)
+                      }
+                      alt=""
+                      style={{
+                        width:40,
+                        height:40
+                      }}
+                    />
+                    
                   </Link>
                 </Col>
 
