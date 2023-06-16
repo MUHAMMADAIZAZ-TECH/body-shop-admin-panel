@@ -35,6 +35,7 @@ import servicesSlice from './services/servicesSlice';
 import couponSlice from './coupons/couponSlice';
 import transactionSlice from './transactions/transactionSlice';
 import bookingSlice from './bookings/bookingSlice';
+import faqSlice from './faq/faqSlice';
 
 const rootReducers = combineReducers({
   fb: firebaseReducer,
@@ -81,7 +82,8 @@ const rootReducers = combineReducers({
   servicesStates:servicesSlice,
   couponStates:couponSlice,
   transactionStates:transactionSlice,
-  bookingStates:bookingSlice
+  bookingStates:bookingSlice,
+  faqStates:faqSlice
 
 });
 

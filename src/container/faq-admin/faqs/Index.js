@@ -2,37 +2,35 @@ import React, { useEffect, useState } from 'react';
 import { Row, Col, Table, Spin } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import moment from 'moment';
 import FeatherIcon from 'feather-icons-react';
 import { RecordViewWrapper } from './Style';
 import { Main, TableWrapper } from '../../styled';
 import { Button } from '../../../components/buttons/buttons';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { PageHeader } from '../../../components/page-headers/page-headers';
+import {deleteFaq, getFaqs} from '../../../redux/faq/faqSlice'
 import {
-  axiosDataRead,
   axiosDataSearch,
-  axiosDataDelete,
-  axiosCrudGetData,
 } from '../../../redux/crud/axios/actionCreator';
 
 const ViewPage = () => {
   const dispatch = useDispatch();
-  const { crud, isLoading } = useSelector(state => {
+  const { crud, isLoading ,faqStates} = useSelector(state => {
     return {
       crud: state.AxiosCrud.data,
       isLoading: state.AxiosCrud.loading,
+      faqStates: state.faqStates
     };
   });
-
+ console.log(faqStates);
   const [state, setState] = useState({
     selectedRowKeys: [],
   });
   const { selectedRowKeys } = state;
 
   useEffect(() => {
-    if (axiosDataRead) {
-      dispatch(axiosDataRead());
-    }
+    dispatch(getFaqs())
   }, [dispatch]);
   const dataSource = [];
 
@@ -40,10 +38,10 @@ const ViewPage = () => {
     const confirm = window.confirm('Are you sure delete this?');
     if (confirm) {
       dispatch(
-        axiosDataDelete({
+        deleteFaq({
           id,
           getData: () => {
-            dispatch(axiosCrudGetData());
+            dispatch(getFaqs());
           },
         }),
       );
@@ -55,33 +53,17 @@ const ViewPage = () => {
     dispatch(axiosDataSearch(e.target.value, crud));
   };
 
-  if (crud.length)
-    crud.map((person, key) => {
-      const { id, name, email, company, position, join, status, city, country, image } = person;
+  if (faqStates?.faqs.length)
+  faqStates?.faqs?.map((person, key) => {
+      const { id,question,answer,updated_at } = person;
       return dataSource.push({
         key: key + 1,
-        name: (
-          <div className="record-img align-center-v">
-            <img
-              src={
-                image ? process.env.REACT_APP_BASE_URL + image : require('../../../static/img/avatar/profileImage.png')
-              }
-              alt={id}
-            />
-            <span>
-              <span>{name}</span>
-              <span className="record-location">{city && country ? `${city},${country}` : ''}</span>
-            </span>
-          </div>
-        ),
-        email,
-        company,
-        position,
-        jdate: join,
-        status: <span className={`status ${status}`}>{status}</span>,
+        question,
+        answer,
+        updated_at,
         action: (
           <div className="table-actions">
-            <Link className="edit" to={`/salon/salon/edit/${id}`}>
+            <Link className="edit" to={`/admin/faq-admin/faqs-edit/${id}`}>
               <FeatherIcon icon="edit" size={14} />
             </Link>
             &nbsp;&nbsp;&nbsp;
@@ -95,34 +77,20 @@ const ViewPage = () => {
 
   const columns = [
     {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
+      title: 'Question',
+      dataIndex: 'question',
+      key: 'question',
     },
     {
-      title: 'Email',
-      dataIndex: 'email',
-      key: 'email',
+      title: 'Answer',
+      dataIndex: 'answer',
+      key: 'answer',
     },
     {
-      title: 'Company',
-      dataIndex: 'company',
-      key: 'company',
-    },
-    {
-      title: 'Position',
-      dataIndex: 'position',
-      key: 'position',
-    },
-    {
-      title: 'Status',
-      dataIndex: 'status',
-      key: 'status',
-    },
-    {
-      title: 'Joining Date',
-      dataIndex: 'jdate',
-      key: 'jdate',
+      title: 'Update At',
+      dataIndex: 'updated_at',
+      key: 'updated_at',
+      render: (text)=>moment(text).fromNow()
     },
     {
       title: 'Actions',

@@ -7,7 +7,10 @@ const initialState = {
     error:false,
     message:"",
     salons:[],
-    salon:null,
+    salon:{
+      isActive:1,
+      isApproved:1
+    },
     approvedSalons:[],
     unapprovedSalons:[],
     availibilityhours:[],

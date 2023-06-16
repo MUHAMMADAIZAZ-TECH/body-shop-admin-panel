@@ -58,7 +58,6 @@ const Edit = ({ match }) => {
       await form.validateFields(); // Validate all form fields
       console.log(values)
       dispatch(updateSalon({id: match.params.id,...values, files,deletedImageIds:removeIds }));
-     form.resetFields();
     } catch (error) {
       console.log('Validation error:', error);
     }
@@ -94,16 +93,21 @@ const Edit = ({ match }) => {
   };
   useEffect(() => {
     form.setFieldsValue(salon);
-    if(salon?.images?.length>0){
-      const array = salon?.images?.map((image)=>{
-        return{
-          uid: image.image_id,
-          name: 'image.png',
-          status: 'done',
-          url: image.image_url,
-        }
-      })
-    setfiles(array)
+    if(salon!==null){
+      if(salon?.images?.length>0){
+        const array = salon?.images?.map((image)=>{
+          return{
+            uid: image.image_id,
+            name: 'image.png',
+            status: 'done',
+            url: image.image_url,
+          }
+        })
+      setfiles(array)
+      }
+      if(salon.isApproved===1){
+        form.setFieldsValue({isApproved:true});
+      }
     }
   }, [form, salon]);
   console.log(salon)
@@ -188,16 +192,31 @@ const Edit = ({ match }) => {
                       <div style={{ marginRight: 30 }}>
                       <Form.Item name="isApproved" >
                       <Checkbox  
-                      onChange={(e) => {form.setFieldsValue({ isApproved: e.target.checked })}}
-                      checked={salon?.isApproved === 1}
+                      name="isApproved"
+                      defaultChecked={salon.isApproved===1}
+                      onChange={(e) => {
+                        if(e.target.checked){
+                          form.setFieldsValue({ isApproved: 1 })
+                        }
+                        else{
+                          form.setFieldsValue({ isApproved: 0 })
+                        }
+                      }}
                       >Approved</Checkbox>
                       </Form.Item>
                       </div>
                       <div style={{ marginRight: 30 }}>
                       <Form.Item name="isActive" >
                       <Checkbox 
-                      onChange={(e) => {form.setFieldsValue({ isActive: e.target.checked })}}
-                      checked={salon?.isActive === 1}
+                      defaultChecked={salon.isActive===1}
+                      onChange={(e) => {
+                        if(e.target.checked){
+                          form.setFieldsValue({ isActive: 1 })
+                        }
+                        else{
+                          form.setFieldsValue({ isActive: 0 })
+                        }
+                      }}
                       >Available</Checkbox>
                       </Form.Item>
                       </div>

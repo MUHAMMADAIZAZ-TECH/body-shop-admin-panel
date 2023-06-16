@@ -138,20 +138,22 @@ function MenuItems({ darkMode, toggleCollapsed, topMenu, events }) {
           Categories
         </NavLink>
       </Menu.Item>
-      <SubMenu key="services" icon={!topMenu && <FeatherIcon icon="database" />} title="Services">
-        <Menu.Item key="services-list">
-          <NavLink to={`${path}/services/services-list-view`}>
-            Services List
+      <Menu.Item
+        icon={!topMenu && <FeatherIcon icon="database" />}
+        key="services-list"
+      >
+         <NavLink to={`${path}/services/services-list-view`}>
+            Services
           </NavLink>
-        </Menu.Item>
-      </SubMenu>
-      <SubMenu key="bookings" icon={!topMenu && <FeatherIcon icon="database" />} title="Bookings">
-        <Menu.Item key="fbView">
-          <NavLink to={`${path}/bookings/bookings-view`}>
+      </Menu.Item>
+      <Menu.Item
+        icon={!topMenu && <FeatherIcon icon="database" />}
+        key="bookings"
+      >
+         <NavLink to={`${path}/bookings/bookings-view`}>
             Bookings
           </NavLink>
-        </Menu.Item>
-      </SubMenu>
+      </Menu.Item>
       <Menu.Item
         icon={!topMenu && <FeatherIcon icon="database" />}
         key="Coupons"
@@ -160,33 +162,22 @@ function MenuItems({ darkMode, toggleCollapsed, topMenu, events }) {
           Coupons
         </NavLink>
       </Menu.Item>
-      <SubMenu key="faq" icon={!topMenu && <FeatherIcon icon="database" />} title="Faqs">
-        <Menu.Item key="faq-categories">
-          <NavLink to={`${path}/faq-admin/faqcategories-view`}>
-            Faq Categories
-          </NavLink>
-        </Menu.Item>
-        <Menu.Item key="Faqs">
+      <Menu.Item
+        icon={!topMenu && <FeatherIcon icon="database" />}
+        key="faq"
+      >
           <NavLink to={`${path}/faq-admin/faqs-view`}>
             Faqs
           </NavLink>
-        </Menu.Item>
-      </SubMenu>
-      {!topMenu && <NavTitle className="sidebar-nav-title">Payments</NavTitle>}
-      <SubMenu key="Payments" icon={!topMenu && <FeatherIcon icon="database" />} title="Payments">
-        <Menu.Item key="Payments-paymentlist">
-          <NavLink to={`${path}/payment/paymentlist-view`}>
-            Payment List
-          </NavLink>
-        </Menu.Item>
-      </SubMenu>
+      </Menu.Item>
+      {/* {!topMenu && <NavTitle className="sidebar-nav-title">Payments</NavTitle>} */}
       <Menu.Item
         icon={!topMenu && <FeatherIcon icon="database" />}
-        key="Earnings"
+        key="Payments"
       >
-        <NavLink onClick={toggleCollapsed} to={`${path}/earnings/earning-view`}>
-          Earnings
-        </NavLink>
+         <NavLink to={`${path}/payment/paymentlist-view`}>
+            Payments
+          </NavLink>
       </Menu.Item>
       {!topMenu && <NavTitle className="sidebar-nav-title">Settings</NavTitle>}
       <Menu.Item
