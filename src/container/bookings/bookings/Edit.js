@@ -89,7 +89,7 @@ const Edit = ({ match }) => {
                         </Select>
                       </Form.Item>
                       <Form.Item name="salon_address" label="Address" initialValue="" rules={[{ required: true, message: 'Please select address' }]} >
-                        <Select size="large" className="sDash_fullwidth-select">
+                        <Select size="large" className="sDash_fullwidth-select" disabled>
                           <Option value="">Please Select</Option>
                           <Option value=" salon_address1">salon_address1</Option>
                           <Option value=" salon_address2">salon_address2</Option>
@@ -97,27 +97,27 @@ const Edit = ({ match }) => {
                         </Select>
                       </Form.Item>
                       <Form.Item name="is_paid" label="Payment Status" initialValue="" rules={[{ required: true, message: 'Please enter Category' }]} >
-                        <Select size="large" className="sDash_fullwidth-select">
+                        <Select size="large" className="sDash_fullwidth-select" disabled>
                           <Option value="">Please Select</Option>
                           <Option value={1}>Paid</Option>
                           <Option value={0}>UnPaid</Option>
                         </Select>
                       </Form.Item>
                       <Form.Item name="hints" label="Hints and Notes" >
-                        <Input.TextArea rows={5} placeholder="Enter Hints and Notes" />
+                        <Input.TextArea rows={5} placeholder="Enter Hints and Notes" disabled/>
                       </Form.Item>
                     </Col>
                     <Col sm={12} xs={24} className="mb-25">
                       <Form.Item name="booking_date" label="Booking At" >
-                        <DatePicker style={{ width: '100%' }} format={dateFormat} />
+                        <DatePicker style={{ width: '100%' }} format={dateFormat} disabled/>
                       </Form.Item>
                       <Form.Item name="appointmentDate" label="Appointment Date" >
-                      <DatePicker style={{ width: '100%' }} format={dateFormat} />
+                      <DatePicker style={{ width: '100%' }} format={dateFormat} disabled/>
                       </Form.Item>
                       <Form.Item name="startTime" label="Start At" >
                       <TimePicker style={{ marginRight: '10px' }} className="sDash_fullwidth-select" format="HH:mm:ss" onChange={(time) => {
                           form.setFieldsValue({ startTime: time });
-                        }} />
+                        }} disabled/>
                       </Form.Item>
                      
                     </Col>

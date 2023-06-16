@@ -18,7 +18,7 @@ export const getbooking = async (id) => {
 }
 export const updatebooking = async (Body) => {
   try {
-    const response = await DataService.patch(`/api/v1/bookings/admin/${Body.id}`,Body);
+    const response = await DataService.patch(`/api/v1/bookings/update/${Body.id}`,Body);
     return response.data;
   } catch (error) {
     return error;

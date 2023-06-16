@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { Row, Col, Table, Spin } from 'antd';
+import React, { useEffect, useState,useRef } from 'react';
+import { Row, Col, Table, Spin,Button,Input,Space } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { SearchOutlined } from '@ant-design/icons';
+import Highlighter from 'react-highlight-words';
 import moment from 'moment';
 import FeatherIcon from 'feather-icons-react';
 import { RecordViewWrapper } from './Style';
@@ -14,6 +16,113 @@ import {
 import { getBookings } from '../../../redux/bookings/bookingSlice';
 
 const ViewPage = () => {
+  const [searchText, setSearchText] = useState('');
+  const [searchedColumn, setSearchedColumn] = useState('');
+  const searchInput = useRef(null);
+  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
+  };
+  const handleReset = (clearFilters) => {
+    clearFilters();
+    setSearchText('');
+  };
+  const getColumnSearchProps = (dataIndex,placeholder) => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
+      <div
+        style={{
+          padding: 8,
+        }}
+      // onKeyDown={(e) => e.stopPropagation()}
+      >
+        <Input
+          ref={searchInput}
+          placeholder={`Search ${placeholder}`}
+          value={selectedKeys[0]}
+          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          style={{
+            marginBottom: 8,
+            display: 'block',
+          }}
+        />
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+            icon={<SearchOutlined />}
+            size="small"
+            style={{
+              width: 90,
+            }}
+          >
+            Search
+          </Button>
+          <Button
+
+            onClick={() => clearFilters && handleReset(clearFilters)}
+            size="small"
+            style={{
+              width: 90,
+            }}
+          >
+            Reset
+          </Button>
+          <Button
+            type="primary"
+            size="small"
+            onClick={() => {
+              confirm({
+                closeDropdown: false,
+              });
+              setSearchText(selectedKeys[0]);
+              setSearchedColumn(dataIndex);
+            }}
+          >
+            Filter
+          </Button>
+          <Button
+            type="primary"
+            size="small"
+            onClick={() => {
+              close();
+            }}
+          >
+            close
+          </Button>
+        </Space>
+      </div>
+    ),
+    filterIcon: (filtered) => (
+      <SearchOutlined
+        style={{
+          color: filtered ? '#1677ff' : undefined,
+        }}
+      />
+    ),
+    onFilter: (value, record) =>
+      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+    onFilterDropdownOpenChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.current?.select(), 100);
+      }
+    },
+    render: (text) =>
+      searchedColumn === dataIndex ? (
+        <Highlighter
+          highlightStyle={{
+            backgroundColor: '#ffc069',
+            padding: 0,
+          }}
+          searchWords={[searchText]}
+          autoEscape
+          textToHighlight={text ? text.toString() : ''}
+        />
+      ) : (
+        text
+      ),
+  });
   const dispatch = useDispatch();
   const { crud, isLoading,bookingStates } = useSelector(state => {
     return {
@@ -77,59 +186,92 @@ const ViewPage = () => {
       title: 'Booking ID',
       dataIndex: 'id',
       key: 'id',
+      sorter: (a, b) => a.id.length - b.id.length,
+      sortDirections: ['descend', 'ascend'],
+      ...getColumnSearchProps('id','Booking ID'),
       render:(text)=><div>#{text}</div>
     },
     {
       title: 'Services',
       dataIndex: 'serviceName',
       key: 'serviceName',
+      sorter: (a, b) => a.serviceName.length - b.serviceName.length,
+      sortDirections: ['descend', 'ascend'],
+      ...getColumnSearchProps('serviceName','Services'),
     },
     {
       title: 'Salon',
       dataIndex: 'salon_id',
       key: 'salon_id',
+      sorter: (a, b) => a.salon_id.length - b.salon_id.length,
+      sortDirections: ['descend', 'ascend'],
+      ...getColumnSearchProps('salon_id','Salon'),
     },
     {
       title: 'Customer',
       dataIndex: 'user_name',
       key: 'user_name',
+      sorter: (a, b) => a.user_name.length - b.user_name.length,
+      sortDirections: ['descend', 'ascend'],
+      ...getColumnSearchProps('user_name','Customer'),
     },
     {
       title: 'Address',
       dataIndex: 'salon_address',
       key: 'salon_address',
+      sorter: (a, b) => a.salon_address.length - b.salon_address.length,
+      sortDirections: ['descend', 'ascend'],
+      ...getColumnSearchProps('salon_address','Address'),
     },
     {
       title: 'Booking Status',
       dataIndex: 'booking_status',
       key: 'bookingstatus',
+      sorter: (a, b) => a.booking_status.length - b.booking_status.length,
+      sortDirections: ['descend', 'ascend'],
+      ...getColumnSearchProps('booking_status','Booking Status'),
     },
     {
       title: 'Payment Status',
       dataIndex: 'is_paid',
       key: 'is_paid',
+      sorter: (a, b) => a.is_paid.length - b.is_paid.length,
+      sortDirections: ['descend', 'ascend'],
+      ...getColumnSearchProps('is_paid','Payment Status'),
     },
     {
       title: 'Coupon',
       dataIndex: 'code',
       key: 'code',
+      sorter: (a, b) => a.code.length - b.code.length,
+      sortDirections: ['descend', 'ascend'],
+      ...getColumnSearchProps('code','Coupon'),
     },
     {
       title: 'Total',
       dataIndex: 'total_amount',
       key: 'total_amount',
+      sorter: (a, b) => a.total_amount.length - b.total_amount.length,
+      sortDirections: ['descend', 'ascend'],
+      ...getColumnSearchProps('total_amount','Total'),
       render:(text)=><div>{text} $</div>
     },
     {
       title: 'Booking At',
       dataIndex: 'booking_date',
       key: 'booking_date',
+      sorter: (a, b) => a.booking_date.length - b.booking_date.length,
+      sortDirections: ['descend', 'ascend'],
+      ...getColumnSearchProps('booking_date','Booking At'),
       render:(text)=>moment(text).format('DD/MM/YY')
     },
     {
       title: 'Appointment Date',
       dataIndex: 'appointmentDate',
       key: 'appointmentDate',
+      sorter: (a, b) => a.appointmentDate.length - b.appointmentDate.length,
+      sortDirections: ['descend', 'ascend'],
+      ...getColumnSearchProps('appointmentDate','Appointment Date'),
       render:(text)=>moment(text).format('DD/MM/YY')
     },
     {
