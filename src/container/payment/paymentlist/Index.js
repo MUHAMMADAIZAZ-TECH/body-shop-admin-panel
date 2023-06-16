@@ -3,7 +3,6 @@ import { Row, Col, Table, Spin,Input,Space } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import Highlighter from 'react-highlight-words';
 import { SearchOutlined } from '@ant-design/icons';
-import { Link } from 'react-router-dom';
 import moment from 'moment';
 import FeatherIcon from 'feather-icons-react';
 import { RecordViewWrapper } from './Style';
@@ -223,15 +222,6 @@ console.log(TransactionStates.transactions);
   return (
     <RecordViewWrapper>
       <PageHeader
-        subTitle={
-          <div>
-            <Button className="btn-add_new" size="default" key="1" type="primary">
-              <Link to="/admin/payment/paymentlist-add">
-                <FeatherIcon icon="plus" size={14} /> <span>Add New</span>
-              </Link>
-            </Button>
-          </div>
-        }
         buttons={[
           <div key={1} className="search-box">
             <span className="search-icon">

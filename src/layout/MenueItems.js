@@ -53,11 +53,11 @@ function MenuItems({ darkMode, toggleCollapsed, topMenu, events }) {
           link: `${path}/salon/availibility-hours-view`,
           label: "Availability hours",
         },
-        {
-          key: "salon-addresses",
-          link: `${path}/salon/address-view`,
-          label: "Addresses",
-        },
+        // {
+        //   key: "salon-addresses",
+        //   link: `${path}/salon/address-view`,
+        //   label: "Addresses",
+        // },
       ],
     },
   ];
