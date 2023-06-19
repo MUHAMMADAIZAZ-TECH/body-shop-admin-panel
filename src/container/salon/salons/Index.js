@@ -1,15 +1,20 @@
 // eslint-disable-next-line camelcase
 import React, { useEffect, useState, useRef } from 'react';
 import { SearchOutlined } from '@ant-design/icons';
-import { Row, Col, Table, Spin, Avatar, Input, Space, Tag, Rate, Modal } from 'antd';
+import { Row, Col, Table, Spin, Avatar, Input, Space, 
+  Tag, Rate, Modal,Select,Form } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { CSVLink } from 'react-csv';
+import * as FileSaver from 'file-saver';
+import * as XLSX from 'xlsx';
 import moment from 'moment';
 import Highlighter from 'react-highlight-words';
 import FeatherIcon from 'feather-icons-react';
 import { RecordViewWrapper } from './Style';
 import { Main, TableWrapper } from '../../styled';
 import { Button } from '../../../components/buttons/buttons';
+import { alertModal } from '../../../components/modals/antd-modals';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { PageHeader } from '../../../components/page-headers/page-headers';
 import { getSalons, deleteSalon, selectSalon } from '../../../redux/salon/salonSlice';
@@ -30,12 +35,76 @@ const ViewPage = () => {
   });
   const dataSource = [];
   const [state, setState] = useState({
-    selectedRowKeys: [],
-    searchText: '',
-    selectedRows: []
+    isModalVisible: false,
+    fileName: 'bodyShop',
+    convertedTo: 'csv',
+    selectedRowKeys: 0,
+    selectedRows: [],
   });
+  const showModal = () => {
+    setState({
+      ...state,
+      isModalVisible: true,
+    });
+  };
+  const handleCancel = () => {
+    setState({
+      ...state,
+      isModalVisible: false,
+    });
+  };
+  // const usersTableData = [];
+  const csvData = [['id', 'name', 'phone_number', 'mobile_number','address',
+'ratings_average','availability_range','isActive','updated_at']];
+ 
+  const rowSelection = {
+    onChange: (selectedRowKeys, selectedRows) => {
+      setState({ ...state, selectedRowKeys, selectedRows });
+    },
+    getCheckboxProps: (record) => ({
+      disabled: record.name === 'Disabled User', // Column configuration not to be checked
+      name: record.name,
+    }),
+  };
 
-  const { selectedRowKeys } = state;
+
+  const { isModalVisible } = state;
+
+  const warning = () => {
+    alertModal.warning({
+      title: 'Please Select your Required Rows!',
+    });
+  };
+
+  const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+  const xlsxExtension = '.xlsx';
+
+  const exportToXLSX = (inputData, fileName) => {
+    const ws = XLSX.utils.json_to_sheet(inputData);
+    const wb = { Sheets: { data: ws }, SheetNames: ['data'] };
+    const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    const data = new Blob([excelBuffer], { type: fileType });
+    FileSaver.saveAs(data, fileName + xlsxExtension);
+    setState({
+      ...state,
+      isModalVisible: false,
+    });
+  };
+
+  const updateFileName = (e) => {
+    setState({
+      ...state,
+      fileName: e.target.value,
+    });
+  };
+  const updateFileType = (value) => {
+    setState({
+      ...state,
+      convertedTo: value,
+    });
+  };
+  const { Option } = Select;
+  const { fileName, convertedTo } = state;
   const [searchText, setSearchText] = useState('');
   const [previewImages, setPreviewImages] = useState([]);
   const [searchedColumn, setSearchedColumn] = useState('');
@@ -171,7 +240,7 @@ const ViewPage = () => {
   });
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewTitle, setPreviewTitle] = useState('');
-  const handleCancel = () => setPreviewOpen(false);
+  const handleCancelpreview = () => setPreviewOpen(false);
   const handlePreview = async (images) => {
     console.log(images)
     setPreviewOpen(true);
@@ -228,102 +297,102 @@ const ViewPage = () => {
         salon
       });
     });
-
-  const columns = [
-    {
-      title: 'Image',
-      dataIndex: 'images',
-      key: 'images',
-    },
-    {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
-      width: 350,
-      sorter: (a, b) => a.name.length - b.name.length,
-      sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('name'),
-      // render: text => <div style={{ whiteSpace: 'pre-wrap' }}>{text}</div>,
-
-    },
-    {
-      title: 'Phone no',
-      dataIndex: 'phone_number',
-      key: 'phone_number',
-      sorter: (a, b) => a.phone_number.length - b.phone_number.length,
-      sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('phone_number'),
-    },
-    {
-      title: 'Mobile no',
-      dataIndex: 'mobile_number',
-      key: 'mobile_number',
-      sorter: (a, b) => a.mobile_number.length - b.mobile_number.length,
-      sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('mobile_number'),
-    },
-    {
-      title: 'Address',
-      dataIndex: 'address',
-      key: 'address',
-      ...getColumnSearchProps('address'),
-    },
-    {
-      title: 'Rating',
-      dataIndex: 'ratings_average',
-      key: 'ratings_average',
-      sorter: (a, b) => a.ratings_average.length - b.ratings_average.length,
-      sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('ratings_average'),
-    },
-    {
-      title: 'Availibility Range',
-      dataIndex: 'availability_range',
-      key: 'availability_range',
-      align: 'center',
-      sorter: (a, b) => a.availability_range.length - b.availability_range.length,
-      sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('availability_range'),
-      render: text => <div>{text} km</div>,
-    },
-    {
-      title: 'Active status',
-      dataIndex: 'isActive',
-      key: 'isActive',
-      align: 'center',
-      sorter: (a, b) => a.isActive.length - b.isActive.length,
-      sortDirections: ['descend', 'ascend'],
-    },
-    // {
-    //   title: 'Closed',
-    //   dataIndex: 'closed',
-    //   key: 'closed',
-    //   align: 'center',
-    //   sorter: (a, b) => a.isActive.length - b.isActive.length,
-    //   sortDirections: ['descend', 'ascend'],
-    // },
-    {
-      title: 'Updated At',
-      dataIndex: 'updated_at',
-      key: 'updated_at',
-      align: 'center',
-      sorter: (a, b) => a.isActive.length - b.isActive.length,
-      sortDirections: ['descend', 'ascend'],
-      render: text => moment(text).fromNow(),
-    },
-    {
-      title: 'Actions',
-      dataIndex: 'action',
-      key: 'action',
-    },
-  ];
-  const onSelectChange = (selectedRowKey, rows) => {
-    setState({ ...state, selectedRowKeys: selectedRowKey, selectedRows: rows });
-  };
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChange,
-  };
+    state.selectedRows.map((rows) => {
+      const { id, name, phone_number,mobile_number, address,ratings_average,availability_range,
+        isActive ,updated_at} = rows.salon;
+        console.log(rows.salon)
+      return csvData.push([id, name, phone_number,mobile_number, address,ratings_average,availability_range,
+        isActive ,updated_at]);
+    });
+  
+    const columns = [
+      {
+        title: 'Image',
+        dataIndex: 'images',
+        key: 'images',
+      },
+      {
+        title: 'Name',
+        dataIndex: 'name',
+        key: 'name',
+        width: 350,
+        sorter: (a, b) => a.name.length - b.name.length,
+        sortDirections: ['descend', 'ascend'],
+        ...getColumnSearchProps('name'),
+        // render: text => <div style={{ whiteSpace: 'pre-wrap' }}>{text}</div>,
+  
+      },
+      {
+        title: 'Phone no',
+        dataIndex: 'phone_number',
+        key: 'phone_number',
+        sorter: (a, b) => a.phone_number.length - b.phone_number.length,
+        sortDirections: ['descend', 'ascend'],
+        ...getColumnSearchProps('phone_number'),
+      },
+      {
+        title: 'Mobile no',
+        dataIndex: 'mobile_number',
+        key: 'mobile_number',
+        sorter: (a, b) => a.mobile_number.length - b.mobile_number.length,
+        sortDirections: ['descend', 'ascend'],
+        ...getColumnSearchProps('mobile_number'),
+      },
+      {
+        title: 'Address',
+        dataIndex: 'address',
+        key: 'address',
+        ...getColumnSearchProps('address'),
+      },
+      {
+        title: 'Rating',
+        dataIndex: 'ratings_average',
+        key: 'ratings_average',
+        sorter: (a, b) => a.ratings_average.length - b.ratings_average.length,
+        sortDirections: ['descend', 'ascend'],
+        ...getColumnSearchProps('ratings_average'),
+      },
+      {
+        title: 'Availibility Range',
+        dataIndex: 'availability_range',
+        key: 'availability_range',
+        align: 'center',
+        sorter: (a, b) => a.availability_range.length - b.availability_range.length,
+        sortDirections: ['descend', 'ascend'],
+        ...getColumnSearchProps('availability_range'),
+        render: text => <div>{text} km</div>,
+      },
+      {
+        title: 'Active status',
+        dataIndex: 'isActive',
+        key: 'isActive',
+        align: 'center',
+        sorter: (a, b) => a.isActive.length - b.isActive.length,
+        sortDirections: ['descend', 'ascend'],
+      },
+      // {
+      //   title: 'Closed',
+      //   dataIndex: 'closed',
+      //   key: 'closed',
+      //   align: 'center',
+      //   sorter: (a, b) => a.isActive.length - b.isActive.length,
+      //   sortDirections: ['descend', 'ascend'],
+      // },
+      {
+        title: 'Updated At',
+        dataIndex: 'updated_at',
+        key: 'updated_at',
+        align: 'center',
+        sorter: (a, b) => a.isActive.length - b.isActive.length,
+        sortDirections: ['descend', 'ascend'],
+        render: text => moment(text).fromNow(),
+      },
+      {
+        title: 'Actions',
+        dataIndex: 'action',
+        key: 'action',
+      },
+    ];
 
   useEffect(() => {
     dispatch(getSalons())
@@ -332,16 +401,70 @@ const ViewPage = () => {
   return (
     <RecordViewWrapper>
       <PageHeader
-        subTitle={
-          <div>
-            <Button className="btn-add_new" size="default" key="1" type="primary">
-              <Link to="/admin/salon/salon-add">
-                <FeatherIcon icon="plus" size={14} /> <span>Add New</span>
-              </Link>
-            </Button>
-          </div>
-        }
         buttons={[
+          <div className="sDash_export-box">
+          {state.selectedRows.length ? (
+            <>
+              <Button className="btn-export" onClick={showModal}  
+              size="small" 
+              type="white">
+                 <FeatherIcon icon="download" size={14} />
+                Export
+              </Button>
+              <Modal
+                title="Export File"
+                wrapClassName="sDash_export-wrap"
+                visible={isModalVisible}
+                footer={null}
+                onCancel={handleCancel}
+              >
+                <Form name="contact">
+                  <Form.Item name="f_name">
+                    <Input placeholder="File Name" value={fileName} onChange={updateFileName} />
+                  </Form.Item>
+                  <Form.Item initialValue="CSV" name="f_type">
+                    <Select onChange={updateFileType}>
+                      <Option value="csv">CSV</Option>
+                      <Option value="xlxs">xlxs</Option>
+                    </Select>
+                  </Form.Item>
+                  <div className="sDash-button-grp">
+                    {convertedTo === 'csv' ? (
+                      <CSVLink filename={`${fileName}.csv`} data={csvData}>
+                        <Button onClick={handleCancel} className="btn-export" type="primary">
+                          Export
+                        </Button>
+                      </CSVLink>
+                    ) : (
+                      <Button
+                        className="btn-export"
+                        onClick={() => exportToXLSX(csvData, fileName)}
+                        type="primary"
+                      >
+                        Eport
+                      </Button>
+                    )}
+                    <Button htmlType="submit" onClick={handleCancel} size="default" type="white" outlined>
+                      Cancel
+                    </Button>
+                  </div>
+                </Form>
+              </Modal>
+            </>
+          ) : (
+            <Button className="btn-export"  size="small"  onClick={warning} type="white">
+               <FeatherIcon icon="download" size={14} />
+              Export
+            </Button>
+          )}
+        </div>,
+        <div>
+        <Button className="btn-add_new" size="small" key="1" type="primary">
+          <Link to="/admin/salon/salon-add">
+            <FeatherIcon icon="plus" size={14} /> <span>Add New</span>
+          </Link>
+        </Button>
+      </div>,
           <div key={1} className="search-box">
             <span className="search-icon">
               <FeatherIcon icon="search" size={14} />
@@ -376,7 +499,7 @@ const ViewPage = () => {
           </Col>
         </Row>
       </Main>
-      <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancel}>
+      <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancelpreview}>
         {previewImages?.map((image, key) => {
           return (
             <div>
