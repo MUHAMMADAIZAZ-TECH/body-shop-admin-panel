@@ -1,39 +1,34 @@
 // eslint-disable-next-line camelcase
 import React, { useEffect, useState, useRef } from 'react';
-import { SearchOutlined } from '@ant-design/icons';
-import { Row, Col, Table, Spin, Avatar, Input, Space, 
-  Tag, Rate, Modal,Select,Form } from 'antd';
+import { Row, Col, Table, Spin, Avatar, Tag, Rate, Modal } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { CSVLink } from 'react-csv';
-import * as FileSaver from 'file-saver';
-import * as XLSX from 'xlsx';
 import moment from 'moment';
-import Highlighter from 'react-highlight-words';
 import FeatherIcon from 'feather-icons-react';
 import { RecordViewWrapper } from './Style';
 import { Main, TableWrapper } from '../../styled';
 import { Button } from '../../../components/buttons/buttons';
-import { alertModal } from '../../../components/modals/antd-modals';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { PageHeader } from '../../../components/page-headers/page-headers';
 import { getSalons, deleteSalon, selectSalon } from '../../../redux/salon/salonSlice';
+import { exportToXLSX,getColumnSearchProps } from '../../../components/utilities/utilities';
+import MYExportButton from '../../../components/buttons/my-export-button/my-export-button';
 
-const avatarStyle = {
-  borderRadius: '4px', // Adjust the border radius as per your preference
-  width: '60px', // Adjust the width and height as per your preference
-  height: '60px',
-  lineHeight: '100px', // Vertically center the content
-  textAlign: 'center', // Horizontally center the content
-};
 const ViewPage = () => {
   const dispatch = useDispatch();
-  const { salonState } = useSelector(state => {
+  const { salonState,isLoading } = useSelector(state => {
     return {
-      salonState: state.salonStates
+      salonState: state.salonStates,
+      isLoading: state.salonStates.loading
     };
   });
   const dataSource = [];
+  const [searchText, setSearchText] = useState('');
+  const [previewImages, setPreviewImages] = useState([]);
+  const [searchedColumn, setSearchedColumn] = useState('');
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewTitle, setPreviewTitle] = useState('');
+  const searchInput = useRef(null);
   const [state, setState] = useState({
     isModalVisible: false,
     fileName: 'bodyShop',
@@ -41,22 +36,7 @@ const ViewPage = () => {
     selectedRowKeys: 0,
     selectedRows: [],
   });
-  const showModal = () => {
-    setState({
-      ...state,
-      isModalVisible: true,
-    });
-  };
-  const handleCancel = () => {
-    setState({
-      ...state,
-      isModalVisible: false,
-    });
-  };
-  // const usersTableData = [];
-  const csvData = [['id', 'name', 'phone_number', 'mobile_number','address',
-'ratings_average','availability_range','isActive','updated_at']];
- 
+
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
       setState({ ...state, selectedRowKeys, selectedRows });
@@ -66,49 +46,7 @@ const ViewPage = () => {
       name: record.name,
     }),
   };
-
-
-  const { isModalVisible } = state;
-
-  const warning = () => {
-    alertModal.warning({
-      title: 'Please Select your Required Rows!',
-    });
-  };
-
-  const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-  const xlsxExtension = '.xlsx';
-
-  const exportToXLSX = (inputData, fileName) => {
-    const ws = XLSX.utils.json_to_sheet(inputData);
-    const wb = { Sheets: { data: ws }, SheetNames: ['data'] };
-    const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
-    const data = new Blob([excelBuffer], { type: fileType });
-    FileSaver.saveAs(data, fileName + xlsxExtension);
-    setState({
-      ...state,
-      isModalVisible: false,
-    });
-  };
-
-  const updateFileName = (e) => {
-    setState({
-      ...state,
-      fileName: e.target.value,
-    });
-  };
-  const updateFileType = (value) => {
-    setState({
-      ...state,
-      convertedTo: value,
-    });
-  };
-  const { Option } = Select;
-  const { fileName, convertedTo } = state;
-  const [searchText, setSearchText] = useState('');
-  const [previewImages, setPreviewImages] = useState([]);
-  const [searchedColumn, setSearchedColumn] = useState('');
-  const searchInput = useRef(null);
+ 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
@@ -118,131 +56,9 @@ const ViewPage = () => {
     clearFilters();
     setSearchText('');
   };
-  // const checkOpeningHours = (openingHoursData) => {
-  //   // Get the current day and time using Moment.js
-  //   const currentDate = moment();
-  //   const currentDay = currentDate.format('dddd');
-  //   const currentTime = currentDate.format('HH:mm');
-  //   // Find the opening hours for the current day
-  //   const openingHours = openingHoursData.find(hours => hours.weekday === currentDay);
-
-  //   if (openingHours) {
-  //     const { closing_time, opening_time } = openingHours;
-
-  //     // Check if the current time is within opening hours
-  //     if (
-  //       moment(currentTime, 'HH:mm').isBetween(
-  //         moment(opening_time, 'HH:mm'),
-  //         moment(closing_time, 'HH:mm'),
-  //         null,
-  //         '[]'
-  //       ) || moment(currentTime, 'HH:mm').isBefore(moment(opening_time, 'HH:mm'))
-  //     ) {
-  //       return true
-  //     } 
-  //   } 
-  // };
-
-  const getColumnSearchProps = (dataIndex) => ({
-    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
-      <div
-        style={{
-          padding: 8,
-        }}
-      // onKeyDown={(e) => e.stopPropagation()}
-      >
-        <Input
-          ref={searchInput}
-          placeholder={`Search ${dataIndex}`}
-          value={selectedKeys[0]}
-          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-          style={{
-            marginBottom: 8,
-            display: 'block',
-          }}
-        />
-        <Space>
-          <Button
-            type="primary"
-            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-            icon={<SearchOutlined />}
-            size="small"
-            style={{
-              width: 90,
-            }}
-          >
-            Search
-          </Button>
-          <Button
-
-            onClick={() => clearFilters && handleReset(clearFilters)}
-            size="small"
-            style={{
-              width: 90,
-            }}
-          >
-            Reset
-          </Button>
-          <Button
-            type="primary"
-            size="small"
-            onClick={() => {
-              confirm({
-                closeDropdown: false,
-              });
-              setSearchText(selectedKeys[0]);
-              setSearchedColumn(dataIndex);
-            }}
-          >
-            Filter
-          </Button>
-          <Button
-            type="primary"
-            size="small"
-            onClick={() => {
-              close();
-            }}
-          >
-            close
-          </Button>
-        </Space>
-      </div>
-    ),
-    filterIcon: (filtered) => (
-      <SearchOutlined
-        style={{
-          color: filtered ? '#1677ff' : undefined,
-        }}
-      />
-    ),
-    onFilter: (value, record) =>
-      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
-    onFilterDropdownOpenChange: (visible) => {
-      if (visible) {
-        setTimeout(() => searchInput.current?.select(), 100);
-      }
-    },
-    render: (text) =>
-      searchedColumn === dataIndex ? (
-        <Highlighter
-          highlightStyle={{
-            backgroundColor: '#ffc069',
-            padding: 0,
-          }}
-          searchWords={[searchText]}
-          autoEscape
-          textToHighlight={text ? text.toString() : ''}
-        />
-      ) : (
-        text
-      ),
-  });
-  const [previewOpen, setPreviewOpen] = useState(false);
-  const [previewTitle, setPreviewTitle] = useState('');
+ 
   const handleCancelpreview = () => setPreviewOpen(false);
   const handlePreview = async (images) => {
-    console.log(images)
     setPreviewOpen(true);
     setPreviewImages(images)
     setPreviewTitle('Saloon Images');
@@ -261,10 +77,7 @@ const ViewPage = () => {
     }
     return false;
   };
-  const handleEdit = (salon) => {
-    dispatch(selectSalon(salon))
-    console.log(salon)
-  }
+  const handleEdit = (salon) => dispatch(selectSalon(salon))
   const onHandleSearch = (e) => {
     setState({ ...state, searchText: e.target.value });
   };
@@ -273,7 +86,7 @@ const ViewPage = () => {
       const { id, images, name, phone_number, mobile_number, address, ratings_average, availability_range, updated_at, isActive } = salon;
       return dataSource.push({
         key: key + 1,
-        images: (images && <Avatar style={avatarStyle} src={images[0]} size={60} onClick={() => handlePreview(salon.images)} />),
+        images: (images && <Avatar className='myavatar' src={images[0]} size={60} onClick={() => handlePreview(salon.images)} />),
         name,
         phone_number,
         mobile_number,
@@ -297,10 +110,11 @@ const ViewPage = () => {
         salon
       });
     });
+    const csvData = [['id', 'name', 'phone_number', 'mobile_number','address',
+    'ratings_average','availability_range','isActive','updated_at']];
     state.selectedRows.map((rows) => {
       const { id, name, phone_number,mobile_number, address,ratings_average,availability_range,
         isActive ,updated_at} = rows.salon;
-        console.log(rows.salon)
       return csvData.push([id, name, phone_number,mobile_number, address,ratings_average,availability_range,
         isActive ,updated_at]);
     });
@@ -318,7 +132,7 @@ const ViewPage = () => {
         width: 350,
         sorter: (a, b) => a.name.length - b.name.length,
         sortDirections: ['descend', 'ascend'],
-        ...getColumnSearchProps('name'),
+        ...getColumnSearchProps('Name','name', handleSearch, handleReset, searchInput, searchedColumn, searchText, setSearchText, setSearchedColumn),
         // render: text => <div style={{ whiteSpace: 'pre-wrap' }}>{text}</div>,
   
       },
@@ -328,7 +142,7 @@ const ViewPage = () => {
         key: 'phone_number',
         sorter: (a, b) => a.phone_number.length - b.phone_number.length,
         sortDirections: ['descend', 'ascend'],
-        ...getColumnSearchProps('phone_number'),
+        ...getColumnSearchProps('Phone no','phone_number', handleSearch, handleReset, searchInput, searchedColumn, searchText, setSearchText, setSearchedColumn),
       },
       {
         title: 'Mobile no',
@@ -336,13 +150,13 @@ const ViewPage = () => {
         key: 'mobile_number',
         sorter: (a, b) => a.mobile_number.length - b.mobile_number.length,
         sortDirections: ['descend', 'ascend'],
-        ...getColumnSearchProps('mobile_number'),
+        ...getColumnSearchProps('Mobile no','mobile_number', handleSearch, handleReset, searchInput, searchedColumn, searchText, setSearchText, setSearchedColumn),
       },
       {
         title: 'Address',
         dataIndex: 'address',
         key: 'address',
-        ...getColumnSearchProps('address'),
+        ...getColumnSearchProps('Address','address', handleSearch, handleReset, searchInput, searchedColumn, searchText, setSearchText, setSearchedColumn),
       },
       {
         title: 'Rating',
@@ -350,7 +164,6 @@ const ViewPage = () => {
         key: 'ratings_average',
         sorter: (a, b) => a.ratings_average.length - b.ratings_average.length,
         sortDirections: ['descend', 'ascend'],
-        ...getColumnSearchProps('ratings_average'),
       },
       {
         title: 'Availibility Range',
@@ -359,7 +172,6 @@ const ViewPage = () => {
         align: 'center',
         sorter: (a, b) => a.availability_range.length - b.availability_range.length,
         sortDirections: ['descend', 'ascend'],
-        ...getColumnSearchProps('availability_range'),
         render: text => <div>{text} km</div>,
       },
       {
@@ -403,60 +215,7 @@ const ViewPage = () => {
       <PageHeader
         buttons={[
           <div className="sDash_export-box">
-          {state.selectedRows.length ? (
-            <>
-              <Button className="btn-export" onClick={showModal}  
-              size="small" 
-              type="white">
-                 <FeatherIcon icon="download" size={14} />
-                Export
-              </Button>
-              <Modal
-                title="Export File"
-                wrapClassName="sDash_export-wrap"
-                visible={isModalVisible}
-                footer={null}
-                onCancel={handleCancel}
-              >
-                <Form name="contact">
-                  <Form.Item name="f_name">
-                    <Input placeholder="File Name" value={fileName} onChange={updateFileName} />
-                  </Form.Item>
-                  <Form.Item initialValue="CSV" name="f_type">
-                    <Select onChange={updateFileType}>
-                      <Option value="csv">CSV</Option>
-                      <Option value="xlxs">xlxs</Option>
-                    </Select>
-                  </Form.Item>
-                  <div className="sDash-button-grp">
-                    {convertedTo === 'csv' ? (
-                      <CSVLink filename={`${fileName}.csv`} data={csvData}>
-                        <Button onClick={handleCancel} className="btn-export" type="primary">
-                          Export
-                        </Button>
-                      </CSVLink>
-                    ) : (
-                      <Button
-                        className="btn-export"
-                        onClick={() => exportToXLSX(csvData, fileName)}
-                        type="primary"
-                      >
-                        Eport
-                      </Button>
-                    )}
-                    <Button htmlType="submit" onClick={handleCancel} size="default" type="white" outlined>
-                      Cancel
-                    </Button>
-                  </div>
-                </Form>
-              </Modal>
-            </>
-          ) : (
-            <Button className="btn-export"  size="small"  onClick={warning} type="white">
-               <FeatherIcon icon="download" size={14} />
-              Export
-            </Button>
-          )}
+            <MYExportButton state={state} setState={setState} exportToXLSX={exportToXLSX} csvData={csvData}/>
         </div>,
         <div>
         <Button className="btn-add_new" size="small" key="1" type="primary">
@@ -479,7 +238,7 @@ const ViewPage = () => {
         <Row gutter={15}>
           <Col className="w-100" md={24}>
             <Cards headless>
-              {false ? (
+              {isLoading ? (
                 <div className="spin">
                   <Spin />
                 </div>

@@ -20,7 +20,7 @@ function SignIn() {
   const dispatch = useDispatch();
   const [username, setUsername] = useState("admin@example.com"); // State variable for username
   const [password, setPassword] = useState("12345678"); 
-  const isLoading = useSelector((state) => state.auth.loading);
+  const isLoading = useSelector((state) => state.authenticationStates.loading);
   const authStates = useSelector((state) => state.authenticationStates);
   const [form] = Form.useForm();
   const [state, setState] = useState({

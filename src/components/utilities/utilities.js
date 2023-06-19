@@ -1,4 +1,12 @@
 /* eslint-disable no-underscore-dangle */
+import React from 'react';
+import * as FileSaver from 'file-saver';
+import * as XLSX from 'xlsx';
+import { Input, Space, Button } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
+import Highlighter from 'react-highlight-words';
+
+
 const textRefactor = (text, size) => {
   return `${text
     .split(' ')
@@ -97,4 +105,96 @@ function customTooltips (tooltip) {
   tooltipEl.style.padding = `${tooltip.yPadding}px ${tooltip.xPadding}px`;
 };
 
-export { textRefactor, chartLinearGradient, customTooltips };
+const exportToXLSX = (inputData, fileName,setState,state) => {
+  const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+  const xlsxExtension = '.xlsx';
+  const ws = XLSX.utils.json_to_sheet(inputData);
+  const wb = { Sheets: { data: ws }, SheetNames: ['data'] };
+  const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+  const data = new Blob([excelBuffer], { type: fileType });
+  FileSaver.saveAs(data, fileName + xlsxExtension);
+  setState({
+    ...state,
+    isModalVisible: false,
+  });
+};
+
+const getColumnSearchProps = (placeholder,dataIndex, handleSearch, handleReset, searchInput, searchedColumn, searchText, setSearchText, setSearchedColumn) => ({
+  filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
+    <div style={{ padding: 8 }}>
+      <Input
+        ref={searchInput}
+        placeholder={`Search ${placeholder}`}
+        value={selectedKeys[0]}
+        onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+        onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+        style={{ marginBottom: 8, display: 'block' }}
+      />
+      <Space>
+        <Button
+          type="primary"
+          onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          icon={<SearchOutlined />}
+          size="small"
+          style={{ width: 90 }}
+        >
+          Search
+        </Button>
+        <Button
+          onClick={() => clearFilters && handleReset(clearFilters)}
+          size="small"
+          style={{ width: 90 }}
+        >
+          Reset
+        </Button>
+        <Button
+          type="primary"
+          size="small"
+          onClick={() => {
+            confirm({ closeDropdown: false });
+            setSearchText(selectedKeys[0]);
+            setSearchedColumn(dataIndex);
+          }}
+        >
+          Filter
+        </Button>
+        <Button
+          type="primary"
+          size="small"
+          onClick={() => {
+            close();
+          }}
+        >
+          Close
+        </Button>
+      </Space>
+    </div>
+  ),
+  filterIcon: (filtered) => (
+    <SearchOutlined
+      style={{
+        color: filtered ? '#1677ff' : undefined,
+      }}
+    />
+  ),
+  onFilter: (value, record) =>
+    record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+  onFilterDropdownOpenChange: (visible) => {
+    if (visible) {
+      setTimeout(() => searchInput.current?.select(), 100);
+    }
+  },
+  render: (text) =>
+    searchedColumn === dataIndex ? (
+      <Highlighter
+        highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+        searchWords={[searchText]}
+        autoEscape
+        textToHighlight={text ? text.toString() : ''}
+      />
+    ) : (
+      text
+    ),
+});
+
+export { textRefactor, chartLinearGradient, customTooltips,exportToXLSX,getColumnSearchProps };
