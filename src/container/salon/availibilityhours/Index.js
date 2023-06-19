@@ -1,5 +1,5 @@
 import React, { useEffect, useState ,useRef} from 'react';
-import { Row, Col, Table, Spin,Input, Space } from 'antd';
+import { Row, Col, Table, Spin,Input, Space,Form ,Select} from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import Highlighter from 'react-highlight-words';
@@ -11,15 +11,17 @@ import { Main, TableWrapper } from '../../styled';
 import { Button } from '../../../components/buttons/buttons';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { PageHeader } from '../../../components/page-headers/page-headers';
-import { deleteAvailibilityHours, getAvailibilityHours } from '../../../redux/salon/salonSlice';
+import { deleteAvailibilityHours, getAvailibilityHourbysalon, getAvailibilityHours, getSalons } from '../../../redux/salon/salonSlice';
 
+const { Option } = Select;
 const ViewPage = () => {
   const dispatch = useDispatch();
   const { salonState } = useSelector(state => {
     return {
-      salonState: state.salonStates
+      salonState: state.salonStates,
     };
   });
+  const [form] = Form.useForm();
   const [searchText, setSearchText] = useState('');
   const searchInput = useRef(null);
   const [searchedColumn, setSearchedColumn] = useState('');
@@ -53,20 +55,15 @@ const ViewPage = () => {
     }
     return false;
   };
-
-  const onHandleSearch = e => {
-    console.log(e.target.value)
-  };
-
-  if (salonState?.availibilityhours?.data?.length)
-  salonState?.availibilityhours?.data?.map((availhour, key) => {
-      const { id, weekday, opening_time, closing_time, salon_name, updated_at } = availhour;
+  console.log(salonState?.availibilityhoursBysalon);
+  if (salonState?.availibilityhoursBysalon?.length)
+  salonState?.availibilityhoursBysalon?.map((availhour, key) => {
+      const { id, weekday, opening_time, closing_time, updated_at } = availhour;
       return dataSource.push({
         key: key + 1,
         weekday,
         opening_time,
         closing_time,
-        salon_name,
         updated_at,
         action: (
           <div className="table-actions">
@@ -196,14 +193,6 @@ const ViewPage = () => {
       key: 'closing_time',
     },
     {
-      title: 'Salon',
-      dataIndex: 'salon_name',
-      key: 'salon_name',
-      sorter: (a, b) => a.salon_name.length - b.salon_name.length,
-      sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('salon_name')
-    },
-    {
       title: 'Updated At',
       dataIndex: 'updated_at',
       key: 'updated_at',
@@ -225,8 +214,20 @@ const ViewPage = () => {
     onChange: onSelectChange,
   };
   useEffect(()=>{
-    dispatch(getAvailibilityHours())
+    dispatch(getSalons())
   },[])
+  const handleSubmit = async values => {
+    try {
+      await form.validateFields(); // Validate all form fields
+      dispatch(getAvailibilityHourbysalon({ 
+       ...values,
+      }));
+        // form.resetFields();
+    } catch (error) {
+      console.log('Validation error:', error);
+    }
+   
+  };
   return (
     <RecordViewWrapper>
       <PageHeader
@@ -239,14 +240,6 @@ const ViewPage = () => {
             </Button>
           </div>
         }
-        buttons={[
-          <div key={1} className="search-box">
-            <span className="search-icon">
-              <FeatherIcon icon="search" size={14} />
-            </span>
-            <input onChange={onHandleSearch} type="text" name="recored-search" placeholder="Search Here" />
-          </div>,
-        ]}
         ghost
         title="Availability Hours | Availability Hours Management"
       />
@@ -254,6 +247,49 @@ const ViewPage = () => {
         <Row gutter={15}>
           <Col className="w-100" md={24}>
             <Cards headless>
+            <Form name="multi-form" layout="vertical" style={{ width: '100%' }} form={form} onFinish={handleSubmit}>
+                  <Row gutter={30}>
+                    <Col sm={10} xs={24} className="mb-25">
+                    <Form.Item name="salon_id" label="Salon" initialValue="" rules={[{ required: true, message: 'Please select salon' }]} >
+                        <Select size="large" className="sDash_fullwidth-select">
+                          <Option value="">Please Select</Option>
+                          {salonState.approvedSalons && salonState.approvedSalons.length>0 && salonState.approvedSalons?.map((salon)=><Option value={salon.id}>{salon.name}</Option>) }
+                        </Select>
+                      </Form.Item>
+                      </Col>
+                    <Col sm={10} xs={24} className="mb-25">
+                    <Form.Item name="weekday" label="Day" initialValue="" >
+                        <Select size="large" className="sDash_fullwidth-select">
+                          <Option value="">Please Select</Option>
+                          <Option value="Sunday">Sunday</Option>
+                          <Option value="Monday">Monday</Option>
+                          <Option value="Tuesday">Tuesday</Option>
+                          <Option value="Wednesday">Wednesday</Option>
+                          <Option value="Thursday">Thursday</Option>
+                          <Option value="Friday">Friday</Option>
+                          <Option value="Saturday">Saturday</Option>
+                        </Select>
+                      </Form.Item>
+                    </Col>
+                    <Col sm={2} xs={24} className="mb-25 mt-25">
+                      <Button size="default" htmlType="Save" type="primary">
+                        {/* {isLoading ? 'Loading...' : 'Submit'} */}
+                        Search
+                      </Button>
+                    </Col>
+                    <Col sm={2} xs={24} className="mb-25 mt-25">
+                      <Button
+                        className="btn-cancel"
+                        size="large"
+                        onClick={() => {
+                          return form.resetFields();
+                        }}
+                      >
+                        Reset
+                      </Button>
+                    </Col>
+                  </Row>
+                </Form>
               {false ? (
                 <div className="spin">
                   <Spin />

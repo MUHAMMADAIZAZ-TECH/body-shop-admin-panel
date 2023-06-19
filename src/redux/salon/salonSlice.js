@@ -1,5 +1,5 @@
 import { createSlice,createAsyncThunk } from "@reduxjs/toolkit";
-import { createaddress, createavailibityhours, createsalon, deleteaddress, deleteavailibityhours, deletesalon, deletesalonreview, getaddress, getallreviews, getavailibilityhour, getavailibilityhours, getsalon, getsalonreview, getsalons, updateaddress, updateavailibityhours, updatesalon, updatesalonreview } from "./salonApis";
+import { createaddress, createavailibityhours, createsalon, deleteaddress, deleteavailibityhours, deletesalon, deletesalonreview, getaddress, getallreviews, getavailibilityhour, getavailibilityhours, gethourbysalon, getsalon, getsalonreview, getsalons, updateaddress, updateavailibityhours, updatesalon, updatesalonreview } from "./salonApis";
 
 const initialState = {
     status:false,
@@ -18,6 +18,7 @@ const initialState = {
     salonreviews:[],
     salonreview:null,
     addresses:[],
+    availibilityhoursBysalon:[]
 }
 // salon-crud
 export const getSalons = createAsyncThunk(
@@ -68,6 +69,13 @@ export const getAvailibilityHour = createAsyncThunk(
   async (id) => {
       const response = await getavailibilityhour(id)
       return response;
+  }
+);
+export const getAvailibilityHourbysalon = createAsyncThunk(
+  'get/getAvailibilityHourbysalon',
+  async (body) => {
+      const response = await gethourbysalon(body)
+      return response.data;
   }
 );
 export const createAvailibilityHours = createAsyncThunk(
@@ -262,6 +270,24 @@ const salonSlice = createSlice({
             state.availibilityhours = action.payload
           })
           .addCase(getAvailibilityHours.rejected, (state, action) => {
+            state.status = false;
+            state.loading = false;
+            state.error = action.error;
+            state.message = 'Something went wrong';
+          });
+          builder
+          .addCase(getAvailibilityHourbysalon.pending, (state) => {
+            state.status = false;
+            state.loading = true;
+            state.error = null;
+            state.message = null;
+          })
+          .addCase(getAvailibilityHourbysalon.fulfilled, (state, action) => {
+            state.status = true;
+            state.loading = false;
+            state.availibilityhoursBysalon = action.payload
+          })
+          .addCase(getAvailibilityHourbysalon.rejected, (state, action) => {
             state.status = false;
             state.loading = false;
             state.error = action.error;

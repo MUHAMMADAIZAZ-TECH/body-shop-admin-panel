@@ -60,6 +60,7 @@ export const updatesalon = async (body) => {
   }]
   const files = body?.files.map((file)=>file.originFileObj)
   const formData = new FormData();
+  
   formData.append('name', body?.name);
   formData.append('description', body?.description);
   formData.append('phone_number', body?.phone_number);
@@ -69,7 +70,13 @@ export const updatesalon = async (body) => {
   formData.append('latitude', '33');
   formData.append('availability_range', body?.availability_range.toString());
   formData.append('availability_hours', JSON.stringify(AvailabilityHours));
-  formData.append('isApproved', body.isApproved);
+  if(body.isApproved===true || body.isApproved===1){
+    formData.append('isApproved', 1);
+  }
+  else if(body.isApproved===false || body.isApproved===0){
+    formData.append('isApproved', 0);
+  }
+ 
   formData.append('isActive', body.isActive);
   files.forEach((file) => {
     formData.append(`files`, file); // Append each file with a unique field name
@@ -108,9 +115,24 @@ export const getavailibilityhours = async () => {
 }
 export const getavailibilityhour = async (id) => {
   try {
-    const response = await DataService.get(`/api/v1/availabilityHours/${id}`);
+    const response = await DataService.get(`/api/v1/availabilityHours/byId/${id}`);
     return response.data;
   } catch (error) {
+    return error;
+  }
+}
+export const gethourbysalon = async (body) => {
+  try {
+    let response;
+    if(body.weekday!==''){
+      response  = await DataService.get(`/api/v1/availabilityHours/${body.salon_id}?weekday=${body.weekday}`);
+    }
+    else{
+      response = await DataService.get(`/api/v1/availabilityHours/${body.salon_id}`);
+    }
+    return response.data;
+  } catch (error) {
+    console.log(error)
     return error;
   }
 }
