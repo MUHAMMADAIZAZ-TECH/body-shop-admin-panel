@@ -78,7 +78,7 @@ const ViewBooking = ({ match }) => {
                                         <Steps current={BookingStatus(bookingStates?.Booking?.booking_status)} items={steps} />
                                         <div style={{ marginTop: 20 }} />
                                         <List
-                                            header={<div>Booking ID #{bookingStates?.Booking?.serviceId}</div>}
+                                            header={<div>Booking ID #{bookingStates?.Booking?.id}</div>}
                                             itemLayout="horizontal"
                                             dataSource={[1]}
                                             renderItem={() => (
