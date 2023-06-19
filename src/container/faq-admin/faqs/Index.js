@@ -10,16 +10,12 @@ import { Button } from '../../../components/buttons/buttons';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { PageHeader } from '../../../components/page-headers/page-headers';
 import {deleteFaq, getFaqs} from '../../../redux/faq/faqSlice'
-import {
-  axiosDataSearch,
-} from '../../../redux/crud/axios/actionCreator';
 
 const ViewPage = () => {
   const dispatch = useDispatch();
-  const { crud, isLoading ,faqStates} = useSelector(state => {
+  const { isLoading ,faqStates} = useSelector(state => {
     return {
-      crud: state.AxiosCrud.data,
-      isLoading: state.AxiosCrud.loading,
+      isLoading: state.faqStates.loading,
       faqStates: state.faqStates
     };
   });
@@ -50,7 +46,7 @@ const ViewPage = () => {
   };
 
   const onHandleSearch = e => {
-    dispatch(axiosDataSearch(e.target.value, crud));
+    console.log(e.target.value)
   };
 
   if (faqStates?.faqs.length)

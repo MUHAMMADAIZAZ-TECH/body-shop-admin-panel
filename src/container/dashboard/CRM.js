@@ -1,4 +1,4 @@
-import React, { lazy, Suspense,useEffect } from 'react';
+import React, { Suspense,useEffect } from 'react';
 import { Row, Col, Skeleton } from 'antd';
 import FeatherIcon from 'feather-icons-react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -15,8 +15,8 @@ import { CalendarButtonPageHeader } from '../../components/buttons/calendar-butt
 
 import { getSalons } from '../../redux/salon/salonSlice';
 
-const TotalRevenue = lazy(() => import('./overview/crm/TotalRevenue'));
-const UserListTable = lazy(() => import('../pages/overview/UserTable'));
+// const TotalRevenue = lazy(() => import('./overview/crm/TotalRevenue'));
+// const UserListTable = lazy(() => import('../pages/overview/UserTable'));
 // const ClosedDeals = lazy(() => import('./overview/crm/ClosedDeals'));
 // const SalesLeaderBoard = lazy(() => import('./overview/crm/SalesLeaderboard'));
 // const EmailSent = lazy(() => import('./overview/crm/EmailSent'));
@@ -63,6 +63,7 @@ function CRM() {
       salonState: state.salonStates
     };
   });
+  console.log(salonState);
   useEffect(()=>{
     dispatch(getSalons())
   },[])
@@ -228,9 +229,9 @@ function CRM() {
                   <Skeleton active />
                 </Cards>
               }
-            >
-              <TotalRevenue title="Earnings" />
-            </Suspense>
+            />
+              {/* <TotalRevenue title="Earnings" /> */}
+            {/* </Suspense> */}
           </Col>
           <Col xxl={12} xs={24}>
             <Suspense
@@ -239,10 +240,11 @@ function CRM() {
                   <Skeleton active />
                 </Cards>
               }
-            >
-              <UserListTable data={salonState?.approvedSalons}/>
+              
+            />
+              {/* <UserListTable data={salonState?.approvedSalons}/> */}
               {/* <ClosedDeals /> */}
-            </Suspense>
+            {/* </Suspense> */}
           </Col>
          {/* <Col xxl={8} xl={12} xs={24}>
             <Suspense

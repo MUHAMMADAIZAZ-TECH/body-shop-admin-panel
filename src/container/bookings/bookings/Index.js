@@ -10,9 +10,6 @@ import { RecordViewWrapper } from './Style';
 import { Main, TableWrapper } from '../../styled';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { PageHeader } from '../../../components/page-headers/page-headers';
-import {
-  axiosDataSearch,
-} from '../../../redux/crud/axios/actionCreator';
 import { getBookings } from '../../../redux/bookings/bookingSlice';
 
 const ViewPage = () => {
@@ -124,10 +121,9 @@ const ViewPage = () => {
       ),
   });
   const dispatch = useDispatch();
-  const { crud, isLoading,bookingStates } = useSelector(state => {
+  const { isLoading,bookingStates } = useSelector(state => {
     return {
-      crud: state.AxiosCrud.data,
-      isLoading: state.AxiosCrud.loading,
+      isLoading: state.bookingStates.loading,
       bookingStates:state.bookingStates
     };
   });
@@ -143,7 +139,7 @@ const ViewPage = () => {
   const dataSource = [];
 
   const onHandleSearch = e => {
-    dispatch(axiosDataSearch(e.target.value, crud));
+    console.log(e.target.value)
   };
 
   if (bookingStates?.Bookings?.length)

@@ -24,8 +24,7 @@ const ViewPage = () => {
   const dispatch = useDispatch();
   const { isLoading,servicesStates } = useSelector(state => {
     return {
-      crud: state.AxiosCrud.data,
-      isLoading: state.AxiosCrud.loading,
+      isLoading: state.servicesStates.loading,
       servicesStates: state.servicesStates,
     };
   });

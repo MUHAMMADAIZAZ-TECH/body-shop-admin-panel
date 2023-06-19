@@ -11,10 +11,8 @@ import { getSalonReview, updateSalonReview } from '../../../redux/salon/salonSli
 
 const Edit = ({ match }) => {
   const dispatch = useDispatch();
-  const {  isLoading,salonState} = useSelector(state => {
+  const { salonState} = useSelector(state => {
     return {
-      isLoading: state.AxiosCrud.loading,
-      url: state.AxiosCrud.url,
       salonState: state.salonStates
     };
   });
@@ -94,7 +92,8 @@ const Edit = ({ match }) => {
                         Cancel
                       </Button>
                       <Button size="default" htmlType="Save" type="primary">
-                        {isLoading ? 'Loading...' : 'Submit'}
+                        {/* {isLoading ? 'Loading...' : 'Submit'} */}
+                        Submit
                       </Button>
                     </div>
                   </div>

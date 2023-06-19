@@ -11,17 +11,12 @@ import { Main, TableWrapper } from '../../styled';
 import { Button } from '../../../components/buttons/buttons';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { PageHeader } from '../../../components/page-headers/page-headers';
-import {
-  axiosDataSearch,
-} from '../../../redux/crud/axios/actionCreator';
 import { deleteAvailibilityHours, getAvailibilityHours } from '../../../redux/salon/salonSlice';
 
 const ViewPage = () => {
   const dispatch = useDispatch();
-  const { crud, isLoading,salonState } = useSelector(state => {
+  const { salonState } = useSelector(state => {
     return {
-      crud: state.AxiosCrud.data,
-      isLoading: state.AxiosCrud.loading,
       salonState: state.salonStates
     };
   });
@@ -60,7 +55,7 @@ const ViewPage = () => {
   };
 
   const onHandleSearch = e => {
-    dispatch(axiosDataSearch(e.target.value, crud));
+    console.log(e.target.value)
   };
 
   if (salonState?.availibilityhours?.data?.length)
@@ -259,7 +254,7 @@ const ViewPage = () => {
         <Row gutter={15}>
           <Col className="w-100" md={24}>
             <Cards headless>
-              {isLoading ? (
+              {false ? (
                 <div className="spin">
                   <Spin />
                 </div>

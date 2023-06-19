@@ -10,17 +10,13 @@ import { Main, TableWrapper } from '../../styled';
 import { Button } from '../../../components/buttons/buttons';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { PageHeader } from '../../../components/page-headers/page-headers';
-import {
-  axiosDataSearch,
-} from '../../../redux/crud/axios/actionCreator';
 import { getTransactions } from '../../../redux/transactions/transactionSlice';
 
 const ViewPage = () => {
   const dispatch = useDispatch();
-  const { crud, isLoading ,TransactionStates} = useSelector(state => {
+  const { isLoading ,TransactionStates} = useSelector(state => {
     return {
-      crud: state.AxiosCrud.data,
-      isLoading: state.AxiosCrud.loading,
+      isLoading: state.transactionStates.loading,
       TransactionStates:state.transactionStates
     };
   });
@@ -47,7 +43,7 @@ console.log(TransactionStates.transactions);
   const dataSource = [];
 
   const onHandleSearch = e => {
-    dispatch(axiosDataSearch(e.target.value, crud));
+    console.log(e.target.value);
   };
 
   if (TransactionStates?.transactions?.length)

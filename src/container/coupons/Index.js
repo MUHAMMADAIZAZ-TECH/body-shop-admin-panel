@@ -17,8 +17,7 @@ const ViewPage = () => {
   const dispatch = useDispatch();
   const { isLoading,couponStates } = useSelector(state => {
     return {
-      crud: state.AxiosCrud.data,
-      isLoading: state.AxiosCrud.loading,
+      isLoading: state.couponStates.loading,
       couponStates:state.couponStates
     };
   });

@@ -14,10 +14,8 @@ import { createAvailibilityHours, getSalons } from '../../../redux/salon/salonSl
 const { Option } = Select;
 const AddNew = ({ match }) => {
   const dispatch = useDispatch();
-  const {salonState, isLoading } = useSelector(state => {
+  const {salonState } = useSelector(state => {
     return {
-      isLoading: state.AxiosCrud.loading,
-      url: state.AxiosCrud.url,
       salonState: state.salonStates
     };
   });
@@ -115,7 +113,8 @@ const AddNew = ({ match }) => {
                         Cancel
                       </Button>
                       <Button size="default" htmlType="Save" type="primary">
-                        {isLoading ? 'Loading...' : 'Submit'}
+                        {/* {isLoading ? 'Loading...' : 'Submit'} */}
+                        Submit
                       </Button>
                     </div>
                   </div>

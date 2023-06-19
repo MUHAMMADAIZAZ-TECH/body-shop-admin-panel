@@ -11,10 +11,6 @@ import { Main, TableWrapper } from '../styled';
 import { Button } from '../../components/buttons/buttons';
 import { Cards } from '../../components/cards/frame/cards-frame';
 import { PageHeader } from '../../components/page-headers/page-headers';
-import {
-  axiosDataRead,
-  axiosDataSearch,
-} from '../../redux/crud/axios/actionCreator';
 import { deleteCategory, getCategories } from '../../redux/categories/categoriesSlice';
 
 const avatarStyle = {
@@ -133,10 +129,9 @@ const ViewPage = () => {
       ),
   });
   const dispatch = useDispatch();
-  const { crud, isLoading ,categoryStates} = useSelector(state => {
+  const { isLoading ,categoryStates} = useSelector(state => {
     return {
-      crud: state.AxiosCrud.data,
-      isLoading: state.AxiosCrud.loading,
+      isLoading: state.categoryStates.loading,
       categoryStates: state.categoryStates
     };
   });
@@ -146,11 +141,6 @@ const ViewPage = () => {
   });
   const { selectedRowKeys } = state;
 
-  useEffect(() => {
-    if (axiosDataRead) {
-      dispatch(axiosDataRead());
-    }
-  }, [dispatch]);
   const dataSource = [];
 
   const handleDelete = id => {
@@ -167,7 +157,7 @@ const ViewPage = () => {
   };
 
   const onHandleSearch = e => {
-    dispatch(axiosDataSearch(e.target.value, crud));
+    console.log(e.target.value)
   };
   console.log(categoryStates)
   if (categoryStates?.categories?.length)

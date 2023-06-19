@@ -16,10 +16,8 @@ import { deleteSalonReview, getAllReviews } from '../../../redux/salon/salonSlic
 
 const ViewPage = () => {
   const dispatch = useDispatch();
-  const { isLoading,salonState } = useSelector(state => {
+  const { salonState } = useSelector(state => {
     return {
-      crud: state.AxiosCrud.data,
-      isLoading: state.AxiosCrud.loading,
       salonState: state.salonStates
     };
   });
@@ -254,7 +252,7 @@ const ViewPage = () => {
         <Row gutter={15}>
           <Col className="w-100" md={24}>
             <Cards headless>
-              {isLoading ? (
+              {false ? (
                 <div className="spin">
                   <Spin />
                 </div>

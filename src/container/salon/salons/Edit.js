@@ -23,11 +23,9 @@ const Edit = ({ match }) => {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   const [previewTitle, setPreviewTitle] = useState('');
-  const { salon, isLoading} = useSelector(state => {
+  const { salon } = useSelector(state => {
     return {
       salon: state.salonStates.salon,
-      isLoading: state.AxiosCrud.loading,
-      url: state.AxiosCrud.url,
       salonState: state.salonStates
     };
   });
@@ -212,7 +210,8 @@ const Edit = ({ match }) => {
                         Cancel
                       </Button>
                       <Button size="default" htmlType="Save" type="primary">
-                        {isLoading ? 'Loading...' : 'Submit'}
+                        {/* {isLoading ? 'Loading...' : 'Submit'} */}
+                        Submit
                       </Button>
                     </div>
                   </div>

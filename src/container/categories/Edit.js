@@ -29,9 +29,7 @@ const Edit = ({ match }) => {
   const [previewTitle, setPreviewTitle] = useState('');
   const { category, isLoading } = useSelector(state => {
     return {
-      salon: state.salonStates.salon,
-      isLoading: state.AxiosCrud.loading,
-      url: state.AxiosCrud.url,
+      isLoading: state.categoryStates.loading,
       category: state.categoryStates.category
     };
   });
@@ -56,7 +54,6 @@ const Edit = ({ match }) => {
     try {
       await form.validateFields(); // Validate all form fields
       dispatch(updateCategory({id:match.params.id, ...values, file:files[0].originFileObj }))
-      // dispatch(createSalon({ ...values, files }));
       console.log(values)
     } catch (error) {
       console.log('Validation error:', error);

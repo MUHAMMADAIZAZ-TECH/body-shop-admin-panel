@@ -1,7 +1,7 @@
 import React from 'react';
 import { Row, Col, Form,Input } from 'antd';
 import { Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 // import moment from 'moment';
 import { PageHeader } from '../../../components/page-headers/page-headers';
 import { Cards } from '../../../components/cards/frame/cards-frame';
@@ -11,13 +11,6 @@ import { createFaq } from '../../../redux/faq/faqSlice';
 
 const AddNew = () => {
   const dispatch = useDispatch();
-  const {isLoading } = useSelector(state => {
-    return {
-      isLoading: state.AxiosCrud.loading,
-      url: state.AxiosCrud.url,
-      salonState: state.salonStates
-    };
-  });
   const [form] = Form.useForm();
   const handleSubmit = async values => {
     try {
@@ -76,7 +69,8 @@ const AddNew = () => {
                         Cancel
                       </Button>
                       <Button size="default" htmlType="Save" type="primary">
-                        {isLoading ? 'Loading...' : 'Submit'}
+                        {/* {isLoading ? 'Loading...' : 'Submit'} */}
+                        Submit
                       </Button>
                     </div>
                   </div>

@@ -29,8 +29,7 @@ const AddNew = ({match}) => {
   const [previewTitle, setPreviewTitle] = useState('');
   const { isLoading } = useSelector(state => {
     return {
-      isLoading: state.AxiosCrud.loading,
-      url: state.AxiosCrud.url,
+      isLoading: state.salonStates.loading,
       salonState: state.salonStates
     };
   });

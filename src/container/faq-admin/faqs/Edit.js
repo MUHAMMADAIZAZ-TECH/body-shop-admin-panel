@@ -7,7 +7,6 @@ import { PageHeader } from '../../../components/page-headers/page-headers';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { Button } from '../../../components/buttons/buttons';
 import { Main, BasicFormWrapper } from '../../styled';
-import { axiosDataSingle } from '../../../redux/crud/axios/actionCreator';
 import { getFaq, updateFaq } from '../../../redux/faq/faqSlice';
 
 
@@ -16,7 +15,7 @@ const Edit = ({ match }) => {
 
   const { faqStates, isLoading } = useSelector(state => {
     return {
-      isLoading: state.AxiosCrud.loading,
+      isLoading: state.faqStates.loading,
       faqStates: state.faqStates
     };
   });
@@ -29,9 +28,7 @@ const Edit = ({ match }) => {
   }, [form, faqStates?.faq]);
 
   useEffect(() => {
-    if (axiosDataSingle) {
-      dispatch(getFaq(parseInt(match.params.id, 10)));
-    }
+    dispatch(getFaq(parseInt(match.params.id, 10)));
   }, [dispatch, match.params.id]);
 
   const handleSubmit = values => dispatch(updateFaq({id:match.params.id, ...values}));

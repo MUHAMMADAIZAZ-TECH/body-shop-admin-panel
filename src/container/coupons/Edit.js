@@ -18,9 +18,7 @@ const Edit = ({ match }) => {
 
   const {  isLoading,salonState,couponStates } = useSelector(state => {
     return {
-      isLoading: state.AxiosCrud.loading,
-      url: state.AxiosCrud.url,
-      isFileLoading: state.AxiosCrud.fileLoading,
+      isLoading: state.couponStates.loading,
       salonState: state.salonStates,
       couponStates:state.couponStates
     };

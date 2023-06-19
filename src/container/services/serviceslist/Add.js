@@ -27,9 +27,8 @@ const AddNew = () => {
   const [enable_customer_booking, setenable_customer_booking] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   const [previewTitle, setPreviewTitle] = useState('');
-  const { isLoading,salonState,categoryState } = useSelector(state => {
+  const { salonState,categoryState } = useSelector(state => {
     return {
-      isLoading: state.AxiosCrud.loading,
       salonState:state.salonStates,
       categoryState:state.categoryStates
     };
@@ -173,7 +172,8 @@ const AddNew = () => {
                         Cancel
                       </Button>
                       <Button size="default" htmlType="Save" type="primary">
-                        {isLoading ? 'Loading...' : 'Submit'}
+                        {/* {isLoading ? 'Loading...' : 'Submit'} */}
+                        Submit
                       </Button>
                     </div>
                   </div>

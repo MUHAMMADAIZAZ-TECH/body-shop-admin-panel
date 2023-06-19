@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
 import { Row, Modal, Col, Form, Input, Select, Upload, message } from 'antd';
 import { Link } from 'react-router-dom';
-import { useSelector,useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { PageHeader } from '../../../components/page-headers/page-headers';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { Button } from '../../../components/buttons/buttons';
@@ -47,13 +47,6 @@ const AddNew = () => {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   const [previewTitle, setPreviewTitle] = useState('');
-  const { isLoading } = useSelector(state => {
-    return {
-      isLoading: state.AxiosCrud.loading,
-      url: state.AxiosCrud.url,
-      isFileLoading: state.AxiosCrud.fileLoading,
-    };
-  });
 
   const [form] = Form.useForm();
   const [files, setfiles] = useState([]);
@@ -65,12 +58,7 @@ const AddNew = () => {
     } catch (error) {
       console.log('Validation error:', error);
     }
-    // form.resetFields();
   };
-
-  // const onChange = (date, value) => {
-  //   console.log(value)
-  // };
 
   const handleCancel = () => setPreviewOpen(false);
   const handlePreview = async (file) => {
@@ -181,7 +169,8 @@ const AddNew = () => {
                         Cancel
                       </Button>
                       <Button size="default" htmlType="Save" type="primary">
-                        {isLoading ? 'Loading...' : 'Submit'}
+                        {/* {isLoading ? 'Loading...' : 'Submit'} */}
+                        Submit
                       </Button>
                     </div>
                   </div>

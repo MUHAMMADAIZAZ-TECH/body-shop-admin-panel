@@ -30,9 +30,7 @@ const Edit = ({ match }) => {
   const [previewTitle, setPreviewTitle] = useState('');
   const { isLoading, servicesStates, salonState, categoryState } = useSelector(state => {
     return {
-      isLoading: state.AxiosCrud.loading,
-      url: state.AxiosCrud.url,
-      isFileLoading: state.AxiosCrud.fileLoading,
+      isLoading: state.servicesStates.loading,
       servicesStates: state.servicesStates,
       salonState: state.salonStates,
       categoryState: state.categoryStates

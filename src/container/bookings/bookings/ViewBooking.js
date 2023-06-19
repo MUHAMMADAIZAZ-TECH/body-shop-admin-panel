@@ -10,7 +10,7 @@ import { Cards } from '../../../components/cards/frame/cards-frame';
 import { Button } from '../../../components/buttons/buttons';
 import { Main, BasicFormWrapper } from '../../styled';
 import { getBooking } from '../../../redux/bookings/bookingSlice';
-import UserCards from '../../pages/overview/UserCard';
+// import UserCards from '../../pages/overview/UserCard';
 
 const ViewBooking = ({ match }) => {
     const dispatch = useDispatch();
@@ -151,9 +151,9 @@ const ViewBooking = ({ match }) => {
                                 </Cards>
                             }
                         >
-                            <UserCards
+                            {/* <UserCards
                                 user={{ name: bookingStates?.Booking?.user_name, designation: bookingStates?.Booking?.user_contact, img: 'static/img/users/1.png' }}
-                            />
+                            /> */}
                         </Suspense>
                         <Suspense
                             fallback={

@@ -11,11 +11,9 @@ import { getSalonReview } from '../../../redux/salon/salonSlice';
 
 const AddNew = ({ match }) => {
   const dispatch = useDispatch();
-  const { salon, isLoading } = useSelector(state => {
+  const { salon } = useSelector(state => {
     return {
       salon: state.salonStates.salon,
-      isLoading: state.AxiosCrud.loading,
-      url: state.AxiosCrud.url,
       salonState: state.salonStates
     };
   });
@@ -92,7 +90,8 @@ const AddNew = ({ match }) => {
                         Cancel
                       </Button>
                       <Button size="default" htmlType="Save" type="primary">
-                        {isLoading ? 'Loading...' : 'Submit'}
+                        {/* {isLoading ? 'Loading...' : 'Submit'} */}
+                        Submit
                       </Button>
                     </div>
                   </div>

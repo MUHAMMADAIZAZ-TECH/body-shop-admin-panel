@@ -16,7 +16,7 @@ const AddNew = ({ match }) => {
   const dispatch = useDispatch();
   const { isLoading ,salonState} = useSelector(state => {
     return {
-      isLoading: state.AxiosCrud.loading,
+      isLoading: state.salonStates.loading,
       salonState: state.salonStates,
     };
   });

@@ -16,9 +16,7 @@ const Edit = ({ match }) => {
   const dispatch = useDispatch();
   const { isLoading, bookingStates } = useSelector(state => {
     return {
-      isLoading: state.AxiosCrud.loading,
-      url: state.AxiosCrud.url,
-      isFileLoading: state.AxiosCrud.fileLoading,
+      isLoading: state.bookingStates.loading,
       bookingStates: state.bookingStates
     };
   });
