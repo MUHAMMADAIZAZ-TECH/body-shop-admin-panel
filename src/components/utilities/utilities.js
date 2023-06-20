@@ -3,7 +3,7 @@ import React from 'react';
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
 import { Input, Space,message } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
+import { SearchOutlined ,PlusOutlined} from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import { Button } from '../buttons/buttons';
 
@@ -222,4 +222,10 @@ const getBase64 = (file) =>
       }
     },
   };
-export { textRefactor, chartLinearGradient, customTooltips,exportToXLSX,getColumnSearchProps,getBase64,draggerprops };
+
+  const uploadButton = (
+    <div><PlusOutlined />
+      <div style={{ marginTop: 8, }}>Upload</div>
+    </div>
+  );
+export { textRefactor, chartLinearGradient, customTooltips,exportToXLSX,getColumnSearchProps,getBase64,draggerprops,uploadButton };

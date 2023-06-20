@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Row, Col, Form, Input, Upload,Modal } from 'antd';
 import { Link } from 'react-router-dom';
-import { PlusOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { PageHeader } from '../../components/page-headers/page-headers';
@@ -9,32 +8,22 @@ import { Cards } from '../../components/cards/frame/cards-frame';
 import { Button } from '../../components/buttons/buttons';
 import { Main, BasicFormWrapper } from '../styled';
 import { getCategory, updateCategory } from '../../redux/categories/categoriesSlice';
+import { getBase64,uploadButton } from '../../components/utilities/utilities';
 
-const getBase64 = (file) =>
-  new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = (error) => reject(error);
-  });
-  const uploadButton = (
-    <div><PlusOutlined />
-      <div style={{ marginTop: 8, }}>Upload</div>
-    </div>
-  );
 const Edit = ({ match }) => {
   const dispatch = useDispatch();
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   const [previewTitle, setPreviewTitle] = useState('');
+  const [form] = Form.useForm();
+  const [files, setfiles] = useState([]);
+
   const { category, isLoading } = useSelector(state => {
     return {
       isLoading: state.categoryStates.loading,
       category: state.categoryStates.category
     };
   });
-  const [form] = Form.useForm();
-  const [files, setfiles] = useState([]);
   const handleCancel = () => setPreviewOpen(false);
   const handlePreview = async (file) => {
     if (!file.url && !file.preview) {
@@ -109,8 +98,6 @@ const Edit = ({ match }) => {
                       >
                         {files.length >= 1 ? null : uploadButton}
                       </Upload>
-                      {/* </Form.Item> */}
-                   
                       <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancel}>
                         <img
                           alt="example"

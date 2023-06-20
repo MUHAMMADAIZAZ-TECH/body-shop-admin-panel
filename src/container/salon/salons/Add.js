@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { PlusOutlined } from '@ant-design/icons';
 import { Row, Modal, Col, Form, Input, Select, Upload } from 'antd';
 import { Link } from 'react-router-dom';
 import { useDispatch,useSelector } from 'react-redux';
@@ -8,7 +7,7 @@ import { Cards } from '../../../components/cards/frame/cards-frame';
 import { Button } from '../../../components/buttons/buttons';
 import { Main, BasicFormWrapper } from '../../styled';
 import { createSalon } from '../../../redux/salon/salonSlice';
-import { getBase64,draggerprops } from '../../../components/utilities/utilities';
+import { getBase64,draggerprops,uploadButton } from '../../../components/utilities/utilities';
 
 const { Option } = Select;
 const { Dragger } = Upload;
@@ -57,11 +56,6 @@ const AddNew = () => {
     })
     setfiles(fileList)
   };
-  const uploadButton = (
-    <div><PlusOutlined />
-      <div style={{ marginTop: 8, }}>Upload</div>
-    </div>
-  );
 
   return (
     <>

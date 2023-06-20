@@ -1,40 +1,40 @@
 import React, { useState } from 'react';
 import { Row, Col, Form,Input,Upload,Modal } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import PropTypes from 'prop-types';
 import { PageHeader } from '../../components/page-headers/page-headers';
 import { Cards } from '../../components/cards/frame/cards-frame';
 import { Button } from '../../components/buttons/buttons';
 import { Main, BasicFormWrapper } from '../styled';
 import { createCategory } from '../../redux/categories/categoriesSlice';
+import { getBase64,uploadButton } from '../../components/utilities/utilities';
 
-const getBase64 = (file) =>
-  new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = (error) => reject(error);
-  });
-  const uploadButton = (
-    <div><PlusOutlined />
-      <div style={{ marginTop: 8, }}>Upload</div>
-    </div>
-  );
-const AddNew = ({match}) => {
+const AddNew = () => {
   const dispatch = useDispatch();
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   const [previewTitle, setPreviewTitle] = useState('');
+  const [form] = Form.useForm();
+  const [files, setfiles] = useState([]);
+
   const { isLoading } = useSelector(state => {
     return {
       isLoading: state.salonStates.loading,
-      salonState: state.salonStates
     };
   });
-  const [form] = Form.useForm();
-  const [files, setfiles] = useState([]);
+  const handleSubmit = async values => {
+    try {
+      await form.validateFields(); // Validate all form fields
+      dispatch(createCategory({
+        ...values,
+        file:files[0].originFileObj
+      }))
+      console.log(values,files[0].originFileObj)
+       form.resetFields();
+    } catch (error) {
+      console.log('Validation error:', error);
+    }
+  };
   const handleCancel = () => setPreviewOpen(false);
   const handlePreview = async (file) => {
     if (!file.url && !file.preview) {
@@ -50,21 +50,7 @@ const AddNew = ({match}) => {
     })
     setfiles(fileList)
   };
-  const handleSubmit = async values => {
-    try {
-      await form.validateFields(); // Validate all form fields
-      dispatch(createCategory({
-        ...values,
-        file:files[0].originFileObj
-      }))
-      console.log(values,files[0].originFileObj)
-       form.resetFields();
-    } catch (error) {
-      console.log('Validation error:', error);
-    }
-   
-  };
-  console.log(match)
+
 
   return (
     <>
@@ -147,10 +133,6 @@ const AddNew = ({match}) => {
       </Main>
     </>
   );
-};
-
-AddNew.propTypes = {
-  match: PropTypes.object,
 };
 
 export default AddNew;
