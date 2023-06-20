@@ -1,8 +1,6 @@
 import React, { useEffect, useState ,useRef} from 'react';
-import { Row, Col, Table, Spin,Input, Space,Form ,Select} from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
+import { Row, Col, Table, Spin,Form ,Select} from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
-import Highlighter from 'react-highlight-words';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
 import FeatherIcon from 'feather-icons-react';
@@ -12,23 +10,40 @@ import { Button } from '../../../components/buttons/buttons';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { PageHeader } from '../../../components/page-headers/page-headers';
 import { deleteAvailibilityHours, getAvailibilityHourbysalon, getAvailibilityHours, getSalons } from '../../../redux/salon/salonSlice';
+import { exportToXLSX, getColumnSearchProps } from '../../../components/utilities/utilities';
+import MYExportButton from '../../../components/buttons/my-export-button/my-export-button';
 
 const { Option } = Select;
 const ViewPage = () => {
   const dispatch = useDispatch();
-  const { salonState } = useSelector(state => {
+  const { salonState,isLoading } = useSelector(state => {
     return {
       salonState: state.salonStates,
+      isLoading: state.salonStates.isLoading,
     };
   });
   const [form] = Form.useForm();
+  const dataSource = [];
   const [searchText, setSearchText] = useState('');
   const searchInput = useRef(null);
   const [searchedColumn, setSearchedColumn] = useState('');
+
   const [state, setState] = useState({
-    selectedRowKeys: [],
+    isModalVisible: false,
+    fileName: 'bodyShop',
+    convertedTo: 'csv',
+    selectedRowKeys: 0,
+    selectedRows: [],
   });
-  const { selectedRowKeys } = state;
+  const rowSelection = {
+    onChange: (selectedRowKeys, selectedRows) => {
+      setState({ ...state, selectedRowKeys, selectedRows });
+    },
+    getCheckboxProps: (record) => ({
+      disabled: record.name === 'Disabled User', // Column configuration not to be checked
+      name: record.name,
+    }),
+  };
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
@@ -38,9 +53,6 @@ const ViewPage = () => {
     clearFilters();
     setSearchText('');
   };
-
-  const dataSource = [];
-
   const handleDelete = id => {
     const confirm = window.confirm('Are you sure delete this?');
     if (confirm) {
@@ -54,6 +66,9 @@ const ViewPage = () => {
       );
     }
     return false;
+  };
+  const onHandleSearch = (e) => {
+    setState({ ...state, searchText: e.target.value });
   };
   console.log(salonState?.availibilityhoursBysalon);
   if (salonState?.availibilityhoursBysalon?.length)
@@ -76,102 +91,13 @@ const ViewPage = () => {
             </Link>
           </div>
         ),
+        availhour
       });
     });
-    const getColumnSearchProps = (dataIndex) => ({
-      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
-        <div
-          style={{
-            padding: 8,
-          }}
-        // onKeyDown={(e) => e.stopPropagation()}
-        >
-          <Input
-            ref={searchInput}
-            placeholder={`Search ${dataIndex}`}
-            value={selectedKeys[0]}
-            onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-            onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-            style={{
-              marginBottom: 8,
-              display: 'block',
-            }}
-          />
-          <Space>
-            <Button
-              type="primary"
-              onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-              icon={<SearchOutlined />}
-              size="small"
-              style={{
-                width: 90,
-              }}
-            >
-              Search
-            </Button>
-            <Button
-  
-              onClick={() => clearFilters && handleReset(clearFilters)}
-              size="small"
-              style={{
-                width: 90,
-              }}
-            >
-              Reset
-            </Button>
-            <Button
-              type="primary"
-              size="small"
-              onClick={() => {
-                confirm({
-                  closeDropdown: false,
-                });
-                setSearchText(selectedKeys[0]);
-                setSearchedColumn(dataIndex);
-              }}
-            >
-              Filter
-            </Button>
-            <Button
-              type="primary"
-              size="small"
-              onClick={() => {
-                close();
-              }}
-            >
-              close
-            </Button>
-          </Space>
-        </div>
-      ),
-      filterIcon: (filtered) => (
-        <SearchOutlined
-          style={{
-            color: filtered ? '#1677ff' : undefined,
-          }}
-        />
-      ),
-      onFilter: (value, record) =>
-        record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
-      onFilterDropdownOpenChange: (visible) => {
-        if (visible) {
-          setTimeout(() => searchInput.current?.select(), 100);
-        }
-      },
-      render: (text) =>
-        searchedColumn === dataIndex ? (
-          <Highlighter
-            highlightStyle={{
-              backgroundColor: '#ffc069',
-              padding: 0,
-            }}
-            searchWords={[searchText]}
-            autoEscape
-            textToHighlight={text ? text.toString() : ''}
-          />
-        ) : (
-          text
-        ),
+    const csvData = [['id', 'weekday', 'opening_time', 'closing_time','updated_at']];
+    state.selectedRows.map((rows) => {
+      const { id, weekday, opening_time,closing_time,updated_at} = rows.availhour;
+      return csvData.push([id, weekday, opening_time,closing_time,updated_at]);
     });
   const columns = [
     {
@@ -180,7 +106,7 @@ const ViewPage = () => {
       key: 'weekday',
       sorter: (a, b) => a.weekday.length - b.weekday.length,
       sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('weekday')
+      ...getColumnSearchProps('Day','weekday', handleSearch, handleReset, searchInput, searchedColumn, searchText, setSearchText, setSearchedColumn),
     },
     {
       title: 'Start At',
@@ -205,14 +131,7 @@ const ViewPage = () => {
       width: '90px',
     },
   ];
-  const onSelectChange = selectedRowKey => {
-    setState({ ...state, selectedRowKeys: selectedRowKey });
-  };
 
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChange,
-  };
   useEffect(()=>{
     dispatch(getSalons())
   },[])
@@ -231,15 +150,24 @@ const ViewPage = () => {
   return (
     <RecordViewWrapper>
       <PageHeader
-        subTitle={
-          <div>
-            <Button className="btn-add_new" size="default" key="1" type="primary">
-              <Link to="/admin/salon/availibility-hours-add">
-                <FeatherIcon icon="plus" size={14} /> <span>Add New</span>
-              </Link>
-            </Button>
-          </div>
-        }
+       buttons={[
+        <div className="sDash_export-box">
+          <MYExportButton state={state} setState={setState} exportToXLSX={exportToXLSX} csvData={csvData}/>
+      </div>,
+      <div>
+      <Button className="btn-add_new" size="small" key="1" type="primary">
+        <Link to="/admin/salon/availibility-hours-add">
+          <FeatherIcon icon="plus" size={14} /> <span>Add New</span>
+        </Link>
+      </Button>
+    </div>,
+        <div key={1} className="search-box">
+          <span className="search-icon">
+            <FeatherIcon icon="search" size={14} />
+          </span>
+          <input onChange={onHandleSearch} type="text" name="recored-search" placeholder="Search Here" />
+        </div>,
+      ]}
         ghost
         title="Availability Hours | Availability Hours Management"
       />
@@ -273,8 +201,7 @@ const ViewPage = () => {
                     </Col>
                     <Col sm={2} xs={24} className="mb-25 mt-25">
                       <Button size="default" htmlType="Save" type="primary">
-                        {/* {isLoading ? 'Loading...' : 'Submit'} */}
-                        Search
+                        {isLoading ? 'Loading...' : 'Submit'}
                       </Button>
                     </Col>
                     <Col sm={2} xs={24} className="mb-25 mt-25">
@@ -290,7 +217,7 @@ const ViewPage = () => {
                     </Col>
                   </Row>
                 </Form>
-              {false ? (
+              {isLoading ? (
                 <div className="spin">
                   <Spin />
                 </div>

@@ -13,9 +13,10 @@ import { getAvailibilityHour, getSalons, updateAvailibilityHours } from '../../.
 const { Option } = Select;
 const Edit = ({ match }) => {
   const dispatch = useDispatch();
-  const {salonState } = useSelector(state => {
+  const {salonState,isLoading } = useSelector(state => {
     return {
-      salonState: state.salonStates
+      salonState: state.salonStates,
+      isLoading: state.salonStates.loading
     };
   });
   const [form] = Form.useForm();
@@ -127,8 +128,7 @@ const Edit = ({ match }) => {
                         Cancel
                       </Button>
                       <Button size="default" htmlType="Save" type="primary">
-                        {/* {isLoading ? 'Loading...' : 'Submit'} */}
-                        Submit
+                        {isLoading ? 'Loading...' : 'Submit'}
                       </Button>
                     </div>
                   </div>

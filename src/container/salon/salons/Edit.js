@@ -18,10 +18,10 @@ const Edit = ({ match }) => {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   const [previewTitle, setPreviewTitle] = useState('');
-  const { salon } = useSelector(state => {
+  const { salon,isLoading } = useSelector(state => {
     return {
       salon: state.salonStates.salon,
-      salonState: state.salonStates
+      isLoading: state.salonStates.loading
     };
   });
   const [form] = Form.useForm();
@@ -205,8 +205,7 @@ const Edit = ({ match }) => {
                         Cancel
                       </Button>
                       <Button size="default" htmlType="Save" type="primary">
-                        {/* {isLoading ? 'Loading...' : 'Submit'} */}
-                        Submit
+                        {isLoading ? 'Loading...' : 'Submit'}
                       </Button>
                     </div>
                   </div>

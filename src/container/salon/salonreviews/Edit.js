@@ -11,9 +11,10 @@ import { getSalonReview, updateSalonReview } from '../../../redux/salon/salonSli
 
 const Edit = ({ match }) => {
   const dispatch = useDispatch();
-  const { salonState} = useSelector(state => {
+  const { salonState,isLoading } = useSelector(state => {
     return {
-      salonState: state.salonStates
+      salonState: state.salonStates,
+      isLoading: state.salonStates.loading
     };
   });
   const [form] = Form.useForm();
@@ -21,7 +22,7 @@ const Edit = ({ match }) => {
     try {
       await form.validateFields(); // Validate all form fields
       dispatch(updateSalonReview({id:match.params.id,salonId:salonState.salonreview.salon_id, ...values}));
-      form.resetFields();
+      // form.resetFields();
       console.log(values)
     } catch (error) {
       console.log('Validation error:', error);
@@ -92,8 +93,7 @@ const Edit = ({ match }) => {
                         Cancel
                       </Button>
                       <Button size="default" htmlType="Save" type="primary">
-                        {/* {isLoading ? 'Loading...' : 'Submit'} */}
-                        Submit
+                        {isLoading ? 'Loading...' : 'Submit'}
                       </Button>
                     </div>
                   </div>

@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
-import { Row, Modal, Col, Form, Input, Select, Upload, message } from 'antd';
+import { Row, Modal, Col, Form, Input, Select, Upload } from 'antd';
 import { Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch,useSelector } from 'react-redux';
 import { PageHeader } from '../../../components/page-headers/page-headers';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { Button } from '../../../components/buttons/buttons';
 import { Main, BasicFormWrapper } from '../../styled';
 import { createSalon } from '../../../redux/salon/salonSlice';
-import { getBase64 } from '../../../components/utilities/utilities';
+import { getBase64,draggerprops } from '../../../components/utilities/utilities';
 
 const { Option } = Select;
 const { Dragger } = Upload;
@@ -19,23 +19,6 @@ const selectAfter = (
     <Option value="m">m</Option>
   </Select>
 );
-const draggerprops = {
-  maxCount:1,
-  name: 'document',
-  multiple: false,
-  action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-  onChange(info) {
-    const { status } = info.file;
-    if (status !== 'uploading') {
-      // console.log(info.file, info.fileList);
-    }
-    if (status === 'done') {
-      message.success(`${info.file.name} file uploaded successfully.`);
-    } else if (status === 'error') {
-      message.error(`${info.file.name} file upload failed.`);
-    }
-  },
-};
 
 const AddNew = () => {
   const dispatch = useDispatch();
@@ -45,7 +28,11 @@ const AddNew = () => {
 
   const [form] = Form.useForm();
   const [files, setfiles] = useState([]);
-  // const [document, setdocument] = useState(null);
+  const { isLoading } = useSelector(state => {
+    return {
+      isLoading: state.salonStates.loading
+    };
+  });
   const handleSubmit = async values => {
     try {
       await form.validateFields(); // Validate all form fields
@@ -164,8 +151,7 @@ const AddNew = () => {
                         Cancel
                       </Button>
                       <Button size="default" htmlType="Save" type="primary">
-                        {/* {isLoading ? 'Loading...' : 'Submit'} */}
-                        Submit
+                        {isLoading ? 'Loading...' : 'Submit'}
                       </Button>
                     </div>
                   </div>

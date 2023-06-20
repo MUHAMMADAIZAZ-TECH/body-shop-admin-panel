@@ -16,9 +16,10 @@ import { getSalons, deleteSalon, selectSalon } from '../../../redux/salon/salonS
 
 const ViewPage = () => {
   const dispatch = useDispatch();
-  const { salonState } = useSelector(state => {
+  const { salonState,isLoading } = useSelector(state => {
     return {
-      salonState: state.salonStates
+      salonState: state.salonStates,
+      isLoading: state.salonStates.loading
     };
   });
   const dataSource = [];
@@ -266,7 +267,7 @@ const ViewPage = () => {
         <Row gutter={15}>
           <Col className="w-100" md={24}>
             <Cards headless>
-              {false ? (
+              {isLoading ? (
                 <div className="spin">
                   <Spin />
                 </div>

@@ -2,7 +2,7 @@
 import React from 'react';
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
-import { Input, Space } from 'antd';
+import { Input, Space,message } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import { Button } from '../buttons/buttons';
@@ -204,4 +204,22 @@ const getBase64 = (file) =>
     reader.onload = () => resolve(reader.result);
     reader.onerror = (error) => reject(error);
   });
-export { textRefactor, chartLinearGradient, customTooltips,exportToXLSX,getColumnSearchProps,getBase64 };
+
+  const draggerprops = {
+    maxCount:1,
+    name: 'document',
+    multiple: false,
+    action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
+    onChange(info) {
+      const { status } = info.file;
+      if (status !== 'uploading') {
+        // console.log(info.file, info.fileList);
+      }
+      if (status === 'done') {
+        message.success(`${info.file.name} file uploaded successfully.`);
+      } else if (status === 'error') {
+        message.error(`${info.file.name} file upload failed.`);
+      }
+    },
+  };
+export { textRefactor, chartLinearGradient, customTooltips,exportToXLSX,getColumnSearchProps,getBase64,draggerprops };
