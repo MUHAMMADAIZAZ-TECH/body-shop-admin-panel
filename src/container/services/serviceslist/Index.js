@@ -7,10 +7,11 @@ import FeatherIcon from 'feather-icons-react';
 import { RecordViewWrapper } from './Style';
 import { Main, TableWrapper } from '../../styled';
 import { Button } from '../../../components/buttons/buttons';
+import { alertModal } from '../../../components/modals/antd-modals';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { PageHeader } from '../../../components/page-headers/page-headers';
 import { deleteService, getServices } from '../../../redux/services/servicesSlice';
-import { getColumnSearchProps,exportToXLSX } from '../../../components/utilities/utilities';
+import { getColumnSearchProps,handlePrint,exportToXLSX } from '../../../components/utilities/utilities';
 import MYExportButton from '../../../components/buttons/my-export-button/my-export-button';
 
 const ViewPage = () => {
@@ -77,9 +78,9 @@ const ViewPage = () => {
       image: (image && <Avatar className='myavatar' src={image} size={60}/>),
       name,
       salon_name,
-      price:<span>{price} $</span>,
+      price,
       category_name,
-      is_available: <Tag className='complete'>{is_available === 1 ? 'yes' : "no"}</Tag>,
+      is_available,
       updated_at,
       action: (
         <div className="table-actions">
@@ -129,6 +130,7 @@ const ViewPage = () => {
       key: 'price',
       sorter: (a, b) => a.price.length - b.price.length,
       sortDirections: ['descend', 'ascend'],
+      render:(price)=><span>{price} $</span>
     },
     {
       title: 'Category Name',
@@ -143,6 +145,7 @@ const ViewPage = () => {
       key: 'is_available',
       sorter: (a, b) => a.is_available.length - b.is_available.length,
       sortDirections: ['descend', 'ascend'],
+      render:(is_available)=><Tag className='complete'>{is_available === 1 ? 'yes' : "no"}</Tag>
     },
     {
       title: 'Updated At',
@@ -159,17 +162,31 @@ const ViewPage = () => {
       width: '90px',
     },
   ];
+  const handlePrinter = () => {
+    if (state.selectedRows.length) {
+      handlePrint(dataSource, columns, 'Categories', state)
+    }
+    else {
+      alertModal.warning({
+        title: 'Please Select your Required Rows!',
+      });
+    }
+  }
   useEffect(()=>{
     dispatch(getServices())
   },[])
   return (
     <RecordViewWrapper>
       <PageHeader
-       
         buttons={[
           <div className="sDash_export-box">
             <MYExportButton state={state} setState={setState} exportToXLSX={exportToXLSX} csvData={csvData}/>
         </div>,
+         <div>
+         <Button className="btn-add_new" size="small" key="1" type="white" onClick={() => handlePrinter()}>
+           <FeatherIcon icon="printer" size={14} /> <span>Print</span>
+         </Button>
+       </div>,
         <div>
         <Button className="btn-add_new" size="small" key="1" type="primary">
           <Link to="/admin/services/services-list-add">

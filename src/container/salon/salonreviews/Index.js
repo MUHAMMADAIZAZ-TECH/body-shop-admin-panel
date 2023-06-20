@@ -6,10 +6,12 @@ import moment from 'moment';
 import FeatherIcon from 'feather-icons-react';
 import { RecordViewWrapper } from './Style';
 import { Main, TableWrapper } from '../../styled';
+import { alertModal } from '../../../components/modals/antd-modals';
+import { Button } from '../../../components/buttons/buttons';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { PageHeader } from '../../../components/page-headers/page-headers';
 import { deleteSalonReview, getAllReviews } from '../../../redux/salon/salonSlice';
-import { exportToXLSX, getColumnSearchProps } from '../../../components/utilities/utilities';
+import { exportToXLSX,handlePrint, getColumnSearchProps } from '../../../components/utilities/utilities';
 import MYExportButton from '../../../components/buttons/my-export-button/my-export-button';
 
 const ViewPage = () => {
@@ -75,7 +77,7 @@ const ViewPage = () => {
       return dataSource.push({
         key: key + 1,
         comment,
-        rating:(<Rate disabled defaultValue={rating} />),
+        rating,
         user_name,
         salon_name,
         updated_at,
@@ -114,6 +116,7 @@ const ViewPage = () => {
       key: 'rating',
       sorter: (a, b) => a.rating.length - b.rating.length,
       sortDirections: ['descend', 'ascend'],
+      render:(rating)=><Rate disabled defaultValue={rating} />
     },
     {
       title: 'User',
@@ -146,6 +149,16 @@ const ViewPage = () => {
       width: '90px',
     },
   ];
+  const handlePrinter = ()=>{
+    if(state.selectedRows.length){
+      handlePrint(dataSource, columns, 'Salon Reviews', state)
+    }
+    else{
+      alertModal.warning({
+        title: 'Please Select your Required Rows!',
+      });
+    }
+  }
   useEffect(()=>{
     dispatch(getAllReviews())
   },[])
@@ -156,6 +169,11 @@ const ViewPage = () => {
           <div className="sDash_export-box">
             <MYExportButton state={state} setState={setState} exportToXLSX={exportToXLSX} csvData={csvData}/>
         </div>,
+         <div>
+         <Button className="btn-add_new" size="small" key="1" type="white" onClick={() => handlePrinter()}>
+           <FeatherIcon icon="printer" size={14} /> <span>Print</span>
+         </Button>
+       </div>,
           <div key={1} className="search-box">
             <span className="search-icon">
               <FeatherIcon icon="search" size={14} />

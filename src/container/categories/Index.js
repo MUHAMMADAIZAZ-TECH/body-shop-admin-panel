@@ -1,4 +1,4 @@
-import React, { useEffect, useState,useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Row, Col, Table, Spin, Avatar, } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -7,15 +7,16 @@ import FeatherIcon from 'feather-icons-react';
 import { RecordViewWrapper } from './Style';
 import { Main, TableWrapper } from '../styled';
 import { Button } from '../../components/buttons/buttons';
+import { alertModal } from '../../components/modals/antd-modals';
 import { Cards } from '../../components/cards/frame/cards-frame';
 import { PageHeader } from '../../components/page-headers/page-headers';
 import { deleteCategory, getCategories } from '../../redux/categories/categoriesSlice';
-import { getColumnSearchProps,exportToXLSX } from '../../components/utilities/utilities';
+import { getColumnSearchProps, handlePrint, exportToXLSX } from '../../components/utilities/utilities';
 import MYExportButton from '../../components/buttons/my-export-button/my-export-button';
 
 const ViewPage = () => {
   const dispatch = useDispatch();
-  const { isLoading ,categoryStates} = useSelector(state => {
+  const { isLoading, categoryStates } = useSelector(state => {
     return {
       isLoading: state.categoryStates.loading,
       categoryStates: state.categoryStates
@@ -55,7 +56,7 @@ const ViewPage = () => {
     if (confirm) {
       dispatch(deleteCategory({
         id,
-        getData:()=>{
+        getData: () => {
           dispatch(getCategories())
         }
       }));
@@ -68,13 +69,13 @@ const ViewPage = () => {
   };
   console.log(categoryStates)
   if (categoryStates?.categories?.length)
-  categoryStates?.categories?.map((category, key) => {
-      const { id,image, name, color,description, created_at, updated_at } = category;
+    categoryStates?.categories?.map((category, key) => {
+      const { id, image, name, color, description, created_at, updated_at } = category;
       return dataSource.push({
         key: key + 1,
         image: (image && <Avatar className='myavatar' src={image} size={60} />),
         name,
-        color:(<div style={{backgroundColor:`${color}`,padding:5,borderRadius:5,textAlign:"center"}}>{color}</div>),
+        color,
         description,
         created_at,
         updated_at,
@@ -92,11 +93,11 @@ const ViewPage = () => {
         category
       });
     });
-    const csvData = [['id', 'name', 'color', 'description','created_at','updated_at']];
-    state.selectedRows.map((rows) => {
-      const { id, name, color,description, created_at, updated_at} = rows.category;
-      return csvData.push([id, name, color,description, created_at, updated_at]);
-    });
+  const csvData = [['id', 'name', 'color', 'description', 'created_at', 'updated_at']];
+  state.selectedRows.map((rows) => {
+    const { id, name, color, description, created_at, updated_at } = rows.category;
+    return csvData.push([id, name, color, description, created_at, updated_at]);
+  });
   const columns = [
     {
       title: 'Image',
@@ -111,7 +112,7 @@ const ViewPage = () => {
       key: 'name',
       sorter: (a, b) => a.name.length - b.name.length,
       sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('Name','name', handleSearch, handleReset, searchInput, searchedColumn, searchText, setSearchText, setSearchedColumn),
+      ...getColumnSearchProps('Name', 'name', handleSearch, handleReset, searchInput, searchedColumn, searchText, setSearchText, setSearchedColumn),
     },
     {
       title: 'Color',
@@ -119,7 +120,8 @@ const ViewPage = () => {
       key: 'color',
       sorter: (a, b) => a.color.length - b.color.length,
       sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('Color','color', handleSearch, handleReset, searchInput, searchedColumn, searchText, setSearchText, setSearchedColumn),
+      ...getColumnSearchProps('Color', 'color', handleSearch, handleReset, searchInput, searchedColumn, searchText, setSearchText, setSearchedColumn),
+      render: (color) => <div style={{ backgroundColor: `${color}`, padding: 5, borderRadius: 5, textAlign: "center" }}>{color}</div>
     },
     {
       title: 'Description',
@@ -127,7 +129,7 @@ const ViewPage = () => {
       key: 'description',
       sorter: (a, b) => a.description.length - b.description.length,
       sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('Description','description', handleSearch, handleReset, searchInput, searchedColumn, searchText, setSearchText, setSearchedColumn),
+      ...getColumnSearchProps('Description', 'description', handleSearch, handleReset, searchInput, searchedColumn, searchText, setSearchText, setSearchedColumn),
     },
     {
       title: 'Created At',
@@ -152,23 +154,38 @@ const ViewPage = () => {
       width: '90px',
     },
   ];
-  useEffect(()=>{
+  const handlePrinter = () => {
+    if (state.selectedRows.length) {
+      handlePrint(dataSource, columns, 'Categories', state)
+    }
+    else {
+      alertModal.warning({
+        title: 'Please Select your Required Rows!',
+      });
+    }
+  }
+  useEffect(() => {
     dispatch(getCategories())
-  },[])
+  }, [])
   return (
     <RecordViewWrapper>
       <PageHeader
         buttons={[
           <div className="sDash_export-box">
-            <MYExportButton state={state} setState={setState} exportToXLSX={exportToXLSX} csvData={csvData}/>
-        </div>,
-        <div>
-        <Button className="btn-add_new" size="small" key="1" type="primary">
-          <Link to="/admin/categories/category-add">
-            <FeatherIcon icon="plus" size={14} /> <span>Add New</span>
-          </Link>
-        </Button>
-      </div>,
+            <MYExportButton state={state} setState={setState} exportToXLSX={exportToXLSX} csvData={csvData} />
+          </div>,
+          <div>
+            <Button className="btn-add_new" size="small" key="1" type="white" onClick={() => handlePrinter()}>
+              <FeatherIcon icon="printer" size={14} /> <span>Print</span>
+            </Button>
+          </div>,
+          <div>
+            <Button className="btn-add_new" size="small" key="1" type="primary">
+              <Link to="/admin/categories/category-add">
+                <FeatherIcon icon="plus" size={14} /> <span>Add New</span>
+              </Link>
+            </Button>
+          </div>,
           <div key={1} className="search-box">
             <span className="search-icon">
               <FeatherIcon icon="search" size={14} />

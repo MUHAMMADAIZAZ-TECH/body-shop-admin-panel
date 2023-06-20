@@ -228,4 +228,73 @@ const getBase64 = (file) =>
       <div style={{ marginTop: 8, }}>Upload</div>
     </div>
   );
-export { textRefactor, chartLinearGradient, customTooltips,exportToXLSX,getColumnSearchProps,getBase64,draggerprops,uploadButton };
+
+  const generatePrintContent = (selectedRows, selectedColumns,printname) => {
+    const excludedColumns = ['Image', 'Actions'];
+  
+    return `
+      <html>
+        <head>
+          <title>Selected ${printname}</title>
+          <style>
+            table {
+              width: 100%;
+              border-collapse: collapse;
+            }
+            th, td {
+              border: 1px solid black;
+              padding: 8px;
+            }
+            th {
+              background-color: #f2f2f2;
+            }
+          </style>
+        </head>
+        <body>
+          <table>
+            <thead>
+              <tr>
+                ${selectedColumns
+                  .filter((column) => !excludedColumns.includes(column.title))
+                  .map((column) => `<th>${column.title}</th>`)
+                  .join('')}
+              </tr>
+            </thead>
+            <tbody>
+              ${selectedRows
+                .map(
+                  (row) => `
+                <tr>
+                  ${selectedColumns
+                    .filter((column) => !excludedColumns.includes(column.title))
+                    .map((column) => `<td>${row[column.dataIndex]}</td>`)
+                    .join('')}
+                </tr>
+              `
+                )
+                .join('')}
+            </tbody>
+          </table>
+        </body>
+      </html>
+    `;
+  };
+  const handlePrint = (dataSource, columns,printname,state) => {
+    const selectedRows = dataSource.filter((row) =>
+    state.selectedRowKeys.includes(row.key)
+  );
+    const printContent = generatePrintContent(selectedRows, columns,printname)
+    const printWindow = window.open('', '_blank');
+    printWindow.document.open();
+    printWindow.document.write(printContent);
+    printWindow.document.close();
+  
+    setTimeout(() => {
+      printWindow.print();
+      printWindow.close();
+    }, 1000); // Delay of 1 second (adjust the delay as needed)
+  };
+export { textRefactor, chartLinearGradient,
+   customTooltips,exportToXLSX,getColumnSearchProps,getBase64,
+   generatePrintContent,handlePrint,
+   draggerprops,uploadButton };

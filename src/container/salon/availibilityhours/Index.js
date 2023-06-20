@@ -7,10 +7,11 @@ import FeatherIcon from 'feather-icons-react';
 import { RecordViewWrapper } from './Style';
 import { Main, TableWrapper } from '../../styled';
 import { Button } from '../../../components/buttons/buttons';
+import { alertModal } from '../../../components/modals/antd-modals';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { PageHeader } from '../../../components/page-headers/page-headers';
 import { deleteAvailibilityHours, getAvailibilityHourbysalon, getAvailibilityHours, getSalons } from '../../../redux/salon/salonSlice';
-import { exportToXLSX, getColumnSearchProps } from '../../../components/utilities/utilities';
+import { exportToXLSX,handlePrint, getColumnSearchProps } from '../../../components/utilities/utilities';
 import MYExportButton from '../../../components/buttons/my-export-button/my-export-button';
 
 const { Option } = Select;
@@ -147,6 +148,16 @@ const ViewPage = () => {
     }
    
   };
+  const handlePrinter = ()=>{
+    if(state.selectedRows.length){
+      handlePrint(dataSource, columns, 'Availibility hours', state)
+    }
+    else{
+      alertModal.warning({
+        title: 'Please Select your Required Rows!',
+      });
+    }
+  }
   return (
     <RecordViewWrapper>
       <PageHeader
@@ -154,6 +165,11 @@ const ViewPage = () => {
         <div className="sDash_export-box">
           <MYExportButton state={state} setState={setState} exportToXLSX={exportToXLSX} csvData={csvData}/>
       </div>,
+       <div>
+       <Button className="btn-add_new" size="small" key="1" type="white" onClick={() => handlePrinter()}>
+         <FeatherIcon icon="printer" size={14} /> <span>Print</span>
+       </Button>
+     </div>,
       <div>
       <Button className="btn-add_new" size="small" key="1" type="primary">
         <Link to="/admin/salon/availibility-hours-add">

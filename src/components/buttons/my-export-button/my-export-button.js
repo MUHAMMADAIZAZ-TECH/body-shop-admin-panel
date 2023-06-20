@@ -80,7 +80,7 @@ const MYExportButton = ({state,setState,exportToXLSX,csvData}) => {
                     onClick={() => exportToXLSX(csvData, fileName,setState,state)}
                     type="primary"
                   >
-                    Eport
+                    Export
                   </Button>
                 )}
                 <Button htmlType="submit" onClick={handleCancel} size="default" type="white" outlined>
