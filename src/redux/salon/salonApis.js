@@ -240,3 +240,11 @@ export const deleteaddress = async (id) => {
     return error;
   }
 }
+export const getdashboard = async () =>{
+  try {
+    const response = await DataService.get(`/api/v1/salons/admin/stats`);
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+}
