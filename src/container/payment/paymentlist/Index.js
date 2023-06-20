@@ -1,16 +1,15 @@
 import React, { useEffect, useState,useRef } from 'react';
-import { Row, Col, Table, Spin,Input,Space } from 'antd';
+import { Row, Col, Table, Spin } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
-import Highlighter from 'react-highlight-words';
-import { SearchOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import FeatherIcon from 'feather-icons-react';
 import { RecordViewWrapper } from './Style';
 import { Main, TableWrapper } from '../../styled';
-import { Button } from '../../../components/buttons/buttons';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { PageHeader } from '../../../components/page-headers/page-headers';
 import { getTransactions } from '../../../redux/transactions/transactionSlice';
+import { exportToXLSX,getColumnSearchProps } from '../../../components/utilities/utilities';
+import MYExportButton from '../../../components/buttons/my-export-button/my-export-button';
 
 const ViewPage = () => {
   const dispatch = useDispatch();
@@ -20,14 +19,28 @@ const ViewPage = () => {
       TransactionStates:state.transactionStates
     };
   });
-console.log(TransactionStates.transactions);
-  const [state, setState] = useState({
-    selectedRowKeys: [],
-  });
-  const { selectedRowKeys } = state;
+  const dataSource = [];
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef(null);
+  const [state, setState] = useState({
+    isModalVisible: false,
+    fileName: 'bodyShop',
+    convertedTo: 'csv',
+    selectedRowKeys: 0,
+    selectedRows: [],
+  });
+
+  const rowSelection = {
+    onChange: (selectedRowKeys, selectedRows) => {
+      setState({ ...state, selectedRowKeys, selectedRows });
+    },
+    getCheckboxProps: (record) => ({
+      disabled: record.name === 'Disabled User', // Column configuration not to be checked
+      name: record.name,
+    }),
+  };
+ 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
@@ -37,15 +50,15 @@ console.log(TransactionStates.transactions);
     clearFilters();
     setSearchText('');
   };
+ 
   useEffect(() => {
     dispatch(getTransactions());
   }, [dispatch]);
-  const dataSource = [];
+  
 
-  const onHandleSearch = e => {
-    console.log(e.target.value);
+  const onHandleSearch = (e) => {
+    setState({ ...state, searchText: e.target.value });
   };
-
   if (TransactionStates?.transactions?.length)
   TransactionStates?.transactions?.map((transaction, key) => {
       const { booking_id, amount, status,user_name, created_at, updated_at } = transaction;
@@ -56,103 +69,15 @@ console.log(TransactionStates.transactions);
         status,
         user_name,
         created_at,
-        updated_at
+        updated_at,
+        transaction
       });
     });
-    const getColumnSearchProps = (dataIndex) => ({
-      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
-        <div
-          style={{
-            padding: 8,
-          }}
-        // onKeyDown={(e) => e.stopPropagation()}
-        >
-          <Input
-            ref={searchInput}
-            placeholder={`Search ${dataIndex}`}
-            value={selectedKeys[0]}
-            onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-            onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-            style={{
-              marginBottom: 8,
-              display: 'block',
-            }}
-          />
-          <Space>
-            <Button
-              type="primary"
-              onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-              icon={<SearchOutlined />}
-              size="small"
-              style={{
-                width: 90,
-              }}
-            >
-              Search
-            </Button>
-            <Button
-  
-              onClick={() => clearFilters && handleReset(clearFilters)}
-              size="small"
-              style={{
-                width: 90,
-              }}
-            >
-              Reset
-            </Button>
-            <Button
-              type="primary"
-              size="small"
-              onClick={() => {
-                confirm({
-                  closeDropdown: false,
-                });
-                setSearchText(selectedKeys[0]);
-                setSearchedColumn(dataIndex);
-              }}
-            >
-              Filter
-            </Button>
-            <Button
-              type="primary"
-              size="small"
-              onClick={() => {
-                close();
-              }}
-            >
-              close
-            </Button>
-          </Space>
-        </div>
-      ),
-      filterIcon: (filtered) => (
-        <SearchOutlined
-          style={{
-            color: filtered ? '#1677ff' : undefined,
-          }}
-        />
-      ),
-      onFilter: (value, record) =>
-        record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
-      onFilterDropdownOpenChange: (visible) => {
-        if (visible) {
-          setTimeout(() => searchInput.current?.select(), 100);
-        }
-      },
-      render: (text) =>
-        searchedColumn === dataIndex ? (
-          <Highlighter
-            highlightStyle={{
-              backgroundColor: '#ffc069',
-              padding: 0,
-            }}
-            searchWords={[searchText]}
-            autoEscape
-            textToHighlight={text ? text.toString() : ''}
-          />
-        ) : (
-          text
-        ),
+    const csvData = [['id', 'booking_id', 'amount', 'status','user_name',
+    'created_at','updated_at']];
+    state.selectedRows.map((rows) => {
+      const { id, booking_id, amount, status,user_name, created_at, updated_at} = rows.transaction;
+      return csvData.push([id, booking_id, amount, status,user_name, created_at, updated_at]);
     });
   const columns = [
     {
@@ -161,7 +86,7 @@ console.log(TransactionStates.transactions);
       key: 'booking_id',
       sorter: (a, b) => a.booking_id.length - b.booking_id.length,
       sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('booking_id'),
+      ...getColumnSearchProps('Booking ID','booking_id', handleSearch, handleReset, searchInput, searchedColumn, searchText, setSearchText, setSearchedColumn),
     },
     {
       title: 'Amount',
@@ -169,7 +94,7 @@ console.log(TransactionStates.transactions);
       key: 'amount',
       sorter: (a, b) => a.amount.length - b.amount.length,
       sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('amount'),
+      ...getColumnSearchProps('Amount','amount', handleSearch, handleReset, searchInput, searchedColumn, searchText, setSearchText, setSearchedColumn),
       render: text => <div>{text} $</div>,
     },
     {
@@ -178,7 +103,7 @@ console.log(TransactionStates.transactions);
       key: 'status',
       sorter: (a, b) => a.status.length - b.status.length,
       sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('status'),
+      ...getColumnSearchProps('Status','status', handleSearch, handleReset, searchInput, searchedColumn, searchText, setSearchText, setSearchedColumn),
     },
     {
       title: 'User',
@@ -186,7 +111,7 @@ console.log(TransactionStates.transactions);
       key: 'user_name',
       sorter: (a, b) => a.user_name.length - b.user_name.length,
       sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('user_name'),
+      ...getColumnSearchProps('User','user_name', handleSearch, handleReset, searchInput, searchedColumn, searchText, setSearchText, setSearchedColumn),
     },
     {
       title: 'Created At',
@@ -206,19 +131,14 @@ console.log(TransactionStates.transactions);
       render: text => moment(text).fromNow(),
     },
   ];
-  const onSelectChange = selectedRowKey => {
-    setState({ ...state, selectedRowKeys: selectedRowKey });
-  };
-
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChange,
-  };
 
   return (
     <RecordViewWrapper>
       <PageHeader
         buttons={[
+          <div className="sDash_export-box">
+            <MYExportButton state={state} setState={setState} exportToXLSX={exportToXLSX} csvData={csvData}/>
+        </div>,
           <div key={1} className="search-box">
             <span className="search-icon">
               <FeatherIcon icon="search" size={14} />

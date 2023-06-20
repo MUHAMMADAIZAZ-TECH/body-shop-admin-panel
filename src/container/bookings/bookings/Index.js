@@ -1,9 +1,7 @@
 import React, { useEffect, useState,useRef } from 'react';
-import { Row, Col, Table, Spin,Button,Input,Space } from 'antd';
+import { Row, Col, Table, Spin } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { SearchOutlined } from '@ant-design/icons';
-import Highlighter from 'react-highlight-words';
 import moment from 'moment';
 import FeatherIcon from 'feather-icons-react';
 import { RecordViewWrapper } from './Style';
@@ -11,11 +9,37 @@ import { Main, TableWrapper } from '../../styled';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { PageHeader } from '../../../components/page-headers/page-headers';
 import { getBookings } from '../../../redux/bookings/bookingSlice';
+import { getColumnSearchProps,exportToXLSX } from '../../../components/utilities/utilities';
+import MYExportButton from '../../../components/buttons/my-export-button/my-export-button';
 
 const ViewPage = () => {
+  const dispatch = useDispatch();
+  const { isLoading,bookingStates } = useSelector(state => {
+    return {
+      isLoading: state.bookingStates.loading,
+      bookingStates:state.bookingStates
+    };
+  });
+  const dataSource = [];
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef(null);
+  const [state, setState] = useState({
+    isModalVisible: false,
+    fileName: 'bodyShop',
+    convertedTo: 'csv',
+    selectedRowKeys: 0,
+    selectedRows: [],
+  });
+  const rowSelection = {
+    onChange: (selectedRowKeys, selectedRows) => {
+      setState({ ...state, selectedRowKeys, selectedRows });
+    },
+    getCheckboxProps: (record) => ({
+      disabled: record.name === 'Disabled User', // Column configuration not to be checked
+      name: record.name,
+    }),
+  };
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
@@ -25,132 +49,19 @@ const ViewPage = () => {
     clearFilters();
     setSearchText('');
   };
-  const getColumnSearchProps = (dataIndex,placeholder) => ({
-    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
-      <div
-        style={{
-          padding: 8,
-        }}
-      // onKeyDown={(e) => e.stopPropagation()}
-      >
-        <Input
-          ref={searchInput}
-          placeholder={`Search ${placeholder}`}
-          value={selectedKeys[0]}
-          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-          style={{
-            marginBottom: 8,
-            display: 'block',
-          }}
-        />
-        <Space>
-          <Button
-            type="primary"
-            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-            icon={<SearchOutlined />}
-            size="small"
-            style={{
-              width: 90,
-            }}
-          >
-            Search
-          </Button>
-          <Button
-
-            onClick={() => clearFilters && handleReset(clearFilters)}
-            size="small"
-            style={{
-              width: 90,
-            }}
-          >
-            Reset
-          </Button>
-          <Button
-            type="primary"
-            size="small"
-            onClick={() => {
-              confirm({
-                closeDropdown: false,
-              });
-              setSearchText(selectedKeys[0]);
-              setSearchedColumn(dataIndex);
-            }}
-          >
-            Filter
-          </Button>
-          <Button
-            type="primary"
-            size="small"
-            onClick={() => {
-              close();
-            }}
-          >
-            close
-          </Button>
-        </Space>
-      </div>
-    ),
-    filterIcon: (filtered) => (
-      <SearchOutlined
-        style={{
-          color: filtered ? '#1677ff' : undefined,
-        }}
-      />
-    ),
-    onFilter: (value, record) =>
-      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
-    onFilterDropdownOpenChange: (visible) => {
-      if (visible) {
-        setTimeout(() => searchInput.current?.select(), 100);
-      }
-    },
-    render: (text) =>
-      searchedColumn === dataIndex ? (
-        <Highlighter
-          highlightStyle={{
-            backgroundColor: '#ffc069',
-            padding: 0,
-          }}
-          searchWords={[searchText]}
-          autoEscape
-          textToHighlight={text ? text.toString() : ''}
-        />
-      ) : (
-        text
-      ),
-  });
-  const dispatch = useDispatch();
-  const { isLoading,bookingStates } = useSelector(state => {
-    return {
-      isLoading: state.bookingStates.loading,
-      bookingStates:state.bookingStates
-    };
-  });
-  console.log(bookingStates)
-  const [state, setState] = useState({
-    selectedRowKeys: [],
-  });
-  const { selectedRowKeys } = state;
-
-  useEffect(() => {
-   dispatch(getBookings())
-  }, [dispatch]);
-  const dataSource = [];
-
-  const onHandleSearch = e => {
-    console.log(e.target.value)
+  const onHandleSearch = (e) => {
+    setState({ ...state, searchText: e.target.value });
   };
-
+  console.log(bookingStates?.Bookings)
   if (bookingStates?.Bookings?.length)
   bookingStates?.Bookings?.map((booking, key) => {
-      const { id, serviceName, salon_id, user_name, salon_address,
+      const { id, serviceName, salon_name, user_name, salon_address,
         booking_status, coupon,is_paid,total_amount,appointmentDate,booking_date } = booking;
       return dataSource.push({
         key: key + 1,
         id,
         serviceName,
-        salon_id,
+        salon_name,
         user_name,
         salon_address,
         booking_status,
@@ -168,15 +79,19 @@ const ViewPage = () => {
             <Link className="edit" to={`/admin/bookings/edit/${id}`}>
               <FeatherIcon icon="edit" size={14} />
             </Link>
-            {/* &nbsp;&nbsp;&nbsp; */}
-            {/* <Link className="delete" onClick={() => handleDelete(id)} to="#">
-              <FeatherIcon icon="trash-2" size={14} />
-            </Link> */}
           </div>
         ),
+        booking
       });
     });
-
+    const csvData = [['id', 'serviceName', 'salon_name', 'user_name','salon_address',
+    'booking_status','is_paid','coupon','total_amount','appointmentDate','booking_date']];
+    state.selectedRows.map((rows) => {
+      const { id, serviceName, salon_name, user_name, salon_address,
+        booking_status, coupon,is_paid,total_amount,appointmentDate,booking_date } = rows.booking;
+      return csvData.push([id, serviceName, salon_name, user_name, salon_address,
+        booking_status,is_paid, coupon.code,total_amount,appointmentDate,booking_date ]);
+    });
   const columns = [
     {
       title: 'Booking ID',
@@ -184,7 +99,7 @@ const ViewPage = () => {
       key: 'id',
       sorter: (a, b) => a.id.length - b.id.length,
       sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('id','Booking ID'),
+      ...getColumnSearchProps('Booking ID','id', handleSearch, handleReset, searchInput, searchedColumn, searchText, setSearchText, setSearchedColumn),
       render:(text)=><div>#{text}</div>
     },
     {
@@ -193,15 +108,15 @@ const ViewPage = () => {
       key: 'serviceName',
       sorter: (a, b) => a.serviceName.length - b.serviceName.length,
       sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('serviceName','Services'),
+      ...getColumnSearchProps('Services','serviceName', handleSearch, handleReset, searchInput, searchedColumn, searchText, setSearchText, setSearchedColumn),
     },
     {
       title: 'Salon',
-      dataIndex: 'salon_id',
-      key: 'salon_id',
-      sorter: (a, b) => a.salon_id.length - b.salon_id.length,
+      dataIndex: 'salon_name',
+      key: 'salon_name',
+      sorter: (a, b) => a.salon_name.length - b.salon_name.length,
       sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('salon_id','Salon'),
+      ...getColumnSearchProps('Salon','salon_name', handleSearch, handleReset, searchInput, searchedColumn, searchText, setSearchText, setSearchedColumn),
     },
     {
       title: 'Customer',
@@ -209,7 +124,7 @@ const ViewPage = () => {
       key: 'user_name',
       sorter: (a, b) => a.user_name.length - b.user_name.length,
       sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('user_name','Customer'),
+      ...getColumnSearchProps('Customer','user_name', handleSearch, handleReset, searchInput, searchedColumn, searchText, setSearchText, setSearchedColumn),
     },
     {
       title: 'Address',
@@ -217,7 +132,7 @@ const ViewPage = () => {
       key: 'salon_address',
       sorter: (a, b) => a.salon_address.length - b.salon_address.length,
       sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('salon_address','Address'),
+      ...getColumnSearchProps('Address','salon_address', handleSearch, handleReset, searchInput, searchedColumn, searchText, setSearchText, setSearchedColumn),
     },
     {
       title: 'Booking Status',
@@ -225,7 +140,7 @@ const ViewPage = () => {
       key: 'bookingstatus',
       sorter: (a, b) => a.booking_status.length - b.booking_status.length,
       sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('booking_status','Booking Status'),
+      ...getColumnSearchProps('Booking Status','booking_status', handleSearch, handleReset, searchInput, searchedColumn, searchText, setSearchText, setSearchedColumn),
     },
     {
       title: 'Payment Status',
@@ -233,7 +148,7 @@ const ViewPage = () => {
       key: 'is_paid',
       sorter: (a, b) => a.is_paid.length - b.is_paid.length,
       sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('is_paid','Payment Status'),
+      ...getColumnSearchProps('Payment Status','is_paid', handleSearch, handleReset, searchInput, searchedColumn, searchText, setSearchText, setSearchedColumn),
     },
     {
       title: 'Coupon',
@@ -241,7 +156,7 @@ const ViewPage = () => {
       key: 'code',
       sorter: (a, b) => a.code.length - b.code.length,
       sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('code','Coupon'),
+      ...getColumnSearchProps('Coupon','code', handleSearch, handleReset, searchInput, searchedColumn, searchText, setSearchText, setSearchedColumn),
     },
     {
       title: 'Total',
@@ -249,7 +164,7 @@ const ViewPage = () => {
       key: 'total_amount',
       sorter: (a, b) => a.total_amount.length - b.total_amount.length,
       sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('total_amount','Total'),
+      ...getColumnSearchProps('Total','total_amount', handleSearch, handleReset, searchInput, searchedColumn, searchText, setSearchText, setSearchedColumn),
       render:(text)=><div>{text} $</div>
     },
     {
@@ -258,7 +173,7 @@ const ViewPage = () => {
       key: 'booking_date',
       sorter: (a, b) => a.booking_date.length - b.booking_date.length,
       sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('booking_date','Booking At'),
+      ...getColumnSearchProps('Booking At','booking_date', handleSearch, handleReset, searchInput, searchedColumn, searchText, setSearchText, setSearchedColumn),
       render:(text)=>moment(text).format('DD/MM/YY')
     },
     {
@@ -267,7 +182,7 @@ const ViewPage = () => {
       key: 'appointmentDate',
       sorter: (a, b) => a.appointmentDate.length - b.appointmentDate.length,
       sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('appointmentDate','Appointment Date'),
+      ...getColumnSearchProps('Appointment Date','appointmentDate', handleSearch, handleReset, searchInput, searchedColumn, searchText, setSearchText, setSearchedColumn),
       render:(text)=>moment(text).format('DD/MM/YY')
     },
     {
@@ -277,19 +192,17 @@ const ViewPage = () => {
       width: '90px',
     },
   ];
-  const onSelectChange = selectedRowKey => {
-    setState({ ...state, selectedRowKeys: selectedRowKey });
-  };
-
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChange,
-  };
-
+  useEffect(() => {
+    dispatch(getBookings())
+   }, [dispatch]);
+ 
   return (
     <RecordViewWrapper>
       <PageHeader
         buttons={[
+          <div className="sDash_export-box">
+            <MYExportButton state={state} setState={setState} exportToXLSX={exportToXLSX} csvData={csvData}/>
+        </div>,
           <div key={1} className="search-box">
             <span className="search-icon">
               <FeatherIcon icon="search" size={14} />

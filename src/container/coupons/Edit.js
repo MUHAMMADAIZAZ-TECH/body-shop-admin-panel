@@ -15,7 +15,6 @@ const { Option } = Select;
 const dateFormat = 'YYYY/MM/DD';
 const Edit = ({ match }) => {
   const dispatch = useDispatch();
-
   const {  isLoading,salonState,couponStates } = useSelector(state => {
     return {
       isLoading: state.couponStates.loading,

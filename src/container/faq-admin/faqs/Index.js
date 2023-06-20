@@ -1,19 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import { Row, Col, Table, Spin,Modal,Form,Input ,Select} from 'antd';
+import React, { useEffect, useState ,useRef} from 'react';
+import { Row, Col, Table, Spin} from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { CSVLink } from 'react-csv';
-import * as FileSaver from 'file-saver';
-import * as XLSX from 'xlsx';
 import moment from 'moment';
 import FeatherIcon from 'feather-icons-react';
 import { RecordViewWrapper } from './Style';
 import { Main, TableWrapper } from '../../styled';
-import {alertModal} from '../../../components/modals/antd-modals'
 import { Button } from '../../../components/buttons/buttons';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { PageHeader } from '../../../components/page-headers/page-headers';
 import {deleteFaq, getFaqs} from '../../../redux/faq/faqSlice'
+import MYExportButton from '../../../components/buttons/my-export-button/my-export-button';
+import { exportToXLSX ,getColumnSearchProps} from '../../../components/utilities/utilities';
 
 const ViewPage = () => {
   const dispatch = useDispatch();
@@ -23,6 +21,10 @@ const ViewPage = () => {
       faqStates: state.faqStates,
     };
   });
+  const dataSource = [];
+  const [searchText, setSearchText] = useState('');
+  const [searchedColumn, setSearchedColumn] = useState('');
+  const searchInput = useRef(null);
   const [state, setState] = useState({
     isModalVisible: false,
     fileName: 'bodyShop',
@@ -30,46 +32,6 @@ const ViewPage = () => {
     selectedRowKeys: 0,
     selectedRows: [],
   });
-  console.log(state);
-
-  const showModal = () => {
-    setState({
-      ...state,
-      isModalVisible: true,
-    });
-  };
-  const handleCancel = () => {
-    setState({
-      ...state,
-      isModalVisible: false,
-    });
-  };
-  // const usersTableData = [];
-  const csvData = [['id', 'question', 'answer', 'updated_at']];
-  const columns = [
-    {
-      title: 'Question',
-      dataIndex: 'question',
-      key: 'question',
-    },
-    {
-      title: 'Answer',
-      dataIndex: 'answer',
-      key: 'answer',
-    },
-    {
-      title: 'Update At',
-      dataIndex: 'updated_at',
-      key: 'updated_at',
-      render: (text)=>moment(text).fromNow()
-    },
-    {
-      title: 'Actions',
-      dataIndex: 'action',
-      key: 'action',
-      width: '90px',
-    },
-  ];
 
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
@@ -80,53 +42,17 @@ const ViewPage = () => {
       name: record.name,
     }),
   };
-
-  state.selectedRows.map((rows) => {
-    const { key, question, answer, updated_at } = rows;
-    return csvData.push([key, question, answer, updated_at]);
-  });
-
-  const { isModalVisible } = state;
-
-  const warning = () => {
-    alertModal.warning({
-      title: 'Please Select your Required Rows!',
-    });
+ 
+  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
   };
-
-  const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-  const xlsxExtension = '.xlsx';
-
-  const exportToXLSX = (inputData, fileName) => {
-    const ws = XLSX.utils.json_to_sheet(inputData);
-    const wb = { Sheets: { data: ws }, SheetNames: ['data'] };
-    const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
-    const data = new Blob([excelBuffer], { type: fileType });
-    FileSaver.saveAs(data, fileName + xlsxExtension);
-    setState({
-      ...state,
-      isModalVisible: false,
-    });
+  const handleReset = (clearFilters) => {
+    clearFilters();
+    setSearchText('');
   };
-
-  const updateFileName = (e) => {
-    setState({
-      ...state,
-      fileName: e.target.value,
-    });
-  };
-  const updateFileType = (value) => {
-    setState({
-      ...state,
-      convertedTo: value,
-    });
-  };
-  const { Option } = Select;
-  const { fileName, convertedTo } = state;
-  useEffect(() => {
-    dispatch(getFaqs())
-  }, [dispatch]);
-  const dataSource = [];
+ 
 
   const handleDelete = id => {
     const confirm = window.confirm('Are you sure delete this?');
@@ -168,66 +94,47 @@ const ViewPage = () => {
         ),
       });
     });
-
+    const csvData = [['id', 'question', 'answer', 'updated_at']];
+    state.selectedRows.map((rows) => {
+      const { key, question, answer, updated_at } = rows;
+      return csvData.push([key, question, answer, updated_at]);
+    });
+    const columns = [
+      {
+        title: 'Question',
+        dataIndex: 'question',
+        key: 'question',
+        ...getColumnSearchProps('Question','question', handleSearch, handleReset, searchInput, searchedColumn, searchText, setSearchText, setSearchedColumn),
+      },
+      {
+        title: 'Answer',
+        dataIndex: 'answer',
+        key: 'answer',
+        ...getColumnSearchProps('Answer','answer', handleSearch, handleReset, searchInput, searchedColumn, searchText, setSearchText, setSearchedColumn),
+      },
+      {
+        title: 'Update At',
+        dataIndex: 'updated_at',
+        key: 'updated_at',
+        render: (text)=>moment(text).fromNow()
+      },
+      {
+        title: 'Actions',
+        dataIndex: 'action',
+        key: 'action',
+        width: '90px',
+      },
+    ];
+  
+    useEffect(() => {
+      dispatch(getFaqs())
+    }, [dispatch]);
   return (
     <RecordViewWrapper>
       <PageHeader
         buttons={[
           <div className="sDash_export-box">
-          {state.selectedRows.length ? (
-            <>
-              <Button className="btn-export" onClick={showModal}  
-              size="small" 
-              type="white">
-                 <FeatherIcon icon="download" size={14} />
-                Export
-              </Button>
-              <Modal
-                title="Export File"
-                wrapClassName="sDash_export-wrap"
-                visible={isModalVisible}
-                footer={null}
-                onCancel={handleCancel}
-              >
-                <Form name="contact">
-                  <Form.Item name="f_name">
-                    <Input placeholder="File Name" value={fileName} onChange={updateFileName} />
-                  </Form.Item>
-                  <Form.Item initialValue="CSV" name="f_type">
-                    <Select onChange={updateFileType}>
-                      <Option value="csv">CSV</Option>
-                      <Option value="xlxs">xlxs</Option>
-                    </Select>
-                  </Form.Item>
-                  <div className="sDash-button-grp">
-                    {convertedTo === 'csv' ? (
-                      <CSVLink filename={`${fileName}.csv`} data={csvData}>
-                        <Button onClick={handleCancel} className="btn-export" type="primary">
-                          Export
-                        </Button>
-                      </CSVLink>
-                    ) : (
-                      <Button
-                        className="btn-export"
-                        onClick={() => exportToXLSX(csvData, fileName)}
-                        type="primary"
-                      >
-                        Eport
-                      </Button>
-                    )}
-                    <Button htmlType="submit" onClick={handleCancel} size="default" type="white" outlined>
-                      Cancel
-                    </Button>
-                  </div>
-                </Form>
-              </Modal>
-            </>
-          ) : (
-            <Button className="btn-export"  size="small"  onClick={warning} type="white">
-               <FeatherIcon icon="download" size={14} />
-              Export
-            </Button>
-          )}
+            <MYExportButton state={state} setState={setState} exportToXLSX={exportToXLSX} csvData={csvData}/>
         </div>,
           <div>
           <Button className="btn-add_new" size="small" key="1" type="primary">

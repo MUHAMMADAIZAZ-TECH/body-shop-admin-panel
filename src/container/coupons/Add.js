@@ -2,7 +2,6 @@ import React, { useEffect,  } from 'react';
 import { Row, Col, Form,Input,Select,DatePicker, } from 'antd';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import PropTypes from 'prop-types';
 import { PageHeader } from '../../components/page-headers/page-headers';
 import { Cards } from '../../components/cards/frame/cards-frame';
 import { Button } from '../../components/buttons/buttons';
@@ -12,7 +11,7 @@ import { createCoupon } from '../../redux/coupons/couponSlice';
 
 const { Option } = Select;
 const dateFormat = 'YYYY/MM/DD';
-const AddNew = ({ match }) => {
+const AddNew = () => {
   const dispatch = useDispatch();
   const { isLoading ,salonState} = useSelector(state => {
     return {
@@ -38,7 +37,7 @@ const AddNew = ({ match }) => {
   };
   useEffect(() => {
     dispatch(getSalons())
-  }, [dispatch,match.params.id]);
+  }, [dispatch]);
 
   return (
     <>
@@ -123,8 +122,5 @@ const AddNew = ({ match }) => {
   );
 };
 
-AddNew.propTypes = {
-  match: PropTypes.object,
-};
 
 export default AddNew;

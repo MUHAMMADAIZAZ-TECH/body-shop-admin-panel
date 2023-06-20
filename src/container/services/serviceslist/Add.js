@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { PlusOutlined } from '@ant-design/icons';
 import { Row, Modal, Col, Form, Input, Select, Upload,Checkbox, TimePicker } from 'antd';
 import { Link } from 'react-router-dom';
 import { useSelector,useDispatch } from 'react-redux';
@@ -10,16 +9,10 @@ import { Main, BasicFormWrapper } from '../../styled';
 import { getSalons } from '../../../redux/salon/salonSlice';
 import { getCategories } from '../../../redux/categories/categoriesSlice';
 import { createService } from '../../../redux/services/servicesSlice';
+import { getBase64,uploadButton } from '../../../components/utilities/utilities';
 
 const { Option } = Select;
 
-const getBase64 = (file) =>
-  new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = (error) => reject(error);
-  });
 const AddNew = () => {
   const dispatch = useDispatch();
   const [previewOpen, setPreviewOpen] = useState(false);
@@ -27,10 +20,11 @@ const AddNew = () => {
   const [enable_customer_booking, setenable_customer_booking] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   const [previewTitle, setPreviewTitle] = useState('');
-  const { salonState,categoryState } = useSelector(state => {
+  const { salonState,categoryState,isLoading } = useSelector(state => {
     return {
       salonState:state.salonStates,
-      categoryState:state.categoryStates
+      categoryState:state.categoryStates,
+      isLoading:state.categoryStates.loading
     };
   });
   const [form] = Form.useForm();
@@ -68,14 +62,7 @@ const AddNew = () => {
     })
     setfiles(fileList)
   };
-  const uploadButton = (
-    <div><PlusOutlined />
-      <div style={{ marginTop: 8, }}>Upload</div>
-    </div>
-  );
-  
     useEffect(()=>{
-      
       dispatch(getSalons())
       dispatch(getCategories())
     },[])
@@ -172,8 +159,7 @@ const AddNew = () => {
                         Cancel
                       </Button>
                       <Button size="default" htmlType="Save" type="primary">
-                        {/* {isLoading ? 'Loading...' : 'Submit'} */}
-                        Submit
+                        {isLoading ? 'Loading...' : 'Submit'}
                       </Button>
                     </div>
                   </div>

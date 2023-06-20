@@ -1,10 +1,8 @@
 import React, { useEffect, useState,useRef } from 'react';
-import { Row, Col, Table, Spin,Avatar,Tag,Input,Space } from 'antd';
+import { Row, Col, Table, Spin,Avatar,Tag } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
-import { SearchOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
-import Highlighter from 'react-highlight-words';
 import FeatherIcon from 'feather-icons-react';
 import { RecordViewWrapper } from './Style';
 import { Main, TableWrapper } from '../../styled';
@@ -12,14 +10,9 @@ import { Button } from '../../../components/buttons/buttons';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { PageHeader } from '../../../components/page-headers/page-headers';
 import { deleteService, getServices } from '../../../redux/services/servicesSlice';
+import { getColumnSearchProps,exportToXLSX } from '../../../components/utilities/utilities';
+import MYExportButton from '../../../components/buttons/my-export-button/my-export-button';
 
-const avatarStyle = {
-  borderRadius: '4px', // Adjust the border radius as per your preference
-  width: '60px', // Adjust the width and height as per your preference
-  height: '60px',
-  lineHeight: '100px', // Vertically center the content
-  textAlign: 'center', // Horizontally center the content
-};
 const ViewPage = () => {
   const dispatch = useDispatch();
   const { isLoading,servicesStates } = useSelector(state => {
@@ -28,9 +21,27 @@ const ViewPage = () => {
       servicesStates: state.servicesStates,
     };
   });
+  const dataSource = [];
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef(null);
+
+  const [state, setState] = useState({
+    isModalVisible: false,
+    fileName: 'bodyShop',
+    convertedTo: 'csv',
+    selectedRowKeys: 0,
+    selectedRows: [],
+  });
+  const rowSelection = {
+    onChange: (selectedRowKeys, selectedRows) => {
+      setState({ ...state, selectedRowKeys, selectedRows });
+    },
+    getCheckboxProps: (record) => ({
+      disabled: record.name === 'Disabled User', // Column configuration not to be checked
+      name: record.name,
+    }),
+  };
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
@@ -40,12 +51,6 @@ const ViewPage = () => {
     clearFilters();
     setSearchText('');
   };
-  const [state, setState] = useState({
-    selectedRowKeys: [],
-  });
-  const { selectedRowKeys } = state;
-  const dataSource = [];
-
   const handleDelete = id => {
     const confirm = window.confirm('Are you sure delete this?');
     if (confirm) {
@@ -60,17 +65,16 @@ const ViewPage = () => {
     }
     return false;
   };
-  const onHandleSearch = () => {
-   
+  const onHandleSearch = (e) => {
+    setState({ ...state, searchText: e.target.value });
   };
 
-  console.log(servicesStates?.services)
   if (servicesStates?.services?.length)
   servicesStates?.services?.map((services, key) => {
     const { id, image, name, salon_name, price, category_name, is_available, updated_at } = services;
     return dataSource.push({
       key: key + 1,
-      image: (image && <Avatar style={avatarStyle} src={image} size={60}/>),
+      image: (image && <Avatar className='myavatar' src={image} size={60}/>),
       name,
       salon_name,
       price:<span>{price} $</span>,
@@ -91,100 +95,10 @@ const ViewPage = () => {
       services
     });
   });
-  const getColumnSearchProps = (dataIndex) => ({
-    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
-      <div
-        style={{
-          padding: 8,
-        }}
-      // onKeyDown={(e) => e.stopPropagation()}
-      >
-        <Input
-          ref={searchInput}
-          placeholder={`Search ${dataIndex}`}
-          value={selectedKeys[0]}
-          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-          style={{
-            marginBottom: 8,
-            display: 'block',
-          }}
-        />
-        <Space>
-          <Button
-            type="primary"
-            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-            icon={<SearchOutlined />}
-            size="small"
-            style={{
-              width: 90,
-            }}
-          >
-            Search
-          </Button>
-          <Button
-
-            onClick={() => clearFilters && handleReset(clearFilters)}
-            size="small"
-            style={{
-              width: 90,
-            }}
-          >
-            Reset
-          </Button>
-          <Button
-            type="primary"
-            size="small"
-            onClick={() => {
-              confirm({
-                closeDropdown: false,
-              });
-              setSearchText(selectedKeys[0]);
-              setSearchedColumn(dataIndex);
-            }}
-          >
-            Filter
-          </Button>
-          <Button
-            type="primary"
-            size="small"
-            onClick={() => {
-              close();
-            }}
-          >
-            close
-          </Button>
-        </Space>
-      </div>
-    ),
-    filterIcon: (filtered) => (
-      <SearchOutlined
-        style={{
-          color: filtered ? '#1677ff' : undefined,
-        }}
-      />
-    ),
-    onFilter: (value, record) =>
-      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
-    onFilterDropdownOpenChange: (visible) => {
-      if (visible) {
-        setTimeout(() => searchInput.current?.select(), 100);
-      }
-    },
-    render: (text) =>
-      searchedColumn === dataIndex ? (
-        <Highlighter
-          highlightStyle={{
-            backgroundColor: '#ffc069',
-            padding: 0,
-          }}
-          searchWords={[searchText]}
-          autoEscape
-          textToHighlight={text ? text.toString() : ''}
-        />
-      ) : (
-        text
-      ),
+  const csvData = [['id', 'name','salon_name', 'price', 'category_name','is_available','updated_at']];
+  state.selectedRows.map((rows) => {
+    const { id,name, salon_name, price, category_name, is_available, updated_at} = rows.services;
+    return csvData.push([id,name, salon_name, price, category_name, is_available, updated_at]);
   });
   const columns = [
     {
@@ -200,7 +114,7 @@ const ViewPage = () => {
       key: 'name',
       sorter: (a, b) => a.name.length - b.name.length,
       sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('name'),
+      ...getColumnSearchProps('Name','name', handleSearch, handleReset, searchInput, searchedColumn, searchText, setSearchText, setSearchedColumn),
     },
     {
       title: 'Salon',
@@ -245,29 +159,24 @@ const ViewPage = () => {
       width: '90px',
     },
   ];
-  const onSelectChange = selectedRowKey => {
-    setState({ ...state, selectedRowKeys: selectedRowKey });
-  };
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChange,
-  };
   useEffect(()=>{
     dispatch(getServices())
   },[])
   return (
     <RecordViewWrapper>
       <PageHeader
-        subTitle={
-          <div>
-            <Button className="btn-add_new" size="default" key="1" type="primary">
-              <Link to="/admin/services/services-list-add">
-                <FeatherIcon icon="plus" size={14} /> <span>Add New</span>
-              </Link>
-            </Button>
-          </div>
-        }
+       
         buttons={[
+          <div className="sDash_export-box">
+            <MYExportButton state={state} setState={setState} exportToXLSX={exportToXLSX} csvData={csvData}/>
+        </div>,
+        <div>
+        <Button className="btn-add_new" size="small" key="1" type="primary">
+          <Link to="/admin/services/services-list-add">
+            <FeatherIcon icon="plus" size={14} /> <span>Add New</span>
+          </Link>
+        </Button>
+      </div>,
           <div key={1} className="search-box">
             <span className="search-icon">
               <FeatherIcon icon="search" size={14} />

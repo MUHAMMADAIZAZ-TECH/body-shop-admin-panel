@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { PlusOutlined } from '@ant-design/icons';
 import { Row, Col, Form, Input, Select, Upload, Modal, Checkbox, TimePicker } from 'antd';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
@@ -12,15 +11,10 @@ import { Main, BasicFormWrapper } from '../../styled';
 import { getService, updateService } from '../../../redux/services/servicesSlice';
 import { getSalons } from '../../../redux/salon/salonSlice';
 import { getCategories } from '../../../redux/categories/categoriesSlice';
+import { getBase64,uploadButton } from '../../../components/utilities/utilities';
 
 const { Option } = Select;
-const getBase64 = (file) =>
-  new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = (error) => reject(error);
-  });
+
 const Edit = ({ match }) => {
   const dispatch = useDispatch();
   const [is_available, setis_available] = useState(false);
@@ -73,11 +67,7 @@ const Edit = ({ match }) => {
     })
     setfiles(fileList)
   };
-  const uploadButton = (
-    <div><PlusOutlined />
-      <div style={{ marginTop: 8, }}>Upload</div>
-    </div>
-  );
+
   useEffect(() => {
     if (servicesStates.service !== null) {
       form.setFieldsValue(servicesStates.service);

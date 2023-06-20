@@ -1,8 +1,7 @@
 import React from 'react';
 import { Row, Col, Form,Input } from 'antd';
 import { Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-// import moment from 'moment';
+import { useDispatch ,useSelector} from 'react-redux';
 import { PageHeader } from '../../../components/page-headers/page-headers';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { Button } from '../../../components/buttons/buttons';
@@ -11,6 +10,11 @@ import { createFaq } from '../../../redux/faq/faqSlice';
 
 const AddNew = () => {
   const dispatch = useDispatch();
+  const { isLoading } = useSelector(state => {
+    return {
+      isLoading: state.faqStates.loading,
+    };
+  });
   const [form] = Form.useForm();
   const handleSubmit = async values => {
     try {
@@ -69,8 +73,7 @@ const AddNew = () => {
                         Cancel
                       </Button>
                       <Button size="default" htmlType="Save" type="primary">
-                        {/* {isLoading ? 'Loading...' : 'Submit'} */}
-                        Submit
+                        {isLoading ? 'Loading...' : 'Submit'}
                       </Button>
                     </div>
                   </div>
