@@ -2706,10 +2706,3 @@ html[dir='rtl'] .ant-menu-vertical .ant-menu-submenu-title {
 li.active > .display {
   display: block;
 }
-.myavatar {
-  border-radius: 4px;
-  width: 60px;
-  height: 60px;
-  line-height: 60px;
-  text-align: center;
-}

@@ -2,9 +2,10 @@
 import React from 'react';
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
-import { Input, Space, Button } from 'antd';
+import { Input, Space } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
+import { Button } from '../buttons/buttons';
 
 
 const textRefactor = (text, size) => {
@@ -196,5 +197,11 @@ const getColumnSearchProps = (placeholder,dataIndex, handleSearch, handleReset, 
       text
     ),
 });
-
-export { textRefactor, chartLinearGradient, customTooltips,exportToXLSX,getColumnSearchProps };
+const getBase64 = (file) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (error) => reject(error);
+  });
+export { textRefactor, chartLinearGradient, customTooltips,exportToXLSX,getColumnSearchProps,getBase64 };

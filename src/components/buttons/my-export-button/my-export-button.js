@@ -77,7 +77,7 @@ const MYExportButton = ({state,setState,exportToXLSX,csvData}) => {
                 ) : (
                   <Button
                     className="btn-export"
-                    onClick={() => exportToXLSX(csvData, fileName)}
+                    onClick={() => exportToXLSX(csvData, fileName,setState,state)}
                     type="primary"
                   >
                     Eport

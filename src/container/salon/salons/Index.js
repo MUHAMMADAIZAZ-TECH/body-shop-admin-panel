@@ -1,12 +1,13 @@
 // eslint-disable-next-line camelcase
 import React, { useEffect, useState, useRef } from 'react';
-import { Row, Col, Table, Spin, Avatar, Tag, Rate, Modal } from 'antd';
+import { Row, Col, Table, Spin, Avatar, Tag, Rate } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
 import FeatherIcon from 'feather-icons-react';
 import { RecordViewWrapper } from './Style';
 import { Main, TableWrapper } from '../../styled';
+import ImagePreviewModal from '../../../components/modals/my-modal';
 import { Button } from '../../../components/buttons/buttons';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { PageHeader } from '../../../components/page-headers/page-headers';
@@ -258,22 +259,12 @@ const ViewPage = () => {
           </Col>
         </Row>
       </Main>
-      <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancelpreview}>
-        {previewImages?.map((image, key) => {
-          return (
-            <div>
-              <img
-                key={key}
-                alt="example"
-                style={{
-                  width: '100%',
-                }}
-                src={image}
-              />
-            </div>
-          )})}
-
-      </Modal>
+      <ImagePreviewModal
+        open={previewOpen}
+        title={previewTitle}
+        images={previewImages}
+        onCancel={handleCancelpreview}
+      />
     </RecordViewWrapper>
   );
 };

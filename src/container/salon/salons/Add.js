@@ -8,6 +8,7 @@ import { Cards } from '../../../components/cards/frame/cards-frame';
 import { Button } from '../../../components/buttons/buttons';
 import { Main, BasicFormWrapper } from '../../styled';
 import { createSalon } from '../../../redux/salon/salonSlice';
+import { getBase64 } from '../../../components/utilities/utilities';
 
 const { Option } = Select;
 const { Dragger } = Upload;
@@ -35,13 +36,7 @@ const draggerprops = {
     }
   },
 };
-const getBase64 = (file) =>
-  new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = (error) => reject(error);
-  });
+
 const AddNew = () => {
   const dispatch = useDispatch();
   const [previewOpen, setPreviewOpen] = useState(false);
