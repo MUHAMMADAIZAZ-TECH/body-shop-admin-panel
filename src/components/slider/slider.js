@@ -5,21 +5,9 @@ import PropTypes from 'prop-types';
 import { FrownOutlined } from '@ant-design/icons';
 import { IconWrapper, SliderStyle } from './style';
 
-const Slider = props => {
-  const {
-    defaultValue,
-    range,
-    min,
-    max,
-    step,
-    input,
-    icon,
-    marks,
-    vertical,
-    defaultValues,
-    onAfterChange,
-    onChange,
-  } = props;
+const Slider = (props) => {
+  const { defaultValue, range, min, max, step, input, icon, marks, vertical, defaultValues, onAfterChange, onChange } =
+    props;
 
   const [state, setState] = useState({
     inputValue: 1,
@@ -27,7 +15,7 @@ const Slider = props => {
     maxi: max,
   });
 
-  const onChanges = value => {
+  const onChanges = (value) => {
     // eslint-disable-next-line no-restricted-globals
     if (isNaN(value)) {
       return;
@@ -40,7 +28,7 @@ const Slider = props => {
     if (onChange) onChange(value);
   };
 
-  const handleChange = value => {
+  const handleChange = (value) => {
     setState({ ...state, value });
     if (onChange) onChange(value);
   };
@@ -50,7 +38,7 @@ const Slider = props => {
   const preColor = value >= mid ? '' : 'rgba(0, 0, 0, .45)';
   const nextColor = value >= mid ? 'rgba(0, 0, 0, .45)' : '';
 
-  const onAfterChanges = values => {
+  const onAfterChanges = (values) => {
     if (onAfterChange) onAfterChange(values);
   };
 

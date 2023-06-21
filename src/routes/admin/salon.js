@@ -17,7 +17,6 @@ const SalonAddressView = lazy(() => import('../../container/salon/addresses/Inde
 const SalonAddressAdd = lazy(() => import('../../container/salon/addresses/Add'));
 const SalonAddressEdit = lazy(() => import('../../container/salon/addresses/Edit'));
 
-
 const SalonRoute = () => {
   const { path } = useRouteMatch();
   return (

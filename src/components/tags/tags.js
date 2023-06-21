@@ -15,18 +15,18 @@ function Tag(props) {
   const { closable, onClose, color, checked, onChange, data, hottags, animate, children } = props;
   const tagsFromServer = data;
 
-  const log = e => {
+  const log = (e) => {
     onClose(e);
   };
 
-  const handleChange = checke => {
+  const handleChange = (checke) => {
     setState({ ...state, checke });
     if (onChange) onChange(checke);
   };
 
   const handleChangeHot = (tag, checke) => {
     const { selectedTags } = state;
-    const nextSelectedTags = checke ? [...selectedTags, tag] : selectedTags.filter(t => t !== tag);
+    const nextSelectedTags = checke ? [...selectedTags, tag] : selectedTags.filter((t) => t !== tag);
     // console.log('You are interested in: ', nextSelectedTags);
     setState({
       ...state,
@@ -42,11 +42,11 @@ function Tag(props) {
   ) : hottags ? (
     <>
       <span style={{ marginRight: 8 }}>Categories:</span>
-      {tagsFromServer.map(tag => (
+      {tagsFromServer.map((tag) => (
         <CheckableTag
           key={tag}
           checked={selectedTags.indexOf(tag) > -1}
-          onChange={checke => handleChangeHot(tag, checke)}
+          onChange={(checke) => handleChangeHot(tag, checke)}
         >
           {tag}
         </CheckableTag>
@@ -77,8 +77,8 @@ function AnimatedTags(props) {
   const { data, onChange } = props;
   const [state, setState] = useState({ tags: data, inputVisible: false, inputValue: '' });
 
-  const handleClose = removedTag => {
-    const tags = state.tags.filter(tag => tag !== removedTag);
+  const handleClose = (removedTag) => {
+    const tags = state.tags.filter((tag) => tag !== removedTag);
     // console.log(tags);
     setState({ tags });
     if (onChange) onChange(tags);
@@ -88,7 +88,7 @@ function AnimatedTags(props) {
     setState({ ...state, inputVisible: true });
   };
 
-  const handleInputChange = e => {
+  const handleInputChange = (e) => {
     setState({ ...state, inputValue: e.target.value });
   };
 
@@ -108,11 +108,11 @@ function AnimatedTags(props) {
     });
   };
 
-  const forMap = tag => {
+  const forMap = (tag) => {
     const tagElem = (
       <TagStyle
         closable
-        onClose={e => {
+        onClose={(e) => {
           e.preventDefault();
           handleClose(tag);
         }}

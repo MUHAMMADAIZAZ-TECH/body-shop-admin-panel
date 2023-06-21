@@ -27,29 +27,29 @@ function MenuItems({ darkMode, toggleCollapsed, topMenu, events }) {
   };
   const subMenuArray = [
     {
-      key: "salon",
+      key: 'salon',
       icon: !topMenu && <FeatherIcon icon="database" />,
-      title: "Salons",
+      title: 'Salons',
       items: [
         {
-          key: "salon-view",
+          key: 'salon-view',
           link: `${path}/salon/salon-view`,
-          label: "Salons",
+          label: 'Salons',
         },
         {
-          key: "salon-request",
+          key: 'salon-request',
           link: `${path}/salon/request-view`,
-          label: "Salon Requests",
+          label: 'Salon Requests',
         },
         {
-          key: "salon-reviews",
+          key: 'salon-reviews',
           link: `${path}/salon/review-view`,
-          label: "Salon Reviews",
+          label: 'Salon Reviews',
         },
         {
-          key: "salon-hours",
+          key: 'salon-hours',
           link: `${path}/salon/availibility-hours-view`,
-          label: "Availability hours",
+          label: 'Availability hours',
         },
         // {
         //   key: "salon-addresses",
@@ -108,38 +108,35 @@ function MenuItems({ darkMode, toggleCollapsed, topMenu, events }) {
       defaultSelectedKeys={
         !topMenu
           ? [
-            `${mainPathSplit.length === 1 ? 'home' : mainPathSplit.length === 2 ? mainPathSplit[1] : mainPathSplit[2]
-            }`,
-          ]
+              `${
+                mainPathSplit.length === 1 ? 'home' : mainPathSplit.length === 2 ? mainPathSplit[1] : mainPathSplit[2]
+              }`,
+            ]
           : []
       }
       defaultOpenKeys={!topMenu ? [`${mainPathSplit.length > 2 ? mainPathSplit[1] : 'dashboard'}`] : []}
       overflowedIndicator={<FeatherIcon icon="more-vertical" />}
       openKeys={openKeys}
     >
-      <Menu.Item
-        icon={!topMenu && <FeatherIcon icon="home" />}
-        key="dashboard"
-      >
+      <Menu.Item icon={!topMenu && <FeatherIcon icon="home" />} key="dashboard">
         <NavLink onClick={toggleCollapsed} to={`${path}`}>
           Dashboard
         </NavLink>
       </Menu.Item>
       {!topMenu && <NavTitle className="sidebar-nav-title">App Management</NavTitle>}
-      {subMenuArray && subMenuArray.map((submenu) => (
-        <SubMenu key={submenu.key} icon={submenu.icon} title={submenu.title}>
-          {submenu.items.map((item) => (
-            <Menu.Item key={item.key}>
-              <NavLink to={item.link}>{item.label}</NavLink>
-            </Menu.Item>
-          ))}
-        </SubMenu>
-      ))}
+      {subMenuArray &&
+        subMenuArray.map((submenu) => (
+          <SubMenu key={submenu.key} icon={submenu.icon} title={submenu.title}>
+            {submenu.items.map((item) => (
+              <Menu.Item key={item.key}>
+                <NavLink to={item.link}>{item.label}</NavLink>
+              </Menu.Item>
+            ))}
+          </SubMenu>
+        ))}
       {menuItems.map((menuItem) => (
         <Menu.Item key={menuItem.key} icon={menuItem.icon}>
-          <NavLink to={menuItem.link}>
-            {menuItem.label}
-          </NavLink>
+          <NavLink to={menuItem.link}>{menuItem.label}</NavLink>
         </Menu.Item>
       ))}
       {!topMenu && <NavTitle className="sidebar-nav-title">Settings</NavTitle>}

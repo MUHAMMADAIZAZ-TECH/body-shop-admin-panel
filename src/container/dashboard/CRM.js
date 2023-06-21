@@ -1,7 +1,7 @@
-import React, { Suspense,useEffect,lazy } from 'react';
+import React, { Suspense, useEffect, lazy } from 'react';
 import { Row, Col, Skeleton } from 'antd';
 import FeatherIcon from 'feather-icons-react';
-import { useDispatch,useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { CardBarChart2, EChartCard } from './style';
 import { PageHeader } from '../../components/page-headers/page-headers';
 import { Cards } from '../../components/cards/frame/cards-frame';
@@ -10,7 +10,7 @@ import Heading from '../../components/heading/heading';
 import { ChartjsBarChartTransparent } from '../../components/charts/chartjs';
 import { ExportButtonPageHeader } from '../../components/buttons/export-button/export-button';
 import { CalendarButtonPageHeader } from '../../components/buttons/calendar-button/calendar-button';
-import { getSalons,getDashboard } from '../../redux/salon/salonSlice';
+import { getSalons, getDashboard } from '../../redux/salon/salonSlice';
 
 const UserListTable = lazy(() => import('./usertable'));
 
@@ -50,15 +50,15 @@ const chartOptions = {
 
 function CRM() {
   const dispatch = useDispatch();
-  const { salonState } = useSelector(state => {
+  const { salonState } = useSelector((state) => {
     return {
-      salonState: state.salonStates
+      salonState: state.salonStates,
     };
   });
-  useEffect(()=>{
-    dispatch(getDashboard())
-    dispatch(getSalons())
-  },[])
+  useEffect(() => {
+    dispatch(getDashboard());
+    dispatch(getSalons());
+  }, []);
   return (
     <>
       <PageHeader
@@ -78,7 +78,9 @@ function CRM() {
               <EChartCard>
                 <div className="card-chunk">
                   <CardBarChart2>
-                    <Heading as="h1">{salonState.dashboard.totalBookings && salonState.dashboard.totalBookings}</Heading>
+                    <Heading as="h1">
+                      {salonState.dashboard.totalBookings && salonState.dashboard.totalBookings}
+                    </Heading>
                     <span>Total Bookings</span>
                     <p>
                       <span className="growth-upward">
@@ -111,7 +113,9 @@ function CRM() {
               <EChartCard>
                 <div className="card-chunk">
                   <CardBarChart2>
-                    <Heading as="h1">{salonState.dashboard.totalEarnings && salonState.dashboard.totalEarnings}$</Heading>
+                    <Heading as="h1">
+                      {salonState.dashboard.totalEarnings && salonState.dashboard.totalEarnings}$
+                    </Heading>
                     <span>Total earnings</span>
                     <p>
                       <span className="growth-downward">
@@ -144,7 +148,7 @@ function CRM() {
               <EChartCard>
                 <div className="card-chunk">
                   <CardBarChart2>
-                  <Heading as="h1">{salonState.dashboard.totalSalons && salonState.dashboard.totalSalons}</Heading>
+                    <Heading as="h1">{salonState.dashboard.totalSalons && salonState.dashboard.totalSalons}</Heading>
                     <span>Salons</span>
                     <p>
                       <span className="growth-upward">
@@ -177,7 +181,9 @@ function CRM() {
               <EChartCard>
                 <div className="card-chunk">
                   <CardBarChart2>
-                  <Heading as="h1">{salonState.dashboard.totalCustomers && salonState.dashboard.totalCustomers}</Heading>
+                    <Heading as="h1">
+                      {salonState.dashboard.totalCustomers && salonState.dashboard.totalCustomers}
+                    </Heading>
                     <span>Total Customers</span>
                     <p>
                       <span className="growth-upward">
@@ -215,7 +221,7 @@ function CRM() {
                 </Cards>
               }
             />
-              {/* <TotalRevenue title="Earnings" /> */}
+            {/* <TotalRevenue title="Earnings" /> */}
             {/* </Suspense> */}
           </Col>
           <Col xxl={12} xs={24}>
@@ -225,9 +231,8 @@ function CRM() {
                   <Skeleton active />
                 </Cards>
               }
-              
             >
-              <UserListTable data={salonState?.approvedSalons}/>
+              <UserListTable data={salonState?.approvedSalons} />
             </Suspense>
           </Col>
         </Row>

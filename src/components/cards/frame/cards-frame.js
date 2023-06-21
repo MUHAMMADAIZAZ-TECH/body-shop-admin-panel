@@ -6,7 +6,7 @@ import { CardFrame } from './style';
 import Heading from '../../heading/heading';
 import { Dropdown } from '../../dropdown/dropdown';
 
-const Cards = props => {
+const Cards = (props) => {
   const {
     title,
     children,

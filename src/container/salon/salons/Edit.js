@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
-import { Row, Col, Form, Input, Select, Upload,Modal ,Checkbox} from 'antd';
+import { Row, Col, Form, Input, Select, Upload, Modal, Checkbox } from 'antd';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -18,25 +18,24 @@ const Edit = ({ match }) => {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   const [previewTitle, setPreviewTitle] = useState('');
-  const { salon,isLoading } = useSelector(state => {
+  const { salon, isLoading } = useSelector((state) => {
     return {
       salon: state.salonStates.salon,
-      isLoading: state.salonStates.loading
+      isLoading: state.salonStates.loading,
     };
   });
   const [form] = Form.useForm();
   const [files, setfiles] = useState([]);
   const [removeIds, setremoveIds] = useState([]);
-  
-  const handleSubmit = async values => {
+
+  const handleSubmit = async (values) => {
     try {
       await form.validateFields(); // Validate all form fields
-      console.log(values)
-      dispatch(updateSalon({id: match.params.id,...values, files,deletedImageIds:removeIds }));
+      console.log(values);
+      dispatch(updateSalon({ id: match.params.id, ...values, files, deletedImageIds: removeIds }));
     } catch (error) {
       console.log('Validation error:', error);
     }
-   
   };
 
   const handleCancel = () => setPreviewOpen(false);
@@ -48,46 +47,47 @@ const Edit = ({ match }) => {
     setPreviewOpen(true);
     setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1));
   };
-  const handleChange = ({ fileList: newFileList, }) => {
-    const fileList  = newFileList?.map((file)=>{
-      return{...file, status:'done'}
-    })
-    console.log(fileList)
-    setfiles(fileList)
+  const handleChange = ({ fileList: newFileList }) => {
+    const fileList = newFileList?.map((file) => {
+      return { ...file, status: 'done' };
+    });
+    console.log(fileList);
+    setfiles(fileList);
   };
   const uploadButton = (
-    <div><PlusOutlined />
-      <div style={{ marginTop: 8, }}>Upload</div>
+    <div>
+      <PlusOutlined />
+      <div style={{ marginTop: 8 }}>Upload</div>
     </div>
   );
   const handleRemove = (removedFile) => {
     const removedImageId = removedFile.uid;
-    const uniqueArray = [...new Set([...removeIds,removedImageId])];
-    localStorage.setItem('removeitemsid',JSON.stringify(uniqueArray))
-    setremoveIds(uniqueArray)
+    const uniqueArray = [...new Set([...removeIds, removedImageId])];
+    localStorage.setItem('removeitemsid', JSON.stringify(uniqueArray));
+    setremoveIds(uniqueArray);
   };
   useEffect(() => {
     form.setFieldsValue(salon);
-    if(salon!==null){
-      if(salon?.images?.length>0){
-        const array = salon?.images?.map((image)=>{
-          return{
+    if (salon !== null) {
+      if (salon?.images?.length > 0) {
+        const array = salon?.images?.map((image) => {
+          return {
             uid: image.image_id,
             name: 'image.png',
             status: 'done',
             url: image.image_url,
-          }
-        })
-      setfiles(array)
+          };
+        });
+        setfiles(array);
       }
-      if(salon.isApproved===1){
-        form.setFieldsValue({isApproved:true});
+      if (salon.isApproved === 1) {
+        form.setFieldsValue({ isApproved: true });
       }
     }
   }, [form, salon]);
-  console.log(salon)
+  console.log(salon);
   useEffect(() => {
-    dispatch(getSalon(parseInt(match.params.id,10)))
+    dispatch(getSalon(parseInt(match.params.id, 10)));
   }, [dispatch, match.params.id]);
 
   return (
@@ -111,13 +111,13 @@ const Edit = ({ match }) => {
                 <Form name="multi-form" layout="vertical" style={{ width: '100%' }} form={form} onFinish={handleSubmit}>
                   <Row gutter={30}>
                     <Col sm={12} xs={24} className="mb-25">
-                    <Upload
+                      <Upload
                         listType="picture-card"
                         fileList={files}
                         onPreview={handlePreview}
                         onChange={handleChange}
                         onRemove={handleRemove}
-                        name='files'
+                        name="files"
                       >
                         {files.length >= 5 ? null : uploadButton}
                       </Upload>
@@ -133,19 +133,31 @@ const Edit = ({ match }) => {
                       <Form.Item name="name" label="Name" rules={[{ required: true, message: 'Please enter a name' }]}>
                         <Input placeholder="Enter Name" />
                       </Form.Item>
-                      <Form.Item name="description" label="Description" >
+                      <Form.Item name="description" label="Description">
                         <Input.TextArea rows={5} placeholder="Enter Description" />
                       </Form.Item>
                     </Col>
                     <Col sm={12} xs={24} className="mb-25">
-
-                      <Form.Item name="phone_number" label="Phone Number" rules={[{ required: true, message: 'Please enter a phone number' }]}>
+                      <Form.Item
+                        name="phone_number"
+                        label="Phone Number"
+                        rules={[{ required: true, message: 'Please enter a phone number' }]}
+                      >
                         <Input placeholder="Last Name" />
                       </Form.Item>
-                      <Form.Item name="mobile_number" label="Mobile Number" rules={[{ required: true, message: 'Please enter a mobile number' }]}>
+                      <Form.Item
+                        name="mobile_number"
+                        label="Mobile Number"
+                        rules={[{ required: true, message: 'Please enter a mobile number' }]}
+                      >
                         <Input placeholder="Enter Mobile Number" />
                       </Form.Item>
-                      <Form.Item name="address" label="Address" initialValue="" rules={[{ required: true, message: 'Please enter address' }]} >
+                      <Form.Item
+                        name="address"
+                        label="Address"
+                        initialValue=""
+                        rules={[{ required: true, message: 'Please enter address' }]}
+                      >
                         <Select size="large" className="sDash_fullwidth-select">
                           <Option value="">Please Select</Option>
                           <Option value="1">1</Option>
@@ -153,47 +165,55 @@ const Edit = ({ match }) => {
                           <Option value="3">3</Option>
                         </Select>
                       </Form.Item>
-                      <Form.Item name="availability_range" label="Availability Range" rules={[{ required: true, message: 'Please enter availibilty range' }]} >
+                      <Form.Item
+                        name="availability_range"
+                        label="Availability Range"
+                        rules={[{ required: true, message: 'Please enter availibilty range' }]}
+                      >
                         <Input placeholder="Enter Availability Range" />
                       </Form.Item>
                     </Col>
                   </Row>
                   <div className="record-form-actions text-right">
-                    <div style={{
-                      display: 'flex',
-                      justifyContent: 'flex-end',
-                      alignItems: 'baseline'
-                    }}>
-                      <div style={{ marginRight: 30 }}>
-                      <Form.Item name="isApproved" >
-                      <Checkbox  
-                      name="isApproved"
-                      defaultChecked={salon.isApproved===1}
-                      onChange={(e) => {
-                        if(e.target.checked){
-                          form.setFieldsValue({ isApproved: 1 })
-                        }
-                        else{
-                          form.setFieldsValue({ isApproved: 0 })
-                        }
+                    <div
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'flex-end',
+                        alignItems: 'baseline',
                       }}
-                      >Approved</Checkbox>
-                      </Form.Item>
+                    >
+                      <div style={{ marginRight: 30 }}>
+                        <Form.Item name="isApproved">
+                          <Checkbox
+                            name="isApproved"
+                            defaultChecked={salon.isApproved === 1}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                form.setFieldsValue({ isApproved: 1 });
+                              } else {
+                                form.setFieldsValue({ isApproved: 0 });
+                              }
+                            }}
+                          >
+                            Approved
+                          </Checkbox>
+                        </Form.Item>
                       </div>
                       <div style={{ marginRight: 30 }}>
-                      <Form.Item name="isActive" >
-                      <Checkbox 
-                      defaultChecked={salon.isActive===1}
-                      onChange={(e) => {
-                        if(e.target.checked){
-                          form.setFieldsValue({ isActive: 1 })
-                        }
-                        else{
-                          form.setFieldsValue({ isActive: 0 })
-                        }
-                      }}
-                      >Available</Checkbox>
-                      </Form.Item>
+                        <Form.Item name="isActive">
+                          <Checkbox
+                            defaultChecked={salon.isActive === 1}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                form.setFieldsValue({ isActive: 1 });
+                              } else {
+                                form.setFieldsValue({ isActive: 0 });
+                              }
+                            }}
+                          >
+                            Available
+                          </Checkbox>
+                        </Form.Item>
                       </div>
                       <Button
                         className="btn-cancel"

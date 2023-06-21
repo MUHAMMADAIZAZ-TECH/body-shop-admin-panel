@@ -29,9 +29,9 @@ const ThemeLayout = (WrappedComponent) => {
       this.state = {
         collapsed: false,
         hide: true,
-        searchHide: true,        
+        searchHide: true,
         activeSearch: false,
-        customizerAction: false
+        customizerAction: false,
       };
       this.updateDimensions = this.updateDimensions.bind(this);
     }
@@ -238,11 +238,10 @@ const ThemeLayout = (WrappedComponent) => {
                       }
                       alt=""
                       style={{
-                        width:40,
-                        height:40
+                        width: 40,
+                        height: 40,
                       }}
                     />
-                    
                   </Link>
                 </Col>
 

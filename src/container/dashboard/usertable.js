@@ -16,10 +16,10 @@ const avatarStyle = {
   lineHeight: '100px', // Vertically center the content
   textAlign: 'center', // Horizontally center the content
 };
-function UserListTable({data}) {
-  const dispatch = useDispatch()
+function UserListTable({ data }) {
+  const dispatch = useDispatch();
   const dataSource = [];
-  const handleDelete = id => {
+  const handleDelete = (id) => {
     const confirm = window.confirm('Are you sure delete this?');
     if (confirm) {
       dispatch(
@@ -34,15 +34,15 @@ function UserListTable({data}) {
     return false;
   };
   const handleEdit = (salon) => {
-    dispatch(selectSalon(salon))
-    console.log(salon)
-  }
+    dispatch(selectSalon(salon));
+    console.log(salon);
+  };
   if (data.length)
-  data?.map((salon, key) => {
+    data?.map((salon, key) => {
       const { id, images, name, address } = salon;
       return dataSource.push({
         key: key + 1,
-        images: (images && <Avatar style={avatarStyle} src={images[0]} size={60} />),
+        images: images && <Avatar style={avatarStyle} src={images[0]} size={60} />,
         name,
         address,
         action: (
@@ -56,7 +56,7 @@ function UserListTable({data}) {
             </Link>
           </div>
         ),
-        salon
+        salon,
       });
     });
 
@@ -91,7 +91,7 @@ function UserListTable({data}) {
       name: record.name,
     }),
   };
-  console.log(data)
+  console.log(data);
   return (
     <Cards headless>
       <UserTableStyleWrapper>

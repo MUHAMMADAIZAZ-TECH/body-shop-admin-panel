@@ -15,7 +15,7 @@ import { Dropdown } from '../../../components/dropdown/dropdown';
 
 function WeekCalendar() {
   const dispatch = useDispatch();
-  const { events, isVisible } = useSelector(state => {
+  const { events, isVisible } = useSelector((state) => {
     return {
       events: state.Calender.events,
       isVisible: state.Calender.eventVisible,
@@ -33,8 +33,8 @@ function WeekCalendar() {
 
   useLayoutEffect(() => {
     const calenderDom = document.querySelectorAll('.ant-picker-calendar-date-content');
-    calenderDom.forEach(element => {
-      element.addEventListener('click', e => {
+    calenderDom.forEach((element) => {
+      element.addEventListener('click', (e) => {
         if (e.target.classList[0] === 'ant-picker-calendar-date-content') {
           const getDate = moment(e.currentTarget.getAttribute('title')).format('YYYY-MM-DD');
           setState({
@@ -96,9 +96,9 @@ function WeekCalendar() {
     dispatch(eventVisible(false));
   };
 
-  const addNew = event => {
+  const addNew = (event) => {
     const arrayData = [];
-    events.map(data => {
+    events.map((data) => {
       return arrayData.push(data.id);
     });
     const max = Math.max(...arrayData);
@@ -107,127 +107,35 @@ function WeekCalendar() {
   };
 
   const maximumDate = () => {
-    return parseInt(
-      moment(
-        moment()
-          .day('Sunday')
-          .year(year)
-          .week(currentWeek)
-          .toDate(),
-      ).format('DD'),
-      10,
-    ) +
-      6 <=
-      moment(
-        moment()
-          .day('Sunday')
-          .year(year)
-          .week(currentWeek)
-          .toDate(),
-      ).daysInMonth()
-      ? parseInt(
-          moment(
-            moment()
-              .day('Sunday')
-              .year(year)
-              .week(currentWeek)
-              .toDate(),
-          ).format('DD'),
-          10,
-        ) + 6
-      : parseInt(
-          moment(
-            moment()
-              .day('Sunday')
-              .year(year)
-              .week(currentWeek)
-              .toDate(),
-          ).format('DD'),
-          10,
-        ) +
+    return parseInt(moment(moment().day('Sunday').year(year).week(currentWeek).toDate()).format('DD'), 10) + 6 <=
+      moment(moment().day('Sunday').year(year).week(currentWeek).toDate()).daysInMonth()
+      ? parseInt(moment(moment().day('Sunday').year(year).week(currentWeek).toDate()).format('DD'), 10) + 6
+      : parseInt(moment(moment().day('Sunday').year(year).week(currentWeek).toDate()).format('DD'), 10) +
           6 -
-          parseInt(
-            moment(
-              moment()
-                .day('Sunday')
-                .year(year)
-                .week(currentWeek)
-                .toDate(),
-            ).daysInMonth(),
-            10,
-          );
+          parseInt(moment(moment().day('Sunday').year(year).week(currentWeek).toDate()).daysInMonth(), 10);
   };
 
-  const daysOfMonth = moment(
-    moment()
-      .day('Sunday')
-      .year(year)
-      .week(currentWeek)
-      .toDate(),
-  ).daysInMonth();
+  const daysOfMonth = moment(moment().day('Sunday').year(year).week(currentWeek).toDate()).daysInMonth();
 
   const minimumDate = () => {
-    return parseInt(
-      moment(
-        moment()
-          .day('Sunday')
-          .year(year)
-          .week(currentWeek)
-          .toDate(),
-      ).format('DD'),
-      10,
-    );
+    return parseInt(moment(moment().day('Sunday').year(year).week(currentWeek).toDate()).format('DD'), 10);
   };
 
   const daysOfWeek = () => {
     const days = [];
     if (minimumDate() + 6 <= daysOfMonth) {
       for (let i = minimumDate(); i <= maximumDate(); i += 1) {
-        days.push(
-          `${moment(
-            moment()
-              .day('Sunday')
-              .year(year)
-              .week(currentWeek)
-              .toDate(),
-          ).format('MM')}/${i}/${year}`,
-        );
+        days.push(`${moment(moment().day('Sunday').year(year).week(currentWeek).toDate()).format('MM')}/${i}/${year}`);
       }
     } else {
       for (let i = minimumDate(); i <= daysOfMonth; i += 1) {
-        days.push(
-          `${moment(
-            moment()
-              .day('Sunday')
-              .year(year)
-              .week(currentWeek)
-              .toDate(),
-          ).format('MM')}/${i}/${year}`,
-        );
+        days.push(`${moment(moment().day('Sunday').year(year).week(currentWeek).toDate()).format('MM')}/${i}/${year}`);
       }
       for (let j = 1; j <= minimumDate() + 6 - daysOfMonth; j += 1) {
         days.push(
           `${
-            parseInt(
-              moment(
-                moment()
-                  .day('Sunday')
-                  .year(year)
-                  .week(currentWeek)
-                  .toDate(),
-              ).format('MM'),
-              10,
-            ) < 12
-              ? parseInt(
-                  moment(
-                    moment()
-                      .day('Sunday')
-                      .year(year)
-                      .week(currentWeek)
-                      .toDate(),
-                  ).format('MM'),
-                  10,
-                ) + 1
+            parseInt(moment(moment().day('Sunday').year(year).week(currentWeek).toDate()).format('MM'), 10) < 12
+              ? parseInt(moment(moment().day('Sunday').year(year).week(currentWeek).toDate()).format('MM'), 10) + 1
               : 1
           }/${j}/${year}`,
         );
@@ -263,8 +171,8 @@ function WeekCalendar() {
     '11 PM',
   ];
 
-  const onEventDelete = id => {
-    const data = events.filter(item => item.id !== id);
+  const onEventDelete = (id) => {
+    const data = events.filter((item) => item.id !== id);
     dispatch(calendarDeleteData(data));
   };
 
@@ -290,38 +198,10 @@ function WeekCalendar() {
               <FeatherIcon icon="chevron-left" />
             </Button>
             <span className="date-label">
-              {`${moment(
-                moment()
-                  .day('Sunday')
-                  .year(year)
-                  .week(currentWeek)
-                  .toDate(),
-              ).format('MMM DD')} - ${
-                parseInt(
-                  moment(
-                    moment()
-                      .day('Sunday')
-                      .year('2020')
-                      .week(currentWeek)
-                      .toDate(),
-                  ).format('DD'),
-                  10,
-                ) +
-                  6 <=
-                moment(
-                  moment()
-                    .day('Sunday')
-                    .year('2020')
-                    .week(currentWeek)
-                    .toDate(),
-                ).daysInMonth()
-                  ? moment(
-                      moment()
-                        .day('Sunday')
-                        .year(year)
-                        .week(currentWeek)
-                        .toDate(),
-                    ).format('MMM')
+              {`${moment(moment().day('Sunday').year(year).week(currentWeek).toDate()).format('MMM DD')} - ${
+                parseInt(moment(moment().day('Sunday').year('2020').week(currentWeek).toDate()).format('DD'), 10) + 6 <=
+                moment(moment().day('Sunday').year('2020').week(currentWeek).toDate()).daysInMonth()
+                  ? moment(moment().day('Sunday').year(year).week(currentWeek).toDate()).format('MMM')
                   : moment(
                       moment()
                         .day('Sunday')
@@ -330,55 +210,12 @@ function WeekCalendar() {
                         .toDate(),
                     ).format('MMM')
               } ${
-                parseInt(
-                  moment(
-                    moment()
-                      .day('Sunday')
-                      .year(year)
-                      .week(currentWeek)
-                      .toDate(),
-                  ).format('DD'),
-                  10,
-                ) +
-                  6 <=
-                moment(
-                  moment()
-                    .day('Sunday')
-                    .year(year)
-                    .week(currentWeek)
-                    .toDate(),
-                ).daysInMonth()
-                  ? parseInt(
-                      moment(
-                        moment()
-                          .day('Sunday')
-                          .year(year)
-                          .week(currentWeek)
-                          .toDate(),
-                      ).format('DD'),
-                      10,
-                    ) + 6
-                  : parseInt(
-                      moment(
-                        moment()
-                          .day('Sunday')
-                          .year(year)
-                          .week(currentWeek)
-                          .toDate(),
-                      ).format('DD'),
-                      10,
-                    ) +
+                parseInt(moment(moment().day('Sunday').year(year).week(currentWeek).toDate()).format('DD'), 10) + 6 <=
+                moment(moment().day('Sunday').year(year).week(currentWeek).toDate()).daysInMonth()
+                  ? parseInt(moment(moment().day('Sunday').year(year).week(currentWeek).toDate()).format('DD'), 10) + 6
+                  : parseInt(moment(moment().day('Sunday').year(year).week(currentWeek).toDate()).format('DD'), 10) +
                     6 -
-                    parseInt(
-                      moment(
-                        moment()
-                          .day('Sunday')
-                          .year(year)
-                          .week(currentWeek)
-                          .toDate(),
-                      ).daysInMonth(),
-                      10,
-                    )
+                    parseInt(moment(moment().day('Sunday').year(year).week(currentWeek).toDate()).daysInMonth(), 10)
               }, ${year}`}
             </span>
             <Button onClick={onIncrement} className="btn-navigate" type="white" outlined>
@@ -411,7 +248,7 @@ function WeekCalendar() {
         <thead>
           <tr>
             <th>&nbsp;</th>
-            {daysOfWeek().map(day => {
+            {daysOfWeek().map((day) => {
               return (
                 <th key={day}>
                   <p className="week-dayName">{moment(day).format('dddd')}</p>
@@ -424,11 +261,11 @@ function WeekCalendar() {
           </tr>
         </thead>
         <tbody>
-          {eventTimes.map(time => {
+          {eventTimes.map((time) => {
             return (
               <tr key={time}>
                 <td>{time}</td>
-                {daysOfWeek().map(day => {
+                {daysOfWeek().map((day) => {
                   return (
                     <td
                       key={day}
@@ -441,7 +278,7 @@ function WeekCalendar() {
                         <span className="currentTime secondary" />
                       ) : null}
                       {events.map(
-                        event =>
+                        (event) =>
                           day === event.date[0] &&
                           time === moment(event.time[0], 'h:mm a').format('h A') && (
                             <Dropdown

@@ -1,4 +1,4 @@
-import React, { useEffect, useState,useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Row, Col, Table, Spin } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
@@ -6,17 +6,19 @@ import FeatherIcon from 'feather-icons-react';
 import { RecordViewWrapper } from './Style';
 import { Main, TableWrapper } from '../../styled';
 import { Cards } from '../../../components/cards/frame/cards-frame';
+import { Button } from '../../../components/buttons/buttons';
+import { alertModal } from '../../../components/modals/antd-modals';
 import { PageHeader } from '../../../components/page-headers/page-headers';
 import { getTransactions } from '../../../redux/transactions/transactionSlice';
-import { exportToXLSX,getColumnSearchProps } from '../../../components/utilities/utilities';
+import { exportToXLSX, handlePrint, getColumnSearchProps } from '../../../components/utilities/utilities';
 import MYExportButton from '../../../components/buttons/my-export-button/my-export-button';
 
 const ViewPage = () => {
   const dispatch = useDispatch();
-  const { isLoading ,TransactionStates} = useSelector(state => {
+  const { isLoading, TransactionStates } = useSelector((state) => {
     return {
       isLoading: state.transactionStates.loading,
-      TransactionStates:state.transactionStates
+      TransactionStates: state.transactionStates,
     };
   });
   const dataSource = [];
@@ -40,7 +42,7 @@ const ViewPage = () => {
       name: record.name,
     }),
   };
- 
+
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
@@ -50,35 +52,33 @@ const ViewPage = () => {
     clearFilters();
     setSearchText('');
   };
- 
+
   useEffect(() => {
     dispatch(getTransactions());
   }, [dispatch]);
-  
 
   const onHandleSearch = (e) => {
     setState({ ...state, searchText: e.target.value });
   };
   if (TransactionStates?.transactions?.length)
-  TransactionStates?.transactions?.map((transaction, key) => {
-      const { booking_id, amount, status,user_name, created_at, updated_at } = transaction;
+    TransactionStates?.transactions?.map((transaction, key) => {
+      const { booking_id, amount, status, user_name, created_at, updated_at } = transaction;
       return dataSource.push({
         key: key + 1,
-        booking_id:<div>#{booking_id}</div>,
+        booking_id,
         amount,
         status,
         user_name,
         created_at,
         updated_at,
-        transaction
+        transaction,
       });
     });
-    const csvData = [['id', 'booking_id', 'amount', 'status','user_name',
-    'created_at','updated_at']];
-    state.selectedRows.map((rows) => {
-      const { id, booking_id, amount, status,user_name, created_at, updated_at} = rows.transaction;
-      return csvData.push([id, booking_id, amount, status,user_name, created_at, updated_at]);
-    });
+  const csvData = [['id', 'booking_id', 'amount', 'status', 'user_name', 'created_at', 'updated_at']];
+  state.selectedRows.map((rows) => {
+    const { id, booking_id, amount, status, user_name, created_at, updated_at } = rows.transaction;
+    return csvData.push([id, booking_id, amount, status, user_name, created_at, updated_at]);
+  });
   const columns = [
     {
       title: 'Booking ID',
@@ -86,7 +86,18 @@ const ViewPage = () => {
       key: 'booking_id',
       sorter: (a, b) => a.booking_id.length - b.booking_id.length,
       sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('Booking ID','booking_id', handleSearch, handleReset, searchInput, searchedColumn, searchText, setSearchText, setSearchedColumn),
+      ...getColumnSearchProps(
+        'Booking ID',
+        'booking_id',
+        handleSearch,
+        handleReset,
+        searchInput,
+        searchedColumn,
+        searchText,
+        setSearchText,
+        setSearchedColumn,
+      ),
+      render: (booking_id) => <div>#{booking_id}</div>,
     },
     {
       title: 'Amount',
@@ -94,8 +105,18 @@ const ViewPage = () => {
       key: 'amount',
       sorter: (a, b) => a.amount.length - b.amount.length,
       sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('Amount','amount', handleSearch, handleReset, searchInput, searchedColumn, searchText, setSearchText, setSearchedColumn),
-      render: text => <div>{text} $</div>,
+      ...getColumnSearchProps(
+        'Amount',
+        'amount',
+        handleSearch,
+        handleReset,
+        searchInput,
+        searchedColumn,
+        searchText,
+        setSearchText,
+        setSearchedColumn,
+      ),
+      render: (text) => <div>{text} $</div>,
     },
     {
       title: 'Status',
@@ -103,7 +124,17 @@ const ViewPage = () => {
       key: 'status',
       sorter: (a, b) => a.status.length - b.status.length,
       sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('Status','status', handleSearch, handleReset, searchInput, searchedColumn, searchText, setSearchText, setSearchedColumn),
+      ...getColumnSearchProps(
+        'Status',
+        'status',
+        handleSearch,
+        handleReset,
+        searchInput,
+        searchedColumn,
+        searchText,
+        setSearchText,
+        setSearchedColumn,
+      ),
     },
     {
       title: 'User',
@@ -111,7 +142,17 @@ const ViewPage = () => {
       key: 'user_name',
       sorter: (a, b) => a.user_name.length - b.user_name.length,
       sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('User','user_name', handleSearch, handleReset, searchInput, searchedColumn, searchText, setSearchText, setSearchedColumn),
+      ...getColumnSearchProps(
+        'User',
+        'user_name',
+        handleSearch,
+        handleReset,
+        searchInput,
+        searchedColumn,
+        searchText,
+        setSearchText,
+        setSearchedColumn,
+      ),
     },
     {
       title: 'Created At',
@@ -119,7 +160,7 @@ const ViewPage = () => {
       key: 'created_at',
       sorter: (a, b) => a.created_at.length - b.created_at.length,
       sortDirections: ['descend', 'ascend'],
-      render: text => moment(text).format('YYYY/MM/DD'),
+      render: (text) => moment(text).format('YYYY/MM/DD'),
     },
     {
       title: 'Updated At',
@@ -128,17 +169,30 @@ const ViewPage = () => {
       width: '90px',
       sorter: (a, b) => a.updated_at.length - b.updated_at.length,
       sortDirections: ['descend', 'ascend'],
-      render: text => moment(text).fromNow(),
+      render: (text) => moment(text).fromNow(),
     },
   ];
-
+  const handlePrinter = () => {
+    if (state.selectedRows.length) {
+      handlePrint(dataSource, columns, 'Payments', state);
+    } else {
+      alertModal.warning({
+        title: 'Please Select your Required Rows!',
+      });
+    }
+  };
   return (
     <RecordViewWrapper>
       <PageHeader
         buttons={[
           <div className="sDash_export-box">
-            <MYExportButton state={state} setState={setState} exportToXLSX={exportToXLSX} csvData={csvData}/>
-        </div>,
+            <MYExportButton state={state} setState={setState} exportToXLSX={exportToXLSX} csvData={csvData} />
+          </div>,
+          <div>
+            <Button className="btn-add_new" size="small" key="1" type="white" onClick={() => handlePrinter()}>
+              <FeatherIcon icon="printer" size={14} /> <span>Print</span>
+            </Button>
+          </div>,
           <div key={1} className="search-box">
             <span className="search-icon">
               <FeatherIcon icon="search" size={14} />

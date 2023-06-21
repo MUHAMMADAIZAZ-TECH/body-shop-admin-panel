@@ -4,7 +4,7 @@ import { ButtonStyledGroup, ButtonStyled } from './styled';
 
 // @Todo props spreading
 
-const Button = props => {
+const Button = (props) => {
   const {
     type,
     shape,

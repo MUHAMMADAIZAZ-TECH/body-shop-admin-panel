@@ -5,18 +5,9 @@ import { CheckboxStyle } from './style';
 
 const CheckboxGroup = CheckboxStyle.Group;
 
-const Checkbox = props => {
-  const {
-    item,
-    defaultSelect,
-    checked,
-    multiple,
-    onChange,
-    onChangeTriger,
-    defaultChecked,
-    disabled,
-    children,
-  } = props;
+const Checkbox = (props) => {
+  const { item, defaultSelect, checked, multiple, onChange, onChangeTriger, defaultChecked, disabled, children } =
+    props;
   const plainOptions = item;
 
   const [state, setState] = useState({
@@ -25,7 +16,7 @@ const Checkbox = props => {
     checkAll: false,
   });
 
-  const onMultiChange = checkedList => {
+  const onMultiChange = (checkedList) => {
     setState({
       checkedList,
       indeterminate: !!checkedList.length && checkedList.length < plainOptions.length,
@@ -40,7 +31,7 @@ const Checkbox = props => {
     // eslint-disable-next-line
   }, [state]);
 
-  const onCheckAllChange = e => {
+  const onCheckAllChange = (e) => {
     setState({
       checkedList: e.target.checked ? plainOptions : [],
       indeterminate: false,
@@ -48,7 +39,7 @@ const Checkbox = props => {
     });
   };
 
-  const onChecked = e => {
+  const onChecked = (e) => {
     return onChange(e.target.checked, e.target.value);
   };
 

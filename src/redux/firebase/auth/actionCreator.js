@@ -12,7 +12,7 @@ const {
   fbSignUpErr,
 } = actions;
 
-const fbAuthLogin = data => {
+const fbAuthLogin = (data) => {
   return async (dispatch, getState, { getFirebase }) => {
     const fb = getFirebase();
     try {
@@ -25,7 +25,7 @@ const fbAuthLogin = data => {
   };
 };
 
-const fbAuthLogout = logOut => {
+const fbAuthLogout = (logOut) => {
   return async (dispatch, getState, { getFirebase }) => {
     const fb = getFirebase();
     try {
@@ -41,7 +41,7 @@ const fbAuthLogout = logOut => {
   };
 };
 
-const fbAuthSignUp = newUser => {
+const fbAuthSignUp = (newUser) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
     const db = getFirestore();
     const fb = getFirebase();

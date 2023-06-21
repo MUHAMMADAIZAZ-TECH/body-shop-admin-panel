@@ -1,4 +1,4 @@
-import React, { useEffect, useState,useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Row, Col, Table, Spin, Rate } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -11,15 +11,15 @@ import { Button } from '../../../components/buttons/buttons';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { PageHeader } from '../../../components/page-headers/page-headers';
 import { deleteSalonReview, getAllReviews } from '../../../redux/salon/salonSlice';
-import { exportToXLSX,handlePrint, getColumnSearchProps } from '../../../components/utilities/utilities';
+import { exportToXLSX, handlePrint, getColumnSearchProps } from '../../../components/utilities/utilities';
 import MYExportButton from '../../../components/buttons/my-export-button/my-export-button';
 
 const ViewPage = () => {
   const dispatch = useDispatch();
-  const { salonState,isLoading } = useSelector(state => {
+  const { salonState, isLoading } = useSelector((state) => {
     return {
       salonState: state.salonStates,
-      isLoading: state.salonStates.loading
+      isLoading: state.salonStates.loading,
     };
   });
   const dataSource = [];
@@ -57,23 +57,25 @@ const ViewPage = () => {
   const handleDelete = (id) => {
     const confirm = window.confirm('Are you sure delete this?');
     if (confirm) {
-      dispatch(deleteSalonReview({
-        id,
-        getData: () => {
-          dispatch(getAllReviews());
-        },
-      }))
-     console.log("delete")
+      dispatch(
+        deleteSalonReview({
+          id,
+          getData: () => {
+            dispatch(getAllReviews());
+          },
+        }),
+      );
+      console.log('delete');
     }
     return false;
   };
   const onHandleSearch = () => {
-    console.log("search")
+    console.log('search');
   };
   // rows
   if (salonState?.salonreviews?.data?.length)
-  salonState?.salonreviews?.data?.map((review, key) => {
-      const { id, comment, rating, salon_name, updated_at, user_name, } = review;
+    salonState?.salonreviews?.data?.map((review, key) => {
+      const { id, comment, rating, salon_name, updated_at, user_name } = review;
       return dataSource.push({
         key: key + 1,
         comment,
@@ -92,14 +94,14 @@ const ViewPage = () => {
             </Link>
           </div>
         ),
-        review
+        review,
       });
     });
-    const csvData = [['id', 'comment', 'rating', 'user_name','salon_name','updated_at']];
-    state.selectedRows.map((rows) => {
-      const { id, comment, rating,user_name, salon_name,updated_at} = rows.review;
-      return csvData.push([id, comment, rating,user_name, salon_name,updated_at]);
-    });
+  const csvData = [['id', 'comment', 'rating', 'user_name', 'salon_name', 'updated_at']];
+  state.selectedRows.map((rows) => {
+    const { id, comment, rating, user_name, salon_name, updated_at } = rows.review;
+    return csvData.push([id, comment, rating, user_name, salon_name, updated_at]);
+  });
   // coloumn
   const columns = [
     {
@@ -108,7 +110,17 @@ const ViewPage = () => {
       key: 'comment',
       sorter: (a, b) => a.comment.length - b.comment.length,
       sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('Review','comment', handleSearch, handleReset, searchInput, searchedColumn, searchText, setSearchText, setSearchedColumn),
+      ...getColumnSearchProps(
+        'Review',
+        'comment',
+        handleSearch,
+        handleReset,
+        searchInput,
+        searchedColumn,
+        searchText,
+        setSearchText,
+        setSearchedColumn,
+      ),
     },
     {
       title: 'Rate',
@@ -116,7 +128,7 @@ const ViewPage = () => {
       key: 'rating',
       sorter: (a, b) => a.rating.length - b.rating.length,
       sortDirections: ['descend', 'ascend'],
-      render:(rating)=><Rate disabled defaultValue={rating} />
+      render: (rating) => <Rate disabled defaultValue={rating} />,
     },
     {
       title: 'User',
@@ -140,7 +152,7 @@ const ViewPage = () => {
       key: 'updated_at',
       sorter: (a, b) => a.updated_at.length - b.updated_at.length,
       sortDirections: ['descend', 'ascend'],
-      render: text => moment(text).fromNow(),
+      render: (text) => moment(text).fromNow(),
     },
     {
       title: 'Actions',
@@ -149,31 +161,30 @@ const ViewPage = () => {
       width: '90px',
     },
   ];
-  const handlePrinter = ()=>{
-    if(state.selectedRows.length){
-      handlePrint(dataSource, columns, 'Salon Reviews', state)
-    }
-    else{
+  const handlePrinter = () => {
+    if (state.selectedRows.length) {
+      handlePrint(dataSource, columns, 'Salon Reviews', state);
+    } else {
       alertModal.warning({
         title: 'Please Select your Required Rows!',
       });
     }
-  }
-  useEffect(()=>{
-    dispatch(getAllReviews())
-  },[])
+  };
+  useEffect(() => {
+    dispatch(getAllReviews());
+  }, []);
   return (
     <RecordViewWrapper>
       <PageHeader
         buttons={[
           <div className="sDash_export-box">
-            <MYExportButton state={state} setState={setState} exportToXLSX={exportToXLSX} csvData={csvData}/>
-        </div>,
-         <div>
-         <Button className="btn-add_new" size="small" key="1" type="white" onClick={() => handlePrinter()}>
-           <FeatherIcon icon="printer" size={14} /> <span>Print</span>
-         </Button>
-       </div>,
+            <MYExportButton state={state} setState={setState} exportToXLSX={exportToXLSX} csvData={csvData} />
+          </div>,
+          <div>
+            <Button className="btn-add_new" size="small" key="1" type="white" onClick={() => handlePrinter()}>
+              <FeatherIcon icon="printer" size={14} /> <span>Print</span>
+            </Button>
+          </div>,
           <div key={1} className="search-box">
             <span className="search-icon">
               <FeatherIcon icon="search" size={14} />

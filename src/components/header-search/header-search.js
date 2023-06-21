@@ -10,17 +10,17 @@ import { Popover } from '../popup/popup';
 
 const HeaderSearch = ({ darkMode }) => {
   const dispatch = useDispatch();
-  const searchData = useSelector(state => state.headerSearchData);
-  const rtl = useSelector(state => state.ChangeLayoutMode.rtlData);
+  const searchData = useSelector((state) => state.headerSearchData);
+  const rtl = useSelector((state) => state.ChangeLayoutMode.rtlData);
 
-  const search = e => {
+  const search = (e) => {
     dispatch(headerSearchAction(e.target.value));
   };
 
   const content = (
     <div>
       {searchData.length ? (
-        searchData.map(group => {
+        searchData.map((group) => {
           const { title, count, id } = group;
           return (
             <NavLink key={id} to="#">

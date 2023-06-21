@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { PageHeaderStyle } from './style';
 
-const PageHeader = props => {
+const PageHeader = (props) => {
   const { title, subTitle, routes, buttons, ghost, bgColor, className } = props;
   return (
     <>

@@ -2056,5 +2056,5 @@ export {
   TableWrapper,
   ImportStyleWrap,
   ExportStyleWrap,
-  UserCard
+  UserCard,
 };

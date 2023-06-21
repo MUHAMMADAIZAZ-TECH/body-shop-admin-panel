@@ -18,7 +18,7 @@ import { Modal } from '../../../components/modals/antd-modals';
 
 function MonthCalendar() {
   const dispatch = useDispatch();
-  const { events, isVisible } = useSelector(state => {
+  const { events, isVisible } = useSelector((state) => {
     return {
       events: state.Calender.events,
       isVisible: state.Calender.eventVisible,
@@ -41,8 +41,8 @@ function MonthCalendar() {
     );
     const containers = document.querySelector('.calendar-header__left .react-calendar__viewContainer');
     const calenderDom = document.querySelectorAll('.ant-picker-calendar-date-content');
-    calenderDom.forEach(element => {
-      element.addEventListener('click', e => {
+    calenderDom.forEach((element) => {
+      element.addEventListener('click', (e) => {
         if (e.target.classList[0] === 'ant-picker-calendar-date-content') {
           const getDate = moment(e.currentTarget.closest('td').getAttribute('title')).format('YYYY-MM-DD');
           setState({
@@ -68,17 +68,17 @@ function MonthCalendar() {
     });
   }, [date, currentLabel, defaultValue, dispatch]);
 
-  const onChange = dt => setState({ ...state, date: dt, defautlValue: moment(dt).format('YYYY-MM-DD') });
+  const onChange = (dt) => setState({ ...state, date: dt, defautlValue: moment(dt).format('YYYY-MM-DD') });
 
-  const onEventDelete = id => {
-    const data = events.filter(item => item.id !== id);
+  const onEventDelete = (id) => {
+    const data = events.filter((item) => item.id !== id);
     dispatch(calendarDeleteData(data));
   };
 
   function getListData(value) {
     let listData;
     const data = [];
-    events.map(event => {
+    events.map((event) => {
       if (moment(event.date[0]).format('MMMM YYYY') === currentLabel) {
         const { label, title, id, description, time, date, type } = event;
         const a = moment(moment(event.date[1]).format('DD MMMM YYYY'));
@@ -102,7 +102,7 @@ function MonthCalendar() {
     const listData = getListData(value);
     return (
       <ul className="events">
-        {listData.map(item => (
+        {listData.map((item) => (
           <Dropdown
             className="event-dropdown"
             key={item.id}
@@ -126,9 +126,9 @@ function MonthCalendar() {
     dispatch(eventVisible(false));
   };
 
-  const addNew = event => {
+  const addNew = (event) => {
     const arrayData = [];
-    events.map(data => {
+    events.map((data) => {
       return arrayData.push(data.id);
     });
     const max = Math.max(...arrayData);

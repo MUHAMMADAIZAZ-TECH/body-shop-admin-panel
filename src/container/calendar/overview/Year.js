@@ -14,7 +14,7 @@ import './style.css';
 
 function YearCalendar() {
   const dispatch = useDispatch();
-  const { events, isVisible } = useSelector(state => {
+  const { events, isVisible } = useSelector((state) => {
     return {
       events: state.Calender.events,
       isVisible: state.Calender.eventVisible,
@@ -30,7 +30,7 @@ function YearCalendar() {
 
   useLayoutEffect(() => {
     const calenderDom = document.querySelectorAll('.ant-picker-calendar-date-content');
-    calenderDom.forEach(element => {
+    calenderDom.forEach((element) => {
       element.addEventListener('click', () => {
         dispatch(eventVisible(true));
       });
@@ -70,9 +70,9 @@ function YearCalendar() {
     dispatch(eventVisible(false));
   };
 
-  const addNew = event => {
+  const addNew = (event) => {
     const arrayData = [];
-    events.map(data => {
+    events.map((data) => {
       return arrayData.push(data.id);
     });
     const max = Math.max(...arrayData);
@@ -103,7 +103,7 @@ function YearCalendar() {
             </Button>
             <Select
               className="year-select"
-              onChange={value => setState({ ...state, currentYear: value })}
+              onChange={(value) => setState({ ...state, currentYear: value })}
               defaultValue={currentYear}
               value={currentYear}
               style={{ width: '100px' }}

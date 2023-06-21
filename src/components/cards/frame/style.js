@@ -1,7 +1,7 @@
 import Styled from 'styled-components';
 import { Card } from 'antd';
 
-const BtnWraper = theme => `
+const BtnWraper = (theme) => `
     .ant-card-head {
       display: flex;
       justify-content: space-evenly;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState,useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Row, Col, Table, Spin } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -7,18 +7,19 @@ import FeatherIcon from 'feather-icons-react';
 import { RecordViewWrapper } from './Style';
 import { Main, TableWrapper } from '../styled';
 import { Button } from '../../components/buttons/buttons';
+import { alertModal } from '../../components/modals/antd-modals';
 import { Cards } from '../../components/cards/frame/cards-frame';
 import { PageHeader } from '../../components/page-headers/page-headers';
 import { deleteCoupon, getCoupons } from '../../redux/coupons/couponSlice';
-import { exportToXLSX,getColumnSearchProps } from '../../components/utilities/utilities';
+import { exportToXLSX, handlePrint, getColumnSearchProps } from '../../components/utilities/utilities';
 import MYExportButton from '../../components/buttons/my-export-button/my-export-button';
 
 const ViewPage = () => {
   const dispatch = useDispatch();
-  const { isLoading,couponStates } = useSelector(state => {
+  const { isLoading, couponStates } = useSelector((state) => {
     return {
       isLoading: state.couponStates.loading,
-      couponStates:state.couponStates
+      couponStates: state.couponStates,
     };
   });
   const dataSource = [];
@@ -41,7 +42,7 @@ const ViewPage = () => {
       name: record.name,
     }),
   };
- 
+
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
@@ -52,7 +53,7 @@ const ViewPage = () => {
     setSearchText('');
   };
 
-  const handleDelete = id => {
+  const handleDelete = (id) => {
     const confirm = window.confirm('Are you sure delete this?');
     if (confirm) {
       dispatch(
@@ -69,14 +70,14 @@ const ViewPage = () => {
   const onHandleSearch = (e) => {
     setState({ ...state, searchText: e.target.value });
   };
-  console.log(couponStates?.coupons)
+  console.log(couponStates?.coupons);
   if (couponStates?.coupons?.length)
-  couponStates?.coupons?.map((coupon, key) => {
-      const { id, code, discount_value,discount_type,redeemed_count,max_redemptions, end_date, updated_at, } = coupon;
+    couponStates?.coupons?.map((coupon, key) => {
+      const { id, code, discount_value, discount_type, redeemed_count, max_redemptions, end_date, updated_at } = coupon;
       return dataSource.push({
         key: key + 1,
         code,
-        discount_value:(discount_type==='percentage'?`${discount_value} %` :`${discount_value} $`  ),
+        discount_value: discount_type === 'percentage' ? `${discount_value} %` : `${discount_value} $`,
         max_redemptions,
         redeemed_count,
         end_date,
@@ -92,15 +93,36 @@ const ViewPage = () => {
             </Link>
           </div>
         ),
-        coupon
+        coupon,
       });
     });
-    const csvData = [['id', 'code', 'discount_value', 'discount_type','redeemed_count',
-    'max_redemptions','end_date','isActive','updated_at']];
-    state.selectedRows.map((rows) => {
-      const { id, code, discount_value,discount_type,redeemed_count,max_redemptions, end_date, updated_at} = rows.coupon;
-      return csvData.push([id, code, discount_value,discount_type,redeemed_count,max_redemptions, end_date, updated_at]);
-    });
+  const csvData = [
+    [
+      'id',
+      'code',
+      'discount_value',
+      'discount_type',
+      'redeemed_count',
+      'max_redemptions',
+      'end_date',
+      'isActive',
+      'updated_at',
+    ],
+  ];
+  state.selectedRows.map((rows) => {
+    const { id, code, discount_value, discount_type, redeemed_count, max_redemptions, end_date, updated_at } =
+      rows.coupon;
+    return csvData.push([
+      id,
+      code,
+      discount_value,
+      discount_type,
+      redeemed_count,
+      max_redemptions,
+      end_date,
+      updated_at,
+    ]);
+  });
   const columns = [
     {
       title: 'Code',
@@ -108,7 +130,17 @@ const ViewPage = () => {
       key: 'code',
       sorter: (a, b) => a.code.length - b.code.length,
       sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('Code','code', handleSearch, handleReset, searchInput, searchedColumn, searchText, setSearchText, setSearchedColumn),
+      ...getColumnSearchProps(
+        'Code',
+        'code',
+        handleSearch,
+        handleReset,
+        searchInput,
+        searchedColumn,
+        searchText,
+        setSearchText,
+        setSearchedColumn,
+      ),
     },
     {
       title: 'Discount',
@@ -116,7 +148,17 @@ const ViewPage = () => {
       key: 'discount_value',
       sorter: (a, b) => a.discount_value.length - b.discount_value.length,
       sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('Discount','discount_value', handleSearch, handleReset, searchInput, searchedColumn, searchText, setSearchText, setSearchedColumn),
+      ...getColumnSearchProps(
+        'Discount',
+        'discount_value',
+        handleSearch,
+        handleReset,
+        searchInput,
+        searchedColumn,
+        searchText,
+        setSearchText,
+        setSearchedColumn,
+      ),
     },
     {
       title: 'Max Redeems',
@@ -124,7 +166,17 @@ const ViewPage = () => {
       key: 'max_redemptions',
       sorter: (a, b) => a.max_redemptions.length - b.max_redemptions.length,
       sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('Max Redeems','max_redemptions', handleSearch, handleReset, searchInput, searchedColumn, searchText, setSearchText, setSearchedColumn),
+      ...getColumnSearchProps(
+        'Max Redeems',
+        'max_redemptions',
+        handleSearch,
+        handleReset,
+        searchInput,
+        searchedColumn,
+        searchText,
+        setSearchText,
+        setSearchedColumn,
+      ),
     },
     {
       title: 'Redeems',
@@ -132,7 +184,17 @@ const ViewPage = () => {
       key: 'redeemed_count',
       sorter: (a, b) => a.redeemed_count.length - b.redeemed_count.length,
       sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('Redeems','redeemed_count', handleSearch, handleReset, searchInput, searchedColumn, searchText, setSearchText, setSearchedColumn),
+      ...getColumnSearchProps(
+        'Redeems',
+        'redeemed_count',
+        handleSearch,
+        handleReset,
+        searchInput,
+        searchedColumn,
+        searchText,
+        setSearchText,
+        setSearchedColumn,
+      ),
     },
     {
       title: 'Expires At',
@@ -140,13 +202,13 @@ const ViewPage = () => {
       key: 'end_date',
       sorter: (a, b) => a.end_date.length - b.end_date.length,
       sortDirections: ['descend', 'ascend'],
-      render: text => moment(text).format('YYYY/MM/DD'),
+      render: (text) => moment(text).format('YYYY/MM/DD'),
     },
     {
       title: 'Updated At',
       dataIndex: 'updated_at',
       key: 'updated_at',
-      render: text => moment(text).fromNow(),
+      render: (text) => moment(text).fromNow(),
     },
     {
       title: 'Actions',
@@ -155,7 +217,15 @@ const ViewPage = () => {
       width: '90px',
     },
   ];
-
+  const handlePrinter = () => {
+    if (state.selectedRows.length) {
+      handlePrint(dataSource, columns, 'Coupons', state);
+    } else {
+      alertModal.warning({
+        title: 'Please Select your Required Rows!',
+      });
+    }
+  };
   useEffect(() => {
     dispatch(getCoupons());
   }, [dispatch]);
@@ -164,15 +234,20 @@ const ViewPage = () => {
       <PageHeader
         buttons={[
           <div className="sDash_export-box">
-            <MYExportButton state={state} setState={setState} exportToXLSX={exportToXLSX} csvData={csvData}/>
-        </div>,
-         <div>
-         <Button className="btn-add_new" size="small" key="1" type="primary">
-           <Link to="/admin/coupons/coupons-add">
-             <FeatherIcon icon="plus" size={14} /> <span>Add New</span>
-           </Link>
-         </Button>
-       </div>,
+            <MYExportButton state={state} setState={setState} exportToXLSX={exportToXLSX} csvData={csvData} />
+          </div>,
+          <div>
+            <Button className="btn-add_new" size="small" key="1" type="white" onClick={() => handlePrinter()}>
+              <FeatherIcon icon="printer" size={14} /> <span>Print</span>
+            </Button>
+          </div>,
+          <div>
+            <Button className="btn-add_new" size="small" key="1" type="primary">
+              <Link to="/admin/coupons/coupons-add">
+                <FeatherIcon icon="plus" size={14} /> <span>Add New</span>
+              </Link>
+            </Button>
+          </div>,
           <div key={1} className="search-box">
             <span className="search-icon">
               <FeatherIcon icon="search" size={14} />

@@ -3,7 +3,7 @@ import { Tabs } from 'antd';
 
 const { TabPane } = Tabs;
 
-const TabColor = colors => `
+const TabColor = (colors) => `
   margin-bottom: 30px !important;
   .ant-tabs-bar {
     margin: 0;
@@ -35,7 +35,7 @@ const TabColor = colors => `
   }
 `;
 
-const TabChildColor = color => `
+const TabChildColor = (color) => `
   h1, h2, h3, h4, h5, h6, p, span, i {
     padding: 15px;
     background : ${color !== 'default' && color};

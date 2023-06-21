@@ -1,5 +1,5 @@
-import React, { useEffect, useState ,useRef} from 'react';
-import { Row, Col, Table, Spin} from 'antd';
+import React, { useEffect, useState, useRef } from 'react';
+import { Row, Col, Table, Spin } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
@@ -7,15 +7,16 @@ import FeatherIcon from 'feather-icons-react';
 import { RecordViewWrapper } from './Style';
 import { Main, TableWrapper } from '../../styled';
 import { Button } from '../../../components/buttons/buttons';
+import { alertModal } from '../../../components/modals/antd-modals';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { PageHeader } from '../../../components/page-headers/page-headers';
-import {deleteFaq, getFaqs} from '../../../redux/faq/faqSlice'
+import { deleteFaq, getFaqs } from '../../../redux/faq/faqSlice';
 import MYExportButton from '../../../components/buttons/my-export-button/my-export-button';
-import { exportToXLSX ,getColumnSearchProps} from '../../../components/utilities/utilities';
+import { exportToXLSX, handlePrint, getColumnSearchProps } from '../../../components/utilities/utilities';
 
 const ViewPage = () => {
   const dispatch = useDispatch();
-  const { isLoading ,faqStates} = useSelector(state => {
+  const { isLoading, faqStates } = useSelector((state) => {
     return {
       isLoading: state.faqStates.loading,
       faqStates: state.faqStates,
@@ -42,7 +43,7 @@ const ViewPage = () => {
       name: record.name,
     }),
   };
- 
+
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
@@ -52,9 +53,8 @@ const ViewPage = () => {
     clearFilters();
     setSearchText('');
   };
- 
 
-  const handleDelete = id => {
+  const handleDelete = (id) => {
     const confirm = window.confirm('Are you sure delete this?');
     if (confirm) {
       dispatch(
@@ -69,13 +69,13 @@ const ViewPage = () => {
     return false;
   };
 
-  const onHandleSearch = e => {
-    console.log(e.target.value)
+  const onHandleSearch = (e) => {
+    console.log(e.target.value);
   };
 
   if (faqStates?.faqs.length)
-  faqStates?.faqs?.map((person, key) => {
-      const { id,question,answer,updated_at } = person;
+    faqStates?.faqs?.map((person, key) => {
+      const { id, question, answer, updated_at } = person;
       return dataSource.push({
         key: key + 1,
         question,
@@ -94,55 +94,88 @@ const ViewPage = () => {
         ),
       });
     });
-    const csvData = [['id', 'question', 'answer', 'updated_at']];
-    state.selectedRows.map((rows) => {
-      const { key, question, answer, updated_at } = rows;
-      return csvData.push([key, question, answer, updated_at]);
-    });
-    const columns = [
-      {
-        title: 'Question',
-        dataIndex: 'question',
-        key: 'question',
-        ...getColumnSearchProps('Question','question', handleSearch, handleReset, searchInput, searchedColumn, searchText, setSearchText, setSearchedColumn),
-      },
-      {
-        title: 'Answer',
-        dataIndex: 'answer',
-        key: 'answer',
-        ...getColumnSearchProps('Answer','answer', handleSearch, handleReset, searchInput, searchedColumn, searchText, setSearchText, setSearchedColumn),
-      },
-      {
-        title: 'Update At',
-        dataIndex: 'updated_at',
-        key: 'updated_at',
-        render: (text)=>moment(text).fromNow()
-      },
-      {
-        title: 'Actions',
-        dataIndex: 'action',
-        key: 'action',
-        width: '90px',
-      },
-    ];
-  
-    useEffect(() => {
-      dispatch(getFaqs())
-    }, [dispatch]);
+  const csvData = [['id', 'question', 'answer', 'updated_at']];
+  state.selectedRows.map((rows) => {
+    const { key, question, answer, updated_at } = rows;
+    return csvData.push([key, question, answer, updated_at]);
+  });
+  const columns = [
+    {
+      title: 'Question',
+      dataIndex: 'question',
+      key: 'question',
+      ...getColumnSearchProps(
+        'Question',
+        'question',
+        handleSearch,
+        handleReset,
+        searchInput,
+        searchedColumn,
+        searchText,
+        setSearchText,
+        setSearchedColumn,
+      ),
+    },
+    {
+      title: 'Answer',
+      dataIndex: 'answer',
+      key: 'answer',
+      ...getColumnSearchProps(
+        'Answer',
+        'answer',
+        handleSearch,
+        handleReset,
+        searchInput,
+        searchedColumn,
+        searchText,
+        setSearchText,
+        setSearchedColumn,
+      ),
+    },
+    {
+      title: 'Update At',
+      dataIndex: 'updated_at',
+      key: 'updated_at',
+      render: (text) => moment(text).fromNow(),
+    },
+    {
+      title: 'Actions',
+      dataIndex: 'action',
+      key: 'action',
+      width: '90px',
+    },
+  ];
+  const handlePrinter = () => {
+    if (state.selectedRows.length) {
+      handlePrint(dataSource, columns, 'Faqs', state);
+    } else {
+      alertModal.warning({
+        title: 'Please Select your Required Rows!',
+      });
+    }
+  };
+  useEffect(() => {
+    dispatch(getFaqs());
+  }, [dispatch]);
   return (
     <RecordViewWrapper>
       <PageHeader
         buttons={[
           <div className="sDash_export-box">
-            <MYExportButton state={state} setState={setState} exportToXLSX={exportToXLSX} csvData={csvData}/>
-        </div>,
+            <MYExportButton state={state} setState={setState} exportToXLSX={exportToXLSX} csvData={csvData} />
+          </div>,
           <div>
-          <Button className="btn-add_new" size="small" key="1" type="primary">
-            <Link to="/admin/faq-admin/faqs-add">
-              <FeatherIcon icon="plus" size={14} /> <span>Add New</span>
-            </Link>
-          </Button>
-        </div>,
+            <Button className="btn-add_new" size="small" key="1" type="white" onClick={() => handlePrinter()}>
+              <FeatherIcon icon="printer" size={14} /> <span>Print</span>
+            </Button>
+          </div>,
+          <div>
+            <Button className="btn-add_new" size="small" key="1" type="primary">
+              <Link to="/admin/faq-admin/faqs-add">
+                <FeatherIcon icon="plus" size={14} /> <span>Add New</span>
+              </Link>
+            </Button>
+          </div>,
           <div key={1} className="search-box">
             <span className="search-icon">
               <FeatherIcon icon="search" size={14} />

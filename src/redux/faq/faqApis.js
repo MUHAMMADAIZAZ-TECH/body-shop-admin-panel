@@ -7,7 +7,7 @@ export const getfaqs = async () => {
   } catch (error) {
     return error;
   }
-}
+};
 
 export const getfaq = async (id) => {
   try {
@@ -16,29 +16,29 @@ export const getfaq = async (id) => {
   } catch (error) {
     return error;
   }
-}
+};
 export const createfaq = async (data) => {
   try {
-    const response = await DataService.post(`/api/v1/faqs`,data);
+    const response = await DataService.post(`/api/v1/faqs`, data);
     return response.data;
   } catch (error) {
     return error;
   }
-}
+};
 export const updatefaq = async (data) => {
   try {
-    const response = await DataService.patch(`/api/v1/faqs/${data.id}`,data);
+    const response = await DataService.patch(`/api/v1/faqs/${data.id}`, data);
     return response.data;
   } catch (error) {
     return error;
   }
-}
+};
 export const deletefaq = async (body) => {
   try {
     const { data } = await DataService.delete(`/api/v1/faqs/${body.id}`);
-    body.getData()
+    body.getData();
     return data;
   } catch (error) {
     return error;
   }
-}
+};

@@ -16,7 +16,7 @@ import Heading from '../../heading/heading';
 
 function AuthInfo() {
   const dispatch = useDispatch();
-  const { isAuthenticate } = useSelector(state => {
+  const { isAuthenticate } = useSelector((state) => {
     return {
       isAuthenticate: state.fb.auth.uid,
     };
@@ -27,7 +27,7 @@ function AuthInfo() {
   });
   const { flag } = state;
 
-  const SignOut = e => {
+  const SignOut = (e) => {
     e.preventDefault();
     if (isAuthenticate) {
       dispatch(fbAuthLogout(dispatch(logOut())));
@@ -80,7 +80,7 @@ function AuthInfo() {
     </UserDropDwon>
   );
 
-  const onFlagChangeHandle = value => {
+  const onFlagChangeHandle = (value) => {
     setState({
       ...state,
       flag: value,

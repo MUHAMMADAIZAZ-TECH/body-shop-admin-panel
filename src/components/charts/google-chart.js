@@ -3,7 +3,7 @@ import React from 'react';
 import { Chart } from 'react-google-charts';
 import PropTypes from 'prop-types';
 
-const GoogleBasicBarChart = props => {
+const GoogleBasicBarChart = (props) => {
   const { width, height, data, title, chartArea } = props;
   return (
     <Chart
@@ -37,7 +37,7 @@ GoogleBasicBarChart.propTypes = {
   chartArea: PropTypes.string.isRequired,
 };
 
-const GoogleMaterialBarChart = props => {
+const GoogleMaterialBarChart = (props) => {
   const { width, height, data, title, subtitle } = props;
   return (
     <Chart
@@ -66,7 +66,7 @@ GoogleMaterialBarChart.propTypes = {
   subtitle: PropTypes.string.isRequired,
 };
 
-const GoogleStackedChart = props => {
+const GoogleStackedChart = (props) => {
   const { width, height, data, title, chartArea } = props;
   return (
     <Chart
@@ -101,7 +101,7 @@ GoogleStackedChart.propTypes = {
   chartArea: PropTypes.string.isRequired,
 };
 
-const GoogleCustomColorChart = props => {
+const GoogleCustomColorChart = (props) => {
   const { width, height, data, title, chartArea, colors } = props;
   return (
     <Chart
@@ -137,7 +137,7 @@ GoogleCustomColorChart.propTypes = {
   colors: PropTypes.array.isRequired,
 };
 
-const GoogleComboChart = props => {
+const GoogleComboChart = (props) => {
   const { width, height, data, title, chartArea, colors } = props;
   return (
     <Chart
@@ -168,7 +168,7 @@ GoogleComboChart.propTypes = {
   colors: PropTypes.array.isRequired,
 };
 
-const GoogleLineChart = props => {
+const GoogleLineChart = (props) => {
   const { width, height, data } = props;
   return (
     <Chart
@@ -197,7 +197,7 @@ GoogleLineChart.propTypes = {
   data: PropTypes.array.isRequired,
 };
 
-const GoogleMultiLineChart = props => {
+const GoogleMultiLineChart = (props) => {
   const { width, height, data } = props;
   return (
     <Chart
@@ -230,7 +230,7 @@ GoogleMultiLineChart.propTypes = {
   data: PropTypes.array.isRequired,
 };
 
-const GoogleOrgChart = props => {
+const GoogleOrgChart = (props) => {
   const { width, height, data, chartArea } = props;
   return (
     <Chart
@@ -256,7 +256,7 @@ GoogleOrgChart.propTypes = {
   chartArea: PropTypes.string.isRequired,
 };
 
-const GoogleBasicPieChart = props => {
+const GoogleBasicPieChart = (props) => {
   const { width, height, data, chartArea, title } = props;
   return (
     <Chart
@@ -283,7 +283,7 @@ GoogleBasicPieChart.propTypes = {
   chartArea: PropTypes.string.isRequired,
 };
 
-const Google3dPieChart = props => {
+const Google3dPieChart = (props) => {
   const { width, height, data, chartArea, title } = props;
   return (
     <Chart

@@ -15,7 +15,7 @@ import { Dropdown } from '../../../components/dropdown/dropdown';
 
 function DayCalendar() {
   const dispatch = useDispatch();
-  const { events, isVisible } = useSelector(state => {
+  const { events, isVisible } = useSelector((state) => {
     return {
       events: state.Calender.events,
       isVisible: state.Calender.eventVisible,
@@ -36,8 +36,8 @@ function DayCalendar() {
     );
     const containers = document.querySelector('.calendar-header__left .react-calendar__viewContainer');
     const calenderDom = document.querySelectorAll('.ant-picker-calendar-date-content');
-    calenderDom.forEach(element => {
-      element.addEventListener('click', e => {
+    calenderDom.forEach((element) => {
+      element.addEventListener('click', (e) => {
         if (e.target.classList[0] === 'ant-picker-calendar-date-content') {
           setState({
             container: containers,
@@ -60,10 +60,10 @@ function DayCalendar() {
     });
   }, [date, currentLabel, defaultValue, dispatch]);
 
-  const onChange = dt => setState({ ...state, date: dt, defaultValue: moment(dt).format('YYYY-MM-DD') });
+  const onChange = (dt) => setState({ ...state, date: dt, defaultValue: moment(dt).format('YYYY-MM-DD') });
 
-  const onEventDelete = id => {
-    const data = events.filter(item => item.id !== id);
+  const onEventDelete = (id) => {
+    const data = events.filter((item) => item.id !== id);
     dispatch(calendarDeleteData(data));
   };
 
@@ -71,9 +71,9 @@ function DayCalendar() {
     dispatch(eventVisible(false));
   };
 
-  const addNew = event => {
+  const addNew = (event) => {
     const arrayData = [];
-    events.map(data => {
+    events.map((data) => {
       return arrayData.push(data.id);
     });
     const max = Math.max(...arrayData);
@@ -188,7 +188,7 @@ function DayCalendar() {
                   {moment().format('h A') === time ? <span className="currentTime secondary" /> : null}
 
                   {events.map(
-                    event =>
+                    (event) =>
                       moment(defaultValue).format('MM/DD/YYYY') === event.date[0] &&
                       time === moment(event.time[0], 'h:mm a').format('h A') && (
                         <Dropdown

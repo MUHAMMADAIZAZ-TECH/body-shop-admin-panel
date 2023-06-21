@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Row, Col, Form,Input,Upload,Modal } from 'antd';
+import { Row, Col, Form, Input, Upload, Modal } from 'antd';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { PageHeader } from '../../components/page-headers/page-headers';
@@ -7,7 +7,7 @@ import { Cards } from '../../components/cards/frame/cards-frame';
 import { Button } from '../../components/buttons/buttons';
 import { Main, BasicFormWrapper } from '../styled';
 import { createCategory } from '../../redux/categories/categoriesSlice';
-import { getBase64,uploadButton } from '../../components/utilities/utilities';
+import { getBase64, uploadButton } from '../../components/utilities/utilities';
 
 const AddNew = () => {
   const dispatch = useDispatch();
@@ -17,20 +17,22 @@ const AddNew = () => {
   const [form] = Form.useForm();
   const [files, setfiles] = useState([]);
 
-  const { isLoading } = useSelector(state => {
+  const { isLoading } = useSelector((state) => {
     return {
       isLoading: state.salonStates.loading,
     };
   });
-  const handleSubmit = async values => {
+  const handleSubmit = async (values) => {
     try {
       await form.validateFields(); // Validate all form fields
-      dispatch(createCategory({
-        ...values,
-        file:files[0].originFileObj
-      }))
-      console.log(values,files[0].originFileObj)
-       form.resetFields();
+      dispatch(
+        createCategory({
+          ...values,
+          file: files[0].originFileObj,
+        }),
+      );
+      console.log(values, files[0].originFileObj);
+      form.resetFields();
     } catch (error) {
       console.log('Validation error:', error);
     }
@@ -44,13 +46,12 @@ const AddNew = () => {
     setPreviewOpen(true);
     setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1));
   };
-  const handleChange = ({ fileList: newFileList, }) => {
-    const fileList  = newFileList?.map((file)=>{
-      return{...file, status:'done'}
-    })
-    setfiles(fileList)
+  const handleChange = ({ fileList: newFileList }) => {
+    const fileList = newFileList?.map((file) => {
+      return { ...file, status: 'done' };
+    });
+    setfiles(fileList);
   };
-
 
   return (
     <>
@@ -73,12 +74,12 @@ const AddNew = () => {
                 <Form name="multi-form" layout="vertical" style={{ width: '100%' }} form={form} onFinish={handleSubmit}>
                   <Row gutter={30}>
                     <Col sm={12} xs={24} className="mb-25">
-                    <Upload
+                      <Upload
                         listType="picture-card"
                         fileList={files}
                         onPreview={handlePreview}
                         onChange={handleChange}
-                        name='files'
+                        name="files"
                       >
                         {files.length >= 1 ? null : uploadButton}
                       </Upload>
@@ -91,26 +92,27 @@ const AddNew = () => {
                           src={previewImage}
                         />
                       </Modal>
-                      <Form.Item name="description" label="Description" >
+                      <Form.Item name="description" label="Description">
                         <Input.TextArea rows={5} placeholder="Enter Description" />
                       </Form.Item>
-                     
                     </Col>
                     <Col sm={12} xs={24} className="mb-25">
-                    <Form.Item name="name" label="Name" rules={[{ required: true, message: 'Please enter Name' }]}>
+                      <Form.Item name="name" label="Name" rules={[{ required: true, message: 'Please enter Name' }]}>
                         <Input placeholder="Enter Name" />
                       </Form.Item>
-                    <Form.Item name="color" label="Color" rules={[{ required: true, message: 'Please enter color' }]}>
+                      <Form.Item name="color" label="Color" rules={[{ required: true, message: 'Please enter color' }]}>
                         <Input placeholder="Enter Color" />
                       </Form.Item>
                     </Col>
                   </Row>
                   <div className="record-form-actions text-right">
-                    <div style={{
-                      display: 'flex',
-                      justifyContent: 'flex-end',
-                      alignItems: 'baseline'
-                    }}>
+                    <div
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'flex-end',
+                        alignItems: 'baseline',
+                      }}
+                    >
                       <Button
                         className="btn-cancel"
                         size="large"

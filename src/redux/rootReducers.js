@@ -23,15 +23,14 @@ const rootReducers = combineReducers({
   message: readMessageReducer,
   notification: readNotificationReducer,
   ChangeLayoutMode,
-  authenticationStates:authenticationSlice,
-  salonStates:salonSlice,
-  categoryStates:categorySlice,
-  servicesStates:servicesSlice,
-  couponStates:couponSlice,
-  transactionStates:transactionSlice,
-  bookingStates:bookingSlice,
-  faqStates:faqSlice
-
+  authenticationStates: authenticationSlice,
+  salonStates: salonSlice,
+  categoryStates: categorySlice,
+  servicesStates: servicesSlice,
+  couponStates: couponSlice,
+  transactionStates: transactionSlice,
+  bookingStates: bookingSlice,
+  faqStates: faqSlice,
 });
 
 export default rootReducers;

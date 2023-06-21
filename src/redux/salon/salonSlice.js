@@ -1,15 +1,36 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { getdashboard, createaddress, createavailibityhours, createsalon, deleteaddress, deleteavailibityhours, deletesalon, deletesalonreview, getaddress, getallreviews, getavailibilityhour, getavailibilityhours, gethourbysalon, getsalon, getsalonreview, getsalons, updateaddress, updateavailibityhours, updatesalon, updatesalonreview } from "./salonApis";
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import {
+  getdashboard,
+  createaddress,
+  createavailibityhours,
+  createsalon,
+  deleteaddress,
+  deleteavailibityhours,
+  deletesalon,
+  deletesalonreview,
+  getaddress,
+  getallreviews,
+  getavailibilityhour,
+  getavailibilityhours,
+  gethourbysalon,
+  getsalon,
+  getsalonreview,
+  getsalons,
+  updateaddress,
+  updateavailibityhours,
+  updatesalon,
+  updatesalonreview,
+} from './salonApis';
 
 const initialState = {
   status: false,
   loading: false,
   error: false,
-  message: "",
+  message: '',
   salons: [],
   salon: {
     isActive: 1,
-    isApproved: 1
+    isApproved: 1,
   },
   approvedSalons: [],
   unapprovedSalons: [],
@@ -19,165 +40,105 @@ const initialState = {
   salonreview: null,
   addresses: [],
   availibilityhoursBysalon: [],
-  dashboard:{
-    totalBookings:0,
-    totalCustomers:0,
-    totalEarnings:'',
-    totalSalons:0
-  }
-}
+  dashboard: {
+    totalBookings: 0,
+    totalCustomers: 0,
+    totalEarnings: '',
+    totalSalons: 0,
+  },
+};
 // Dashboard
-export const getDashboard = createAsyncThunk(
-  'get/getDashboard',
-  async () => {
-    const response = await getdashboard()
-    return response;
-  }
-)
+export const getDashboard = createAsyncThunk('get/getDashboard', async () => {
+  const response = await getdashboard();
+  return response;
+});
 // salon-crud
-export const getSalons = createAsyncThunk(
-  'get/getsalons',
-  async () => {
-    const response = await getsalons()
-    return response;
-  }
-);
-export const getSalon = createAsyncThunk(
-  'get/getSalon',
-  async (id) => {
-    const response = await getsalon(id)
-    return response;
-  }
-);
-export const createSalon = createAsyncThunk(
-  'post/createSalon',
-  async (body) => {
-    const response = await createsalon(body)
-    return response;
-  }
-);
-export const updateSalon = createAsyncThunk(
-  'update/updateSalon',
-  async (body) => {
-    const response = await updatesalon(body)
-    return response;
-  }
-);
-export const deleteSalon = createAsyncThunk(
-  'delete/deleteSalon',
-  async (id) => {
-    const response = await deletesalon(id)
-    return response;
-  }
-);
+export const getSalons = createAsyncThunk('get/getsalons', async () => {
+  const response = await getsalons();
+  return response;
+});
+export const getSalon = createAsyncThunk('get/getSalon', async (id) => {
+  const response = await getsalon(id);
+  return response;
+});
+export const createSalon = createAsyncThunk('post/createSalon', async (body) => {
+  const response = await createsalon(body);
+  return response;
+});
+export const updateSalon = createAsyncThunk('update/updateSalon', async (body) => {
+  const response = await updatesalon(body);
+  return response;
+});
+export const deleteSalon = createAsyncThunk('delete/deleteSalon', async (id) => {
+  const response = await deletesalon(id);
+  return response;
+});
 // availibilityhours-crud
-export const getAvailibilityHours = createAsyncThunk(
-  'get/getavailibilityhours',
-  async () => {
-    const response = await getavailibilityhours()
-    return response;
-  }
-);
-export const getAvailibilityHour = createAsyncThunk(
-  'get/getAvailibilityHour',
-  async (id) => {
-    const response = await getavailibilityhour(id)
-    return response;
-  }
-);
-export const getAvailibilityHourbysalon = createAsyncThunk(
-  'get/getAvailibilityHourbysalon',
-  async (body) => {
-    const response = await gethourbysalon(body)
-    return response.data;
-  }
-);
-export const createAvailibilityHours = createAsyncThunk(
-  'post/createAvailibilityHours',
-  async (body) => {
-    const response = await createavailibityhours(body)
-    return response;
-  }
-);
-export const updateAvailibilityHours = createAsyncThunk(
-  'update/updateAvailibilityHours',
-  async (body) => {
-    const response = await updateavailibityhours(body)
-    return response;
-  }
-);
-export const deleteAvailibilityHours = createAsyncThunk(
-  'delete/deleteAvailibilityHours',
-  async (body) => {
-    const response = await deleteavailibityhours(body)
-    return response;
-  }
-);
+export const getAvailibilityHours = createAsyncThunk('get/getavailibilityhours', async () => {
+  const response = await getavailibilityhours();
+  return response;
+});
+export const getAvailibilityHour = createAsyncThunk('get/getAvailibilityHour', async (id) => {
+  const response = await getavailibilityhour(id);
+  return response;
+});
+export const getAvailibilityHourbysalon = createAsyncThunk('get/getAvailibilityHourbysalon', async (body) => {
+  const response = await gethourbysalon(body);
+  return response.data;
+});
+export const createAvailibilityHours = createAsyncThunk('post/createAvailibilityHours', async (body) => {
+  const response = await createavailibityhours(body);
+  return response;
+});
+export const updateAvailibilityHours = createAsyncThunk('update/updateAvailibilityHours', async (body) => {
+  const response = await updateavailibityhours(body);
+  return response;
+});
+export const deleteAvailibilityHours = createAsyncThunk('delete/deleteAvailibilityHours', async (body) => {
+  const response = await deleteavailibityhours(body);
+  return response;
+});
 // reviews
-export const getAllReviews = createAsyncThunk(
-  'get/getallreviews',
-  async () => {
-    const response = await getallreviews()
-    return response;
-  }
-);
-export const getSalonReview = createAsyncThunk(
-  'get/getSalonReview',
-  async (id) => {
-    const response = await getsalonreview(id)
-    return response;
-  }
-);
-export const updateSalonReview = createAsyncThunk(
-  'update/updateSalonReview',
-  async (body) => {
-    const response = await updatesalonreview(body)
-    return response;
-  }
-);
-export const deleteSalonReview = createAsyncThunk(
-  'delete/deleteSalonReview',
-  async (id) => {
-    const response = await deletesalonreview(id)
-    return response;
-  }
-);
+export const getAllReviews = createAsyncThunk('get/getallreviews', async () => {
+  const response = await getallreviews();
+  return response;
+});
+export const getSalonReview = createAsyncThunk('get/getSalonReview', async (id) => {
+  const response = await getsalonreview(id);
+  return response;
+});
+export const updateSalonReview = createAsyncThunk('update/updateSalonReview', async (body) => {
+  const response = await updatesalonreview(body);
+  return response;
+});
+export const deleteSalonReview = createAsyncThunk('delete/deleteSalonReview', async (id) => {
+  const response = await deletesalonreview(id);
+  return response;
+});
 // addresses
-export const getAddress = createAsyncThunk(
-  'get/getAddress',
-  async () => {
-    const response = await getaddress()
-    return response;
-  }
-);
-export const createAddress = createAsyncThunk(
-  'post/createAddress',
-  async (body) => {
-    const response = await createaddress(body)
-    return response;
-  }
-);
-export const updateAddress = createAsyncThunk(
-  'update/updateAddress',
-  async (body) => {
-    const response = await updateaddress(body)
-    return response;
-  }
-);
-export const deleteAddress = createAsyncThunk(
-  'delete/deleteAddress',
-  async (id) => {
-    const response = await deleteaddress(id)
-    return response;
-  }
-);
+export const getAddress = createAsyncThunk('get/getAddress', async () => {
+  const response = await getaddress();
+  return response;
+});
+export const createAddress = createAsyncThunk('post/createAddress', async (body) => {
+  const response = await createaddress(body);
+  return response;
+});
+export const updateAddress = createAsyncThunk('update/updateAddress', async (body) => {
+  const response = await updateaddress(body);
+  return response;
+});
+export const deleteAddress = createAsyncThunk('delete/deleteAddress', async (id) => {
+  const response = await deleteaddress(id);
+  return response;
+});
 const salonSlice = createSlice({
   name: 'salonslice',
   initialState,
   reducers: {
     selectSalon: (state, action) => {
-      state.salon = action.payload
-    }
+      state.salon = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -191,7 +152,6 @@ const salonSlice = createSlice({
         state.status = true;
         state.loading = false;
         state.dashboard = action?.payload?.data;
-
       })
       .addCase(getDashboard.rejected, (state, action) => {
         state.loading = false;
@@ -248,7 +208,7 @@ const salonSlice = createSlice({
       .addCase(createSalon.fulfilled, (state) => {
         state.status = true;
         state.loading = false;
-        state.message = "Successfuly created";
+        state.message = 'Successfuly created';
       })
       .addCase(createSalon.rejected, (state, action) => {
         state.status = false;
@@ -265,7 +225,7 @@ const salonSlice = createSlice({
       .addCase(updateSalon.fulfilled, (state) => {
         state.status = true;
         state.loading = false;
-        state.message = "Successfuly updated";
+        state.message = 'Successfuly updated';
       })
       .addCase(updateSalon.rejected, (state, action) => {
         state.loading = false;
@@ -282,7 +242,7 @@ const salonSlice = createSlice({
       .addCase(deleteSalon.fulfilled, (state) => {
         state.status = true;
         state.loading = false;
-        state.message = "Successfuly deleted";
+        state.message = 'Successfuly deleted';
       })
       .addCase(deleteSalon.rejected, (state, action) => {
         state.status = false;
@@ -300,7 +260,7 @@ const salonSlice = createSlice({
       .addCase(getAvailibilityHours.fulfilled, (state, action) => {
         state.status = true;
         state.loading = false;
-        state.availibilityhours = action.payload
+        state.availibilityhours = action.payload;
       })
       .addCase(getAvailibilityHours.rejected, (state, action) => {
         state.status = false;
@@ -318,7 +278,7 @@ const salonSlice = createSlice({
       .addCase(getAvailibilityHourbysalon.fulfilled, (state, action) => {
         state.status = true;
         state.loading = false;
-        state.availibilityhoursBysalon = action.payload
+        state.availibilityhoursBysalon = action.payload;
       })
       .addCase(getAvailibilityHourbysalon.rejected, (state, action) => {
         state.status = false;
@@ -336,7 +296,7 @@ const salonSlice = createSlice({
       .addCase(getAvailibilityHour.fulfilled, (state, action) => {
         state.status = true;
         state.loading = false;
-        state.availibilityhour = action.payload.data
+        state.availibilityhour = action.payload.data;
       })
       .addCase(getAvailibilityHour.rejected, (state, action) => {
         state.status = false;
@@ -353,7 +313,7 @@ const salonSlice = createSlice({
       .addCase(createAvailibilityHours.fulfilled, (state) => {
         state.status = true;
         state.loading = false;
-        state.message = "Successfully created";
+        state.message = 'Successfully created';
       })
       .addCase(createAvailibilityHours.rejected, (state, action) => {
         state.loading = false;
@@ -370,7 +330,7 @@ const salonSlice = createSlice({
       .addCase(updateAvailibilityHours.fulfilled, (state) => {
         state.status = true;
         state.loading = false;
-        state.message = "Successfully updated";
+        state.message = 'Successfully updated';
       })
       .addCase(updateAvailibilityHours.rejected, (state, action) => {
         state.status = false;
@@ -387,7 +347,7 @@ const salonSlice = createSlice({
       .addCase(deleteAvailibilityHours.fulfilled, (state) => {
         state.status = true;
         state.loading = false;
-        state.message = "Successfully deleted";
+        state.message = 'Successfully deleted';
       })
       .addCase(deleteAvailibilityHours.rejected, (state, action) => {
         state.status = false;
@@ -405,7 +365,7 @@ const salonSlice = createSlice({
       .addCase(getAllReviews.fulfilled, (state, action) => {
         state.status = true;
         state.loading = false;
-        state.salonreviews = action.payload
+        state.salonreviews = action.payload;
       })
       .addCase(getAllReviews.rejected, (state, action) => {
         state.status = false;
@@ -423,7 +383,7 @@ const salonSlice = createSlice({
       .addCase(getSalonReview.fulfilled, (state, action) => {
         state.status = true;
         state.loading = false;
-        state.salonreview = action.payload.data
+        state.salonreview = action.payload.data;
       })
       .addCase(getSalonReview.rejected, (state, action) => {
         state.loading = false;
@@ -448,11 +408,9 @@ const salonSlice = createSlice({
         state.error = action.error;
         state.message = 'Something went wrong';
       });
-
   },
-})
+});
 
-
-export const { selectSalon } = salonSlice.actions
+export const { selectSalon } = salonSlice.actions;
 
 export default salonSlice.reducer;

@@ -17,7 +17,7 @@ const outline = (theme, type) => {
     `;
 };
 
-const ghosts = theme => {
+const ghosts = (theme) => {
   return `
           background: transparent;
           border: 1px solid ${theme['border-color-normal']} !important;

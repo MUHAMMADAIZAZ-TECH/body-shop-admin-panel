@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { CascaderStyle } from './style';
 
-const Cascader = props => {
+const Cascader = (props) => {
   const { data, defaultValue, trigger, onChange, isShowSearch, loading, placeholder } = props;
 
   const options = data;
@@ -10,7 +10,7 @@ const Cascader = props => {
     options,
   });
 
-  const onChangeEvent = value => {
+  const onChangeEvent = (value) => {
     onChange(value);
   };
 
@@ -19,10 +19,10 @@ const Cascader = props => {
   };
 
   const filter = (inputValue, path) => {
-    return path.some(option => option.label.toLowerCase().indexOf(inputValue.toLowerCase()) > -1);
+    return path.some((option) => option.label.toLowerCase().indexOf(inputValue.toLowerCase()) > -1);
   };
 
-  const loadData = selectedOptions => {
+  const loadData = (selectedOptions) => {
     const targetOption = selectedOptions[selectedOptions.length - 1];
     targetOption.loading = true;
     // load options lazily

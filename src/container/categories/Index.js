@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Row, Col, Table, Spin, Avatar, } from 'antd';
+import { Row, Col, Table, Spin, Avatar } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
@@ -16,10 +16,10 @@ import MYExportButton from '../../components/buttons/my-export-button/my-export-
 
 const ViewPage = () => {
   const dispatch = useDispatch();
-  const { isLoading, categoryStates } = useSelector(state => {
+  const { isLoading, categoryStates } = useSelector((state) => {
     return {
       isLoading: state.categoryStates.loading,
-      categoryStates: state.categoryStates
+      categoryStates: state.categoryStates,
     };
   });
   const dataSource = [];
@@ -51,15 +51,17 @@ const ViewPage = () => {
     clearFilters();
     setSearchText('');
   };
-  const handleDelete = id => {
+  const handleDelete = (id) => {
     const confirm = window.confirm('Are you sure delete this?');
     if (confirm) {
-      dispatch(deleteCategory({
-        id,
-        getData: () => {
-          dispatch(getCategories())
-        }
-      }));
+      dispatch(
+        deleteCategory({
+          id,
+          getData: () => {
+            dispatch(getCategories());
+          },
+        }),
+      );
     }
     return false;
   };
@@ -67,13 +69,13 @@ const ViewPage = () => {
   const onHandleSearch = (e) => {
     setState({ ...state, searchText: e.target.value });
   };
-  console.log(categoryStates)
+  console.log(categoryStates);
   if (categoryStates?.categories?.length)
     categoryStates?.categories?.map((category, key) => {
       const { id, image, name, color, description, created_at, updated_at } = category;
       return dataSource.push({
         key: key + 1,
-        image: (image && <Avatar className='myavatar' src={image} size={60} />),
+        image: image && <Avatar className="myavatar" src={image} size={60} />,
         name,
         color,
         description,
@@ -90,7 +92,7 @@ const ViewPage = () => {
             </Link>
           </div>
         ),
-        category
+        category,
       });
     });
   const csvData = [['id', 'name', 'color', 'description', 'created_at', 'updated_at']];
@@ -112,7 +114,17 @@ const ViewPage = () => {
       key: 'name',
       sorter: (a, b) => a.name.length - b.name.length,
       sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('Name', 'name', handleSearch, handleReset, searchInput, searchedColumn, searchText, setSearchText, setSearchedColumn),
+      ...getColumnSearchProps(
+        'Name',
+        'name',
+        handleSearch,
+        handleReset,
+        searchInput,
+        searchedColumn,
+        searchText,
+        setSearchText,
+        setSearchedColumn,
+      ),
     },
     {
       title: 'Color',
@@ -120,8 +132,20 @@ const ViewPage = () => {
       key: 'color',
       sorter: (a, b) => a.color.length - b.color.length,
       sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('Color', 'color', handleSearch, handleReset, searchInput, searchedColumn, searchText, setSearchText, setSearchedColumn),
-      render: (color) => <div style={{ backgroundColor: `${color}`, padding: 5, borderRadius: 5, textAlign: "center" }}>{color}</div>
+      ...getColumnSearchProps(
+        'Color',
+        'color',
+        handleSearch,
+        handleReset,
+        searchInput,
+        searchedColumn,
+        searchText,
+        setSearchText,
+        setSearchedColumn,
+      ),
+      render: (color) => (
+        <div style={{ backgroundColor: `${color}`, padding: 5, borderRadius: 5, textAlign: 'center' }}>{color}</div>
+      ),
     },
     {
       title: 'Description',
@@ -129,7 +153,17 @@ const ViewPage = () => {
       key: 'description',
       sorter: (a, b) => a.description.length - b.description.length,
       sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('Description', 'description', handleSearch, handleReset, searchInput, searchedColumn, searchText, setSearchText, setSearchedColumn),
+      ...getColumnSearchProps(
+        'Description',
+        'description',
+        handleSearch,
+        handleReset,
+        searchInput,
+        searchedColumn,
+        searchText,
+        setSearchText,
+        setSearchedColumn,
+      ),
     },
     {
       title: 'Created At',
@@ -137,7 +171,7 @@ const ViewPage = () => {
       key: 'created_at',
       sorter: (a, b) => a.created_at.length - b.created_at.length,
       sortDirections: ['descend', 'ascend'],
-      render: text => moment(text).fromNow(),
+      render: (text) => moment(text).fromNow(),
     },
     {
       title: 'Updated At',
@@ -145,7 +179,7 @@ const ViewPage = () => {
       key: 'updated_at',
       sorter: (a, b) => a.updated_at.length - b.updated_at.length,
       sortDirections: ['descend', 'ascend'],
-      render: text => moment(text).fromNow(),
+      render: (text) => moment(text).fromNow(),
     },
     {
       title: 'Actions',
@@ -156,17 +190,16 @@ const ViewPage = () => {
   ];
   const handlePrinter = () => {
     if (state.selectedRows.length) {
-      handlePrint(dataSource, columns, 'Categories', state)
-    }
-    else {
+      handlePrint(dataSource, columns, 'Categories', state);
+    } else {
       alertModal.warning({
         title: 'Please Select your Required Rows!',
       });
     }
-  }
+  };
   useEffect(() => {
-    dispatch(getCategories())
-  }, [])
+    dispatch(getCategories());
+  }, []);
   return (
     <RecordViewWrapper>
       <PageHeader

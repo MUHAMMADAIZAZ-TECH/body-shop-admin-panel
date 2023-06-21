@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { ColorPalette } from './style';
 
-const Palette = props => {
+const Palette = (props) => {
   const { colorCode, bordered, content, bg, gradient, direction, children } = props;
 
   return (

@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import FeatherIcon from 'feather-icons-react';
 import { Content, PopoverStyle, Title } from './style';
 
-const Popover = props => {
+const Popover = (props) => {
   const { content, placement, title, action, children } = props;
   const content1 = <Content>{content}</Content>;
 

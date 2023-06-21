@@ -2,17 +2,13 @@
 import React from 'react';
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
-import { Input, Space,message } from 'antd';
-import { SearchOutlined ,PlusOutlined} from '@ant-design/icons';
+import { Input, Space, message } from 'antd';
+import { SearchOutlined, PlusOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import { Button } from '../buttons/buttons';
 
-
 const textRefactor = (text, size) => {
-  return `${text
-    .split(' ')
-    .slice(0, size)
-    .join(' ')}...`;
+  return `${text.split(' ').slice(0, size).join(' ')}...`;
 };
 
 const chartLinearGradient = (canvas, height, color) => {
@@ -24,7 +20,7 @@ const chartLinearGradient = (canvas, height, color) => {
 };
 
 // Custom Tooltip
-function customTooltips (tooltip) {
+function customTooltips(tooltip) {
   // Tooltip Element
   let tooltipEl = document.querySelector('.chartjs-tooltip');
 
@@ -33,7 +29,7 @@ function customTooltips (tooltip) {
     tooltipEl.className = 'chartjs-tooltip';
     tooltipEl.innerHTML = '<table></table>';
 
-    document.querySelectorAll('.parentContainer').forEach(el => {
+    document.querySelectorAll('.parentContainer').forEach((el) => {
       if (el.contains(document.querySelector('.chartjs-tooltip'))) {
         document.querySelector('.chartjs-tooltip').remove();
       }
@@ -97,16 +93,18 @@ function customTooltips (tooltip) {
 
   tooltipEl.style.opacity = 1;
   tooltipEl.style.left = `${positionX + tooltip.caretX}px`;
-  tooltipEl.style.top = `${positionY +
+  tooltipEl.style.top = `${
+    positionY +
     tooltip.caretY -
-    (tooltip.caretY > 10 ? (toolTipHeight > 100 ? toolTipHeight + 5 : toolTipHeight + 15) : 70)}px`;
+    (tooltip.caretY > 10 ? (toolTipHeight > 100 ? toolTipHeight + 5 : toolTipHeight + 15) : 70)
+  }px`;
   tooltipEl.style.fontFamily = tooltip._bodyFontFamily;
   tooltipEl.style.fontSize = `${tooltip.bodyFontSize}px`;
   tooltipEl.style.fontStyle = tooltip._bodyFontStyle;
   tooltipEl.style.padding = `${tooltip.yPadding}px ${tooltip.xPadding}px`;
-};
+}
 
-const exportToXLSX = (inputData, fileName,setState,state) => {
+const exportToXLSX = (inputData, fileName, setState, state) => {
   const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
   const xlsxExtension = '.xlsx';
   const ws = XLSX.utils.json_to_sheet(inputData);
@@ -120,7 +118,17 @@ const exportToXLSX = (inputData, fileName,setState,state) => {
   });
 };
 
-const getColumnSearchProps = (placeholder,dataIndex, handleSearch, handleReset, searchInput, searchedColumn, searchText, setSearchText, setSearchedColumn) => ({
+const getColumnSearchProps = (
+  placeholder,
+  dataIndex,
+  handleSearch,
+  handleReset,
+  searchInput,
+  searchedColumn,
+  searchText,
+  setSearchText,
+  setSearchedColumn,
+) => ({
   filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
     <div style={{ padding: 8 }}>
       <Input
@@ -141,11 +149,7 @@ const getColumnSearchProps = (placeholder,dataIndex, handleSearch, handleReset, 
         >
           Search
         </Button>
-        <Button
-          onClick={() => clearFilters && handleReset(clearFilters)}
-          size="small"
-          style={{ width: 90 }}
-        >
+        <Button onClick={() => clearFilters && handleReset(clearFilters)} size="small" style={{ width: 90 }}>
           Reset
         </Button>
         <Button
@@ -178,8 +182,7 @@ const getColumnSearchProps = (placeholder,dataIndex, handleSearch, handleReset, 
       }}
     />
   ),
-  onFilter: (value, record) =>
-    record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+  onFilter: (value, record) => record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
   onFilterDropdownOpenChange: (visible) => {
     if (visible) {
       setTimeout(() => searchInput.current?.select(), 100);
@@ -205,34 +208,35 @@ const getBase64 = (file) =>
     reader.onerror = (error) => reject(error);
   });
 
-  const draggerprops = {
-    maxCount:1,
-    name: 'document',
-    multiple: false,
-    action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-    onChange(info) {
-      const { status } = info.file;
-      if (status !== 'uploading') {
-        // console.log(info.file, info.fileList);
-      }
-      if (status === 'done') {
-        message.success(`${info.file.name} file uploaded successfully.`);
-      } else if (status === 'error') {
-        message.error(`${info.file.name} file upload failed.`);
-      }
-    },
-  };
+const draggerprops = {
+  maxCount: 1,
+  name: 'document',
+  multiple: false,
+  action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
+  onChange(info) {
+    const { status } = info.file;
+    if (status !== 'uploading') {
+      // console.log(info.file, info.fileList);
+    }
+    if (status === 'done') {
+      message.success(`${info.file.name} file uploaded successfully.`);
+    } else if (status === 'error') {
+      message.error(`${info.file.name} file upload failed.`);
+    }
+  },
+};
 
-  const uploadButton = (
-    <div><PlusOutlined />
-      <div style={{ marginTop: 8, }}>Upload</div>
-    </div>
-  );
+const uploadButton = (
+  <div>
+    <PlusOutlined />
+    <div style={{ marginTop: 8 }}>Upload</div>
+  </div>
+);
 
-  const generatePrintContent = (selectedRows, selectedColumns,printname) => {
-    const excludedColumns = ['Image', 'Actions'];
-  
-    return `
+const generatePrintContent = (selectedRows, selectedColumns, printname) => {
+  const excludedColumns = ['Image', 'Actions'];
+
+  return `
       <html>
         <head>
           <title>Selected ${printname}</title>
@@ -270,7 +274,7 @@ const getBase64 = (file) =>
                     .map((column) => `<td>${row[column.dataIndex]}</td>`)
                     .join('')}
                 </tr>
-              `
+              `,
                 )
                 .join('')}
             </tbody>
@@ -278,23 +282,29 @@ const getBase64 = (file) =>
         </body>
       </html>
     `;
-  };
-  const handlePrint = (dataSource, columns,printname,state) => {
-    const selectedRows = dataSource.filter((row) =>
-    state.selectedRowKeys.includes(row.key)
-  );
-    const printContent = generatePrintContent(selectedRows, columns,printname)
-    const printWindow = window.open('', '_blank');
-    printWindow.document.open();
-    printWindow.document.write(printContent);
-    printWindow.document.close();
-  
-    setTimeout(() => {
-      printWindow.print();
-      printWindow.close();
-    }, 1000); // Delay of 1 second (adjust the delay as needed)
-  };
-export { textRefactor, chartLinearGradient,
-   customTooltips,exportToXLSX,getColumnSearchProps,getBase64,
-   generatePrintContent,handlePrint,
-   draggerprops,uploadButton };
+};
+const handlePrint = (dataSource, columns, printname, state) => {
+  const selectedRows = dataSource.filter((row) => state.selectedRowKeys.includes(row.key));
+  const printContent = generatePrintContent(selectedRows, columns, printname);
+  const printWindow = window.open('', '_blank');
+  printWindow.document.open();
+  printWindow.document.write(printContent);
+  printWindow.document.close();
+
+  setTimeout(() => {
+    printWindow.print();
+    printWindow.close();
+  }, 1000); // Delay of 1 second (adjust the delay as needed)
+};
+export {
+  textRefactor,
+  chartLinearGradient,
+  customTooltips,
+  exportToXLSX,
+  getColumnSearchProps,
+  getBase64,
+  generatePrintContent,
+  handlePrint,
+  draggerprops,
+  uploadButton,
+};

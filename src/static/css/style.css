@@ -99,7 +99,7 @@ ul {
   padding-bottom: 30px;
 }
 
-.pl-0{
+.pl-0 {
   padding-left: 0 !important;
 }
 
@@ -141,7 +141,6 @@ ul {
   color: #868eae;
 }
 
-
 .ant-card-head .ant-card-extra {
   display: flex;
   align-items: center;
@@ -157,7 +156,7 @@ ul {
   margin-left: 20px;
 }
 
-.sDash_unresizable{
+.sDash_unresizable {
   resize: none;
 }
 
@@ -749,7 +748,7 @@ ul {
   padding-bottom: 2px !important;
 }
 
-.sDash_fullwidth-select{
+.sDash_fullwidth-select {
   width: 100%;
 }
 
@@ -845,46 +844,46 @@ ul {
   text-align: left !important;
 }
 
-.sDash_addTask-modal{
+.sDash_addTask-modal {
   max-width: 390px;
 }
-.sDash_addTask-modal .ant-modal-header{
+.sDash_addTask-modal .ant-modal-header {
   border-bottom: 0 none;
   padding-bottom: 0 !important;
 }
-.sDash_addTask-modal .ant-modal-header .ant-modal-title{
+.sDash_addTask-modal .ant-modal-header .ant-modal-title {
   font-size: 16px;
   font-weight: 500;
-  color: #272B41;
+  color: #272b41;
 }
-.sDash_addTask-modal .sDash_addTask-modal-inner .ant-form-item{
+.sDash_addTask-modal .sDash_addTask-modal-inner .ant-form-item {
   margin-bottom: 15px;
 }
-.sDash_addTask-modal .ant-modal-header .ant-modal-close-x svg{
-  color: #9299B8;
+.sDash_addTask-modal .ant-modal-header .ant-modal-close-x svg {
+  color: #9299b8;
 }
-.sDash_addTask-modal .ant-form-item-control-input{
+.sDash_addTask-modal .ant-form-item-control-input {
   min-height: 36px;
 }
 .sDash_addTask-modal input::placeholder,
-.sDash_addTask-modal textarea::placeholder{
-  color: #9299B8;
+.sDash_addTask-modal textarea::placeholder {
+  color: #9299b8;
 }
 .sDash_addTask-modal input,
-.sDash_addTask-modal textarea{
+.sDash_addTask-modal textarea {
   padding: 6px 20px;
   border-radius: 5px;
 }
-.sDash_addTask-modal textarea{
+.sDash_addTask-modal textarea {
   resize: none;
   min-height: 125px;
 }
-.sDash_addTask-modal .sDash-modal-actions{
+.sDash_addTask-modal .sDash-modal-actions {
   display: flex;
   justify-content: flex-end;
   margin: -6px;
 }
-.sDash_addTask-modal .sDash-modal-actions button{
+.sDash_addTask-modal .sDash-modal-actions button {
   font-size: 14px;
   margin: 6px;
   height: 38px;
@@ -992,7 +991,6 @@ ul {
   color: #5a5f7d;
 }
 
-
 /* mail props dropdown */
 
 .mail-props {
@@ -1036,7 +1034,7 @@ ul {
 
 .ant-dropdown.wide-dropdwon.kanbanCard-more {
   min-width: 220px !important;
-  box-shadow: 0 17px 20px #9299B820;
+  box-shadow: 0 17px 20px #9299b820;
 }
 .ant-dropdown.wide-dropdwon.kanbanCard-more a {
   padding: 10px 24px;
@@ -1249,15 +1247,15 @@ ul {
   margin-bottom: 0;
 }
 
-.add-file-dropdown a{
+.add-file-dropdown a {
   font-size: 14px;
   font-weight: 400;
-} 
-.add-file-dropdown a svg{
+}
+.add-file-dropdown a svg {
   width: 14px;
 }
 
-.folder-dropdown{
+.folder-dropdown {
   min-width: 200px !important;
 }
 
@@ -1457,37 +1455,37 @@ ul {
   margin-top: 10px !important;
 }
 
-.sDash_upload-basic .ant-upload.ant-upload-select{
+.sDash_upload-basic .ant-upload.ant-upload-select {
   width: 100%;
-  border: 1px solid #E3E6EF;
+  border: 1px solid #e3e6ef;
   border-radius: 4px;
 }
-.sDash_upload-basic .ant-upload.ant-upload-select .ant-upload{
+.sDash_upload-basic .ant-upload.ant-upload-select .ant-upload {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
-.sDash_upload-basic .sDash_upload-text{
+.sDash_upload-basic .sDash_upload-text {
   font-size: 14px;
-  color: #9299B8;
+  color: #9299b8;
   padding-left: 15px;
 }
-html[dir='rtl'] .sDash_upload-basic .sDash_upload-text{
+html[dir='rtl'] .sDash_upload-basic .sDash_upload-text {
   padding-left: 0px;
   padding-right: 15px;
 }
-.sDash_upload-basic .sDash_upload-browse{
+.sDash_upload-basic .sDash_upload-browse {
   font-size: 14px;
-  color: #9299B8;
+  color: #9299b8;
   display: inline-block;
   padding: 14px 23px;
-  border-left: 1px solid #E3E6EF;
+  border-left: 1px solid #e3e6ef;
 }
-html[dir='rtl'] .sDash_upload-basic .sDash_upload-browse{
+html[dir='rtl'] .sDash_upload-basic .sDash_upload-browse {
   border-left: 0 none;
-  border-right: 1px solid #E3E6EF;
+  border-right: 1px solid #e3e6ef;
 }
-.ant-card.sDash_upload-form .ant-card-body{
+.ant-card.sDash_upload-form .ant-card-body {
   padding-bottom: 15px !important;
 }
 /* Ant Picker */
@@ -1799,23 +1797,23 @@ html[dir='rtl'] .sDash_upload-basic .sDash_upload-browse{
 }
 
 /* File Export Import Modal */
-.sDash_export-wrap .ant-modal{
+.sDash_export-wrap .ant-modal {
   width: 390px !important;
 }
-.sDash_export-wrap .ant-modal .ant-modal-header{
+.sDash_export-wrap .ant-modal .ant-modal-header {
   border-bottom: 0 none;
-  padding: 18px 30px 0 30px
+  padding: 18px 30px 0 30px;
 }
-.sDash_export-wrap .ant-modal .ant-modal-body{
+.sDash_export-wrap .ant-modal .ant-modal-body {
   padding: 25px 30px 30px 30px;
 }
-.sDash_export-wrap .ant-modal .sDash-button-grp{
+.sDash_export-wrap .ant-modal .sDash-button-grp {
   text-align: right;
 }
-.sDash_export-wrap .ant-modal .sDash-button-grp{
+.sDash_export-wrap .ant-modal .sDash-button-grp {
   margin: 20px -8px -8px -8px;
 }
-.sDash_export-wrap .ant-modal .sDash-button-grp button{
+.sDash_export-wrap .ant-modal .sDash-button-grp button {
   font-size: 14px;
   font-weight: 500;
   text-align: right;
@@ -1823,228 +1821,250 @@ html[dir='rtl'] .sDash_upload-basic .sDash_upload-browse{
   padding: 0 16px;
   margin: 8px;
 }
-.sDash_export-wrap .ant-modal .sDash-button-grp button.ant-btn-white{
-  color: #9299B8 !important;
+.sDash_export-wrap .ant-modal .sDash-button-grp button.ant-btn-white {
+  color: #9299b8 !important;
 }
-.sDash_export-wrap .ant-form-item-control-input{
+.sDash_export-wrap .ant-form-item-control-input {
   min-height: 36px;
 }
 
-.sDash_export-wrap .ant-form-item-control-input input{
+.sDash_export-wrap .ant-form-item-control-input input {
   font-size: 14px;
   font-weight: 400;
   padding: 6px 20px;
   border-radius: 5px;
-  color: #9299B8;
+  color: #9299b8;
 }
 
-.sDash_export-wrap .ant-select-single{
+.sDash_export-wrap .ant-select-single {
   width: 100% !important;
 }
 
-.sDash_export-wrap .ant-form .ant-form-item{
+.sDash_export-wrap .ant-form .ant-form-item {
   margin-bottom: 15px;
 }
 
-.sDash_export-wrap .ant-select-single .ant-select-selector{
+.sDash_export-wrap .ant-select-single .ant-select-selector {
   padding: 0 20px;
-  border-color: #E3E6EF !important;
+  border-color: #e3e6ef !important;
 }
 
-.sDash_create-file .sDash-button-grp{
+.sDash_create-file .sDash-button-grp {
   text-align: right;
 }
 
-.sDash_create-file .ant-modal{
+.sDash_create-file .ant-modal {
   width: 390px !important;
 }
-.sDash_create-file .ant-modal .ant-form-item{
+.sDash_create-file .ant-modal .ant-form-item {
   margin-bottom: 20px;
 }
-.sDash_create-file .ant-modal-header{
+.sDash_create-file .ant-modal-header {
   border-bottom: 0 none;
   padding-bottom: 6px;
 }
-.sDash_create-file .sDash-button-grp button{
+.sDash_create-file .sDash-button-grp button {
   height: 40px;
   border-radius: 5px;
   margin: 5px;
 }
 
-.sDash_create-file .ant-form-item-control-input{
+.sDash_create-file .ant-form-item-control-input {
   border-radius: 5px;
 }
 
-.sDash_create-file .ant-form-item-control-input input{
-  border: 1px solid #E3E6EF;
+.sDash_create-file .ant-form-item-control-input input {
+  border: 1px solid #e3e6ef;
 }
 
 /* Task Modal */
-.sDash_task-details .ant-modal-content .ant-modal-close{
+.sDash_task-details .ant-modal-content .ant-modal-close {
   top: 10px;
 }
-.sDash_task-details .ant-modal-header{
+.sDash_task-details .ant-modal-header {
   border-bottom: 0 none;
   padding: 30px 30px 0;
 }
-.sDash_task-details .ant-modal{
+.sDash_task-details .ant-modal {
   width: 600px !important;
 }
-.sDash_task-details .ant-modal-header .ant-modal-title h4{
+.sDash_task-details .ant-modal-header .ant-modal-title h4 {
   font-size: 20px;
   font-weight: 500;
-  color: #272B41;
+  color: #272b41;
   margin-bottom: 4px;
 }
-.sDash_task-details .ant-modal-header .ant-modal-title .sub-text{
+.sDash_task-details .ant-modal-header .ant-modal-title .sub-text {
   font-size: 14px;
   font-weight: 400;
-  color: #868EAE;
+  color: #868eae;
 }
-.sDash_task-details .sDash_task-details-modal .sDash_task-details__label{
+.sDash_task-details .sDash_task-details-modal .sDash_task-details__label {
   font-size: 16px;
   display: block;
   margin-bottom: 8px;
 }
-.sDash_task-details .sDash_task-details-modal .sDash_task-details-modal__description textarea{
+.sDash_task-details .sDash_task-details-modal .sDash_task-details-modal__description textarea {
   padding: 10px 20px;
   min-height: 88px;
   width: 100%;
   border: 0 none;
   border-radius: 4px;
-  background-color: #F4F5F7;
+  background-color: #f4f5f7;
   resize: none;
 }
-.sDash_task-details .sDash_task-details-modal .sDash_task-details-modal__description textarea:focus{
+.sDash_task-details .sDash_task-details-modal .sDash_task-details-modal__description textarea:focus {
   outline: none;
 }
-.sDash_task-details .sDash_task-details-modal .sDash_task-details-modal__description textarea::placeholder{
-  color: #5A5F7D;
+.sDash_task-details .sDash_task-details-modal .sDash_task-details-modal__description textarea::placeholder {
+  color: #5a5f7d;
   font-size: 15px;
 }
-.sDash_task-details .ant-modal-body{
+.sDash_task-details .ant-modal-body {
   padding: 14px 30px 30px 30px;
 }
-.sDash_task-details .ant-modal-body .sDash_checklist-block{
+.sDash_task-details .ant-modal-body .sDash_checklist-block {
   margin-top: 26px;
 }
 
-.sDash_task-details .ant-modal-body .sDash_checklist-block .addChecklist-wrap{
+.sDash_task-details .ant-modal-body .sDash_checklist-block .addChecklist-wrap {
   position: relative;
 }
 
-.sDash_task-details .ant-modal-body .sDash_checklist-block .addChecklist-form{
+.sDash_task-details .ant-modal-body .sDash_checklist-block .addChecklist-form {
   position: absolute;
   width: 240px;
   padding: 18px;
   left: 0;
   top: 50px;
-  box-shadow: 0 15px 30px #9299BB30;
+  box-shadow: 0 15px 30px #9299bb30;
   background-color: #fff;
-  border: 1px solid #E3E6EF;
+  border: 1px solid #e3e6ef;
   border-radius: 6px;
   z-index: 222;
 }
 
-html[dir='rtl'] .sDash_task-details .ant-modal-body .sDash_checklist-block .addChecklist-form{
+html[dir='rtl'] .sDash_task-details .ant-modal-body .sDash_checklist-block .addChecklist-form {
   left: auto;
   right: 0;
 }
 
-.sDash_task-details .ant-modal-body .sDash_checklist-block .addChecklist-form .add-checklist{
+.sDash_task-details .ant-modal-body .sDash_checklist-block .addChecklist-form .add-checklist {
   padding: 10px;
   border-radius: 4px;
   background-color: #fff;
   width: 100%;
   height: 38px;
-  border: 1px solid #E3E6EF;
+  border: 1px solid #e3e6ef;
 }
 
-.sDash_task-details .ant-modal-body .sDash_checklist-block .addChecklist-form .addChecklist-form-action{
+.sDash_task-details .ant-modal-body .sDash_checklist-block .addChecklist-form .addChecklist-form-action {
   margin-top: 15px;
 }
 
-.sDash_task-details .ant-modal-body .sDash_checklist-block .addChecklist-form .addChecklist-form-action a{
+.sDash_task-details .ant-modal-body .sDash_checklist-block .addChecklist-form .addChecklist-form-action a {
   position: relative;
   top: 3px;
   display: inline-flex;
   align-items: center;
   line-height: 1;
 }
-.sDash_task-details .ant-modal-body .sDash_checklist-block .addChecklist-form .addChecklist-form-action a svg{
-  color: #9299BB;
+.sDash_task-details .ant-modal-body .sDash_checklist-block .addChecklist-form .addChecklist-form-action a svg {
+  color: #9299bb;
 }
-.sDash_task-details .ant-modal-body .sDash_checklist-block .addChecklist-form .addChecklist-form-action .btn-add{
+.sDash_task-details .ant-modal-body .sDash_checklist-block .addChecklist-form .addChecklist-form-action .btn-add {
   margin-right: 15px;
 }
-html[dir='rtl'] .sDash_task-details .ant-modal-body .sDash_checklist-block .addChecklist-form .addChecklist-form-action .btn-add{
+html[dir='rtl']
+  .sDash_task-details
+  .ant-modal-body
+  .sDash_checklist-block
+  .addChecklist-form
+  .addChecklist-form-action
+  .btn-add {
   margin-left: 15px;
   margin-right: 0;
 }
 
-.sDash_task-details .ant-modal-body .sDash_checklist-block button{
+.sDash_task-details .ant-modal-body .sDash_checklist-block button {
   height: 38px;
   padding: 0px 18.37px;
 }
 
-.sDash_task-details .ant-modal-body .sDash_checklist-row{
+.sDash_task-details .ant-modal-body .sDash_checklist-row {
   margin-top: 26px;
 }
-.sDash_task-details .ant-modal-body .sDash_checklist-row .sDash_checklist-item:not(:last-child){
+.sDash_task-details .ant-modal-body .sDash_checklist-row .sDash_checklist-item:not(:last-child) {
   margin-bottom: 30px;
 }
 
-.sDash_task-details .ant-modal-body .sDash_checklist-row .sDash_checklist-item__top{
+.sDash_task-details .ant-modal-body .sDash_checklist-row .sDash_checklist-item__top {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 10px;
 }
 
-.sDash_task-details .ant-modal-body .sDash_checklist-row .sDash_checklist-item__top button{
+.sDash_task-details .ant-modal-body .sDash_checklist-row .sDash_checklist-item__top button {
   padding: 0px 16.32px;
 }
 
-.sDash_task-details .ant-modal-body .sDash_checklist-row .sDash_checklist-item__title{
+.sDash_task-details .ant-modal-body .sDash_checklist-row .sDash_checklist-item__title {
   font-size: 16px;
   font-weight: 500;
-  color: #272B41;
+  color: #272b41;
   margin-bottom: 0;
 }
 
-.sDash_task-details .ant-modal-body .sDash_checklist-row .sDash_checklist__progress .ant-progress-inner .ant-progress-bg{
+.sDash_task-details
+  .ant-modal-body
+  .sDash_checklist-row
+  .sDash_checklist__progress
+  .ant-progress-inner
+  .ant-progress-bg {
   height: 5px !important;
-  background-color: #20C997;
+  background-color: #20c997;
 }
-.sDash_task-details .ant-modal-body .sDash_checklist-row .sDash_checklist__progress .ant-progress .ant-progress-text{
+.sDash_task-details .ant-modal-body .sDash_checklist-row .sDash_checklist__progress .ant-progress .ant-progress-text {
   font-size: 12px;
   font-weight: 500;
   order: -1;
   margin: 0 10px 0 0;
 }
-html[dir='rtl'] .sDash_task-details .ant-modal-body .sDash_checklist-row .sDash_checklist__progress .ant-progress .ant-progress-text{
+html[dir='rtl']
+  .sDash_task-details
+  .ant-modal-body
+  .sDash_checklist-row
+  .sDash_checklist__progress
+  .ant-progress
+  .ant-progress-text {
   margin: 0 0 0 10px;
 }
-.sDash_task-details .ant-modal-body .sDash_checklist-tasks{
+.sDash_task-details .ant-modal-body .sDash_checklist-tasks {
   margin: 5px 0 5px 0;
 }
-.sDash_task-details .ant-modal-body .sDash_checklist-tasks .ant-checkbox-wrapper .ant-checkbox-inner{
+.sDash_task-details .ant-modal-body .sDash_checklist-tasks .ant-checkbox-wrapper .ant-checkbox-inner {
   width: 18px;
   height: 18px;
-  border-color: #C6D0DC;
+  border-color: #c6d0dc;
 }
-.sDash_task-details .ant-modal-body .sDash_checklist-tasks .ant-checkbox-wrapper .ant-checkbox-checked .ant-checkbox-inner{
-  background-color: #20C997;
+.sDash_task-details
+  .ant-modal-body
+  .sDash_checklist-tasks
+  .ant-checkbox-wrapper
+  .ant-checkbox-checked
+  .ant-checkbox-inner {
+  background-color: #20c997;
 }
-.sDash_task-details .ant-modal-body .sDash_checklist-tasks .ant-checkbox-wrapper .ant-checkbox-checked:after{
-  border-color: #20C997;
+.sDash_task-details .ant-modal-body .sDash_checklist-tasks .ant-checkbox-wrapper .ant-checkbox-checked:after {
+  border-color: #20c997;
 }
 
-.sDash_task-details .ant-modal-body .sDash_checklist-item .sDash_checklist-tasks-wrap button{
+.sDash_task-details .ant-modal-body .sDash_checklist-item .sDash_checklist-tasks-wrap button {
   padding: 0px 35px;
-} 
+}
 
-.sDash_task-details .ant-modal-body{
+.sDash_task-details .ant-modal-body {
   max-height: 800px;
   overflow-y: auto;
 }
@@ -2177,7 +2197,9 @@ html[dir='rtl'] .sDash_task-details .ant-modal-body .sDash_checklist-row .sDash_
   visibility: visible;
 }
 
-.ant-table-thead > tr > th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before{
+.ant-table-thead
+  > tr
+  > th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
   display: none;
 }
 
@@ -2327,7 +2349,7 @@ html[dir='rtl'] .sDash_task-details .ant-modal-body .sDash_checklist-row .sDash_
   .ant-layout-header {
     height: auto;
   }
-  .ant-card-head{
+  .ant-card-head {
     line-height: 1;
   }
   .ant-card-head-title {
@@ -2512,7 +2534,7 @@ html[dir='rtl'] .sDash_task-details .ant-modal-body .sDash_checklist-row .sDash_
   .invoice-area .ant-page-header {
     display: none;
   }
-  .customizer-trigger{
+  .customizer-trigger {
     display: none;
   }
 }
@@ -2635,7 +2657,7 @@ html[dir='rtl'] .sDash_task-details .ant-modal-body .sDash_checklist-row .sDash_
   margin-bottom: 30px;
 }
 
-.common-ul{
+.common-ul {
   padding: 5px 0;
   padding-left: 10px;
 }
@@ -2648,12 +2670,12 @@ li.active > .display {
   display: block;
 }
 
-
 /* rtl section from here */
 html[dir='rtl'] .ant-card-head-title span {
   margin-right: 15px;
 }
-html[dir='rtl'] span[aria-label="arrow-right"] svg, html[dir='rtl'] span[aria-label="arrow-left"] svg {
+html[dir='rtl'] span[aria-label='arrow-right'] svg,
+html[dir='rtl'] span[aria-label='arrow-left'] svg {
   transform: rotateY(180deg);
 }
 
@@ -2680,21 +2702,22 @@ html[dir='rtl'] .ant-menu-vertical .ant-menu-submenu-title {
 }
 
 /* Auth0 style */
-.auth0-lock.auth0-lock .auth0-lock-header-logo {  
+.auth0-lock.auth0-lock .auth0-lock-header-logo {
   width: 180px !important;
   margin: 0 !important;
   display: none !important;
 }
 
-.auth0-lock.auth0-lock .auth0-lock-name{
+.auth0-lock.auth0-lock .auth0-lock-name {
   font-size: 18px !important;
 }
 
-.auth0-lock.auth0-lock .auth0-lock-close-button, .auth0-lock.auth0-lock .auth0-lock-back-button {   
-    box-shadow: none !important;   
-    padding: 2px !important;
+.auth0-lock.auth0-lock .auth0-lock-close-button,
+.auth0-lock.auth0-lock .auth0-lock-back-button {
+  box-shadow: none !important;
+  padding: 2px !important;
 }
-.common-ul{
+.common-ul {
   padding: 5px 0;
   padding-left: 10px;
 }

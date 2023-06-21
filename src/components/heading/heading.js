@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import * as headings from './style';
 
-const Heading = props => {
+const Heading = (props) => {
   const { as, children, className, id } = props;
   const StyledHeading = as ? headings[as.toUpperCase()] : headings.H1;
 

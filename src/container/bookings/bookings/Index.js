@@ -1,4 +1,4 @@
-import React, { useEffect, useState,useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Row, Col, Table, Spin } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -7,17 +7,19 @@ import FeatherIcon from 'feather-icons-react';
 import { RecordViewWrapper } from './Style';
 import { Main, TableWrapper } from '../../styled';
 import { Cards } from '../../../components/cards/frame/cards-frame';
+import { alertModal } from '../../../components/modals/antd-modals';
+import { Button } from '../../../components/buttons/buttons';
 import { PageHeader } from '../../../components/page-headers/page-headers';
 import { getBookings } from '../../../redux/bookings/bookingSlice';
-import { getColumnSearchProps,exportToXLSX } from '../../../components/utilities/utilities';
+import { getColumnSearchProps, handlePrint, exportToXLSX } from '../../../components/utilities/utilities';
 import MYExportButton from '../../../components/buttons/my-export-button/my-export-button';
 
 const ViewPage = () => {
   const dispatch = useDispatch();
-  const { isLoading,bookingStates } = useSelector(state => {
+  const { isLoading, bookingStates } = useSelector((state) => {
     return {
       isLoading: state.bookingStates.loading,
-      bookingStates:state.bookingStates
+      bookingStates: state.bookingStates,
     };
   });
   const dataSource = [];
@@ -52,11 +54,22 @@ const ViewPage = () => {
   const onHandleSearch = (e) => {
     setState({ ...state, searchText: e.target.value });
   };
-  console.log(bookingStates?.Bookings)
+  console.log(bookingStates?.Bookings);
   if (bookingStates?.Bookings?.length)
-  bookingStates?.Bookings?.map((booking, key) => {
-      const { id, serviceName, salon_name, user_name, salon_address,
-        booking_status, coupon,is_paid,total_amount,appointmentDate,booking_date } = booking;
+    bookingStates?.Bookings?.map((booking, key) => {
+      const {
+        id,
+        serviceName,
+        salon_name,
+        user_name,
+        salon_address,
+        booking_status,
+        coupon,
+        is_paid,
+        total_amount,
+        appointmentDate,
+        booking_date,
+      } = booking;
       return dataSource.push({
         key: key + 1,
         id,
@@ -65,14 +78,14 @@ const ViewPage = () => {
         user_name,
         salon_address,
         booking_status,
-        is_paid:is_paid===1?'Paid':'UnPaid',
-        code:coupon.code,
+        is_paid: is_paid === 1 ? 'Paid' : 'UnPaid',
+        code: coupon.code,
         total_amount,
         booking_date,
         appointmentDate,
         action: (
           <div className="table-actions">
-             <Link className="edit" to={`/admin/bookings/view/${id}`}>
+            <Link className="edit" to={`/admin/bookings/view/${id}`}>
               <FeatherIcon icon="eye" size={14} />
             </Link>
             &nbsp;&nbsp;&nbsp;
@@ -81,17 +94,52 @@ const ViewPage = () => {
             </Link>
           </div>
         ),
-        booking
+        booking,
       });
     });
-    const csvData = [['id', 'serviceName', 'salon_name', 'user_name','salon_address',
-    'booking_status','is_paid','coupon','total_amount','appointmentDate','booking_date']];
-    state.selectedRows.map((rows) => {
-      const { id, serviceName, salon_name, user_name, salon_address,
-        booking_status, coupon,is_paid,total_amount,appointmentDate,booking_date } = rows.booking;
-      return csvData.push([id, serviceName, salon_name, user_name, salon_address,
-        booking_status,is_paid, coupon.code,total_amount,appointmentDate,booking_date ]);
-    });
+  const csvData = [
+    [
+      'id',
+      'serviceName',
+      'salon_name',
+      'user_name',
+      'salon_address',
+      'booking_status',
+      'is_paid',
+      'coupon',
+      'total_amount',
+      'appointmentDate',
+      'booking_date',
+    ],
+  ];
+  state.selectedRows.map((rows) => {
+    const {
+      id,
+      serviceName,
+      salon_name,
+      user_name,
+      salon_address,
+      booking_status,
+      coupon,
+      is_paid,
+      total_amount,
+      appointmentDate,
+      booking_date,
+    } = rows.booking;
+    return csvData.push([
+      id,
+      serviceName,
+      salon_name,
+      user_name,
+      salon_address,
+      booking_status,
+      is_paid,
+      coupon.code,
+      total_amount,
+      appointmentDate,
+      booking_date,
+    ]);
+  });
   const columns = [
     {
       title: 'Booking ID',
@@ -99,8 +147,18 @@ const ViewPage = () => {
       key: 'id',
       sorter: (a, b) => a.id.length - b.id.length,
       sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('Booking ID','id', handleSearch, handleReset, searchInput, searchedColumn, searchText, setSearchText, setSearchedColumn),
-      render:(text)=><div>#{text}</div>
+      ...getColumnSearchProps(
+        'Booking ID',
+        'id',
+        handleSearch,
+        handleReset,
+        searchInput,
+        searchedColumn,
+        searchText,
+        setSearchText,
+        setSearchedColumn,
+      ),
+      render: (text) => <div>#{text}</div>,
     },
     {
       title: 'Services',
@@ -108,7 +166,17 @@ const ViewPage = () => {
       key: 'serviceName',
       sorter: (a, b) => a.serviceName.length - b.serviceName.length,
       sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('Services','serviceName', handleSearch, handleReset, searchInput, searchedColumn, searchText, setSearchText, setSearchedColumn),
+      ...getColumnSearchProps(
+        'Services',
+        'serviceName',
+        handleSearch,
+        handleReset,
+        searchInput,
+        searchedColumn,
+        searchText,
+        setSearchText,
+        setSearchedColumn,
+      ),
     },
     {
       title: 'Salon',
@@ -116,7 +184,17 @@ const ViewPage = () => {
       key: 'salon_name',
       sorter: (a, b) => a.salon_name.length - b.salon_name.length,
       sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('Salon','salon_name', handleSearch, handleReset, searchInput, searchedColumn, searchText, setSearchText, setSearchedColumn),
+      ...getColumnSearchProps(
+        'Salon',
+        'salon_name',
+        handleSearch,
+        handleReset,
+        searchInput,
+        searchedColumn,
+        searchText,
+        setSearchText,
+        setSearchedColumn,
+      ),
     },
     {
       title: 'Customer',
@@ -124,7 +202,17 @@ const ViewPage = () => {
       key: 'user_name',
       sorter: (a, b) => a.user_name.length - b.user_name.length,
       sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('Customer','user_name', handleSearch, handleReset, searchInput, searchedColumn, searchText, setSearchText, setSearchedColumn),
+      ...getColumnSearchProps(
+        'Customer',
+        'user_name',
+        handleSearch,
+        handleReset,
+        searchInput,
+        searchedColumn,
+        searchText,
+        setSearchText,
+        setSearchedColumn,
+      ),
     },
     {
       title: 'Address',
@@ -132,7 +220,17 @@ const ViewPage = () => {
       key: 'salon_address',
       sorter: (a, b) => a.salon_address.length - b.salon_address.length,
       sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('Address','salon_address', handleSearch, handleReset, searchInput, searchedColumn, searchText, setSearchText, setSearchedColumn),
+      ...getColumnSearchProps(
+        'Address',
+        'salon_address',
+        handleSearch,
+        handleReset,
+        searchInput,
+        searchedColumn,
+        searchText,
+        setSearchText,
+        setSearchedColumn,
+      ),
     },
     {
       title: 'Booking Status',
@@ -140,7 +238,17 @@ const ViewPage = () => {
       key: 'bookingstatus',
       sorter: (a, b) => a.booking_status.length - b.booking_status.length,
       sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('Booking Status','booking_status', handleSearch, handleReset, searchInput, searchedColumn, searchText, setSearchText, setSearchedColumn),
+      ...getColumnSearchProps(
+        'Booking Status',
+        'booking_status',
+        handleSearch,
+        handleReset,
+        searchInput,
+        searchedColumn,
+        searchText,
+        setSearchText,
+        setSearchedColumn,
+      ),
     },
     {
       title: 'Payment Status',
@@ -148,7 +256,17 @@ const ViewPage = () => {
       key: 'is_paid',
       sorter: (a, b) => a.is_paid.length - b.is_paid.length,
       sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('Payment Status','is_paid', handleSearch, handleReset, searchInput, searchedColumn, searchText, setSearchText, setSearchedColumn),
+      ...getColumnSearchProps(
+        'Payment Status',
+        'is_paid',
+        handleSearch,
+        handleReset,
+        searchInput,
+        searchedColumn,
+        searchText,
+        setSearchText,
+        setSearchedColumn,
+      ),
     },
     {
       title: 'Coupon',
@@ -156,7 +274,17 @@ const ViewPage = () => {
       key: 'code',
       sorter: (a, b) => a.code.length - b.code.length,
       sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('Coupon','code', handleSearch, handleReset, searchInput, searchedColumn, searchText, setSearchText, setSearchedColumn),
+      ...getColumnSearchProps(
+        'Coupon',
+        'code',
+        handleSearch,
+        handleReset,
+        searchInput,
+        searchedColumn,
+        searchText,
+        setSearchText,
+        setSearchedColumn,
+      ),
     },
     {
       title: 'Total',
@@ -164,8 +292,18 @@ const ViewPage = () => {
       key: 'total_amount',
       sorter: (a, b) => a.total_amount.length - b.total_amount.length,
       sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('Total','total_amount', handleSearch, handleReset, searchInput, searchedColumn, searchText, setSearchText, setSearchedColumn),
-      render:(text)=><div>{text} $</div>
+      ...getColumnSearchProps(
+        'Total',
+        'total_amount',
+        handleSearch,
+        handleReset,
+        searchInput,
+        searchedColumn,
+        searchText,
+        setSearchText,
+        setSearchedColumn,
+      ),
+      render: (text) => <div>{text} $</div>,
     },
     {
       title: 'Booking At',
@@ -173,8 +311,18 @@ const ViewPage = () => {
       key: 'booking_date',
       sorter: (a, b) => a.booking_date.length - b.booking_date.length,
       sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('Booking At','booking_date', handleSearch, handleReset, searchInput, searchedColumn, searchText, setSearchText, setSearchedColumn),
-      render:(text)=>moment(text).format('DD/MM/YY')
+      ...getColumnSearchProps(
+        'Booking At',
+        'booking_date',
+        handleSearch,
+        handleReset,
+        searchInput,
+        searchedColumn,
+        searchText,
+        setSearchText,
+        setSearchedColumn,
+      ),
+      render: (text) => moment(text).format('DD/MM/YY'),
     },
     {
       title: 'Appointment Date',
@@ -182,8 +330,18 @@ const ViewPage = () => {
       key: 'appointmentDate',
       sorter: (a, b) => a.appointmentDate.length - b.appointmentDate.length,
       sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('Appointment Date','appointmentDate', handleSearch, handleReset, searchInput, searchedColumn, searchText, setSearchText, setSearchedColumn),
-      render:(text)=>moment(text).format('DD/MM/YY')
+      ...getColumnSearchProps(
+        'Appointment Date',
+        'appointmentDate',
+        handleSearch,
+        handleReset,
+        searchInput,
+        searchedColumn,
+        searchText,
+        setSearchText,
+        setSearchedColumn,
+      ),
+      render: (text) => moment(text).format('DD/MM/YY'),
     },
     {
       title: 'Actions',
@@ -192,17 +350,31 @@ const ViewPage = () => {
       width: '90px',
     },
   ];
+  const handlePrinter = () => {
+    if (state.selectedRows.length) {
+      handlePrint(dataSource, columns, 'Bookings', state);
+    } else {
+      alertModal.warning({
+        title: 'Please Select your Required Rows!',
+      });
+    }
+  };
   useEffect(() => {
-    dispatch(getBookings())
-   }, [dispatch]);
- 
+    dispatch(getBookings());
+  }, [dispatch]);
+
   return (
     <RecordViewWrapper>
       <PageHeader
         buttons={[
           <div className="sDash_export-box">
-            <MYExportButton state={state} setState={setState} exportToXLSX={exportToXLSX} csvData={csvData}/>
-        </div>,
+            <MYExportButton state={state} setState={setState} exportToXLSX={exportToXLSX} csvData={csvData} />
+          </div>,
+          <div>
+            <Button className="btn-add_new" size="small" key="1" type="white" onClick={() => handlePrinter()}>
+              <FeatherIcon icon="printer" size={14} /> <span>Print</span>
+            </Button>
+          </div>,
           <div key={1} className="search-box">
             <span className="search-icon">
               <FeatherIcon icon="search" size={14} />

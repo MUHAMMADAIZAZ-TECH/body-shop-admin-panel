@@ -1890,5 +1890,5 @@ export {
   SalesTargetWrap,
   SalesGrowthWrap,
   TopSellerWrap,
-  UserTableStyleWrapper
+  UserTableStyleWrapper,
 };

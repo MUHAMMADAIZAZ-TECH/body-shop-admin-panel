@@ -1,5 +1,5 @@
-import React, { useEffect, useState ,useRef} from 'react';
-import { Row, Col, Table, Spin,Form ,Select} from 'antd';
+import React, { useEffect, useState, useRef } from 'react';
+import { Row, Col, Table, Spin, Form, Select } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
@@ -10,14 +10,19 @@ import { Button } from '../../../components/buttons/buttons';
 import { alertModal } from '../../../components/modals/antd-modals';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { PageHeader } from '../../../components/page-headers/page-headers';
-import { deleteAvailibilityHours, getAvailibilityHourbysalon, getAvailibilityHours, getSalons } from '../../../redux/salon/salonSlice';
-import { exportToXLSX,handlePrint, getColumnSearchProps } from '../../../components/utilities/utilities';
+import {
+  deleteAvailibilityHours,
+  getAvailibilityHourbysalon,
+  getAvailibilityHours,
+  getSalons,
+} from '../../../redux/salon/salonSlice';
+import { exportToXLSX, handlePrint, getColumnSearchProps } from '../../../components/utilities/utilities';
 import MYExportButton from '../../../components/buttons/my-export-button/my-export-button';
 
 const { Option } = Select;
 const ViewPage = () => {
   const dispatch = useDispatch();
-  const { salonState,isLoading } = useSelector(state => {
+  const { salonState, isLoading } = useSelector((state) => {
     return {
       salonState: state.salonStates,
       isLoading: state.salonStates.isLoading,
@@ -54,7 +59,7 @@ const ViewPage = () => {
     clearFilters();
     setSearchText('');
   };
-  const handleDelete = id => {
+  const handleDelete = (id) => {
     const confirm = window.confirm('Are you sure delete this?');
     if (confirm) {
       dispatch(
@@ -73,7 +78,7 @@ const ViewPage = () => {
   };
   console.log(salonState?.availibilityhoursBysalon);
   if (salonState?.availibilityhoursBysalon?.length)
-  salonState?.availibilityhoursBysalon?.map((availhour, key) => {
+    salonState?.availibilityhoursBysalon?.map((availhour, key) => {
       const { id, weekday, opening_time, closing_time, updated_at } = availhour;
       return dataSource.push({
         key: key + 1,
@@ -92,14 +97,14 @@ const ViewPage = () => {
             </Link>
           </div>
         ),
-        availhour
+        availhour,
       });
     });
-    const csvData = [['id', 'weekday', 'opening_time', 'closing_time','updated_at']];
-    state.selectedRows.map((rows) => {
-      const { id, weekday, opening_time,closing_time,updated_at} = rows.availhour;
-      return csvData.push([id, weekday, opening_time,closing_time,updated_at]);
-    });
+  const csvData = [['id', 'weekday', 'opening_time', 'closing_time', 'updated_at']];
+  state.selectedRows.map((rows) => {
+    const { id, weekday, opening_time, closing_time, updated_at } = rows.availhour;
+    return csvData.push([id, weekday, opening_time, closing_time, updated_at]);
+  });
   const columns = [
     {
       title: 'Day',
@@ -107,7 +112,17 @@ const ViewPage = () => {
       key: 'weekday',
       sorter: (a, b) => a.weekday.length - b.weekday.length,
       sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('Day','weekday', handleSearch, handleReset, searchInput, searchedColumn, searchText, setSearchText, setSearchedColumn),
+      ...getColumnSearchProps(
+        'Day',
+        'weekday',
+        handleSearch,
+        handleReset,
+        searchInput,
+        searchedColumn,
+        searchText,
+        setSearchText,
+        setSearchedColumn,
+      ),
     },
     {
       title: 'Start At',
@@ -123,7 +138,7 @@ const ViewPage = () => {
       title: 'Updated At',
       dataIndex: 'updated_at',
       key: 'updated_at',
-      render: text => moment(text).fromNow(),
+      render: (text) => moment(text).fromNow(),
     },
     {
       title: 'Actions',
@@ -133,57 +148,57 @@ const ViewPage = () => {
     },
   ];
 
-  useEffect(()=>{
-    dispatch(getSalons())
-  },[])
-  const handleSubmit = async values => {
+  useEffect(() => {
+    dispatch(getSalons());
+  }, []);
+  const handleSubmit = async (values) => {
     try {
       await form.validateFields(); // Validate all form fields
-      dispatch(getAvailibilityHourbysalon({ 
-       ...values,
-      }));
-        // form.resetFields();
+      dispatch(
+        getAvailibilityHourbysalon({
+          ...values,
+        }),
+      );
+      // form.resetFields();
     } catch (error) {
       console.log('Validation error:', error);
     }
-   
   };
-  const handlePrinter = ()=>{
-    if(state.selectedRows.length){
-      handlePrint(dataSource, columns, 'Availibility hours', state)
-    }
-    else{
+  const handlePrinter = () => {
+    if (state.selectedRows.length) {
+      handlePrint(dataSource, columns, 'Availibility hours', state);
+    } else {
       alertModal.warning({
         title: 'Please Select your Required Rows!',
       });
     }
-  }
+  };
   return (
     <RecordViewWrapper>
       <PageHeader
-       buttons={[
-        <div className="sDash_export-box">
-          <MYExportButton state={state} setState={setState} exportToXLSX={exportToXLSX} csvData={csvData}/>
-      </div>,
-       <div>
-       <Button className="btn-add_new" size="small" key="1" type="white" onClick={() => handlePrinter()}>
-         <FeatherIcon icon="printer" size={14} /> <span>Print</span>
-       </Button>
-     </div>,
-      <div>
-      <Button className="btn-add_new" size="small" key="1" type="primary">
-        <Link to="/admin/salon/availibility-hours-add">
-          <FeatherIcon icon="plus" size={14} /> <span>Add New</span>
-        </Link>
-      </Button>
-    </div>,
-        <div key={1} className="search-box">
-          <span className="search-icon">
-            <FeatherIcon icon="search" size={14} />
-          </span>
-          <input onChange={onHandleSearch} type="text" name="recored-search" placeholder="Search Here" />
-        </div>,
-      ]}
+        buttons={[
+          <div className="sDash_export-box">
+            <MYExportButton state={state} setState={setState} exportToXLSX={exportToXLSX} csvData={csvData} />
+          </div>,
+          <div>
+            <Button className="btn-add_new" size="small" key="1" type="white" onClick={() => handlePrinter()}>
+              <FeatherIcon icon="printer" size={14} /> <span>Print</span>
+            </Button>
+          </div>,
+          <div>
+            <Button className="btn-add_new" size="small" key="1" type="primary">
+              <Link to="/admin/salon/availibility-hours-add">
+                <FeatherIcon icon="plus" size={14} /> <span>Add New</span>
+              </Link>
+            </Button>
+          </div>,
+          <div key={1} className="search-box">
+            <span className="search-icon">
+              <FeatherIcon icon="search" size={14} />
+            </span>
+            <input onChange={onHandleSearch} type="text" name="recored-search" placeholder="Search Here" />
+          </div>,
+        ]}
         ghost
         title="Availability Hours | Availability Hours Management"
       />
@@ -191,48 +206,55 @@ const ViewPage = () => {
         <Row gutter={15}>
           <Col className="w-100" md={24}>
             <Cards headless>
-            <Form name="multi-form" layout="vertical" style={{ width: '100%' }} form={form} onFinish={handleSubmit}>
-                  <Row gutter={30}>
-                    <Col sm={10} xs={24} className="mb-25">
-                    <Form.Item name="salon_id" label="Salon" initialValue="" rules={[{ required: true, message: 'Please select salon' }]} >
-                        <Select size="large" className="sDash_fullwidth-select">
-                          <Option value="">Please Select</Option>
-                          {salonState.approvedSalons && salonState.approvedSalons.length>0 && salonState.approvedSalons?.map((salon)=><Option value={salon.id}>{salon.name}</Option>) }
-                        </Select>
-                      </Form.Item>
-                      </Col>
-                    <Col sm={10} xs={24} className="mb-25">
-                    <Form.Item name="weekday" label="Day" initialValue="" >
-                        <Select size="large" className="sDash_fullwidth-select">
-                          <Option value="">Please Select</Option>
-                          <Option value="Sunday">Sunday</Option>
-                          <Option value="Monday">Monday</Option>
-                          <Option value="Tuesday">Tuesday</Option>
-                          <Option value="Wednesday">Wednesday</Option>
-                          <Option value="Thursday">Thursday</Option>
-                          <Option value="Friday">Friday</Option>
-                          <Option value="Saturday">Saturday</Option>
-                        </Select>
-                      </Form.Item>
-                    </Col>
-                    <Col sm={2} xs={24} className="mb-25 mt-25">
-                      <Button size="default" htmlType="Save" type="primary">
-                        {isLoading ? 'Loading...' : 'Submit'}
-                      </Button>
-                    </Col>
-                    <Col sm={2} xs={24} className="mb-25 mt-25">
-                      <Button
-                        className="btn-cancel"
-                        size="large"
-                        onClick={() => {
-                          return form.resetFields();
-                        }}
-                      >
-                        Reset
-                      </Button>
-                    </Col>
-                  </Row>
-                </Form>
+              <Form name="multi-form" layout="vertical" style={{ width: '100%' }} form={form} onFinish={handleSubmit}>
+                <Row gutter={30}>
+                  <Col sm={10} xs={24} className="mb-25">
+                    <Form.Item
+                      name="salon_id"
+                      label="Salon"
+                      initialValue=""
+                      rules={[{ required: true, message: 'Please select salon' }]}
+                    >
+                      <Select size="large" className="sDash_fullwidth-select">
+                        <Option value="">Please Select</Option>
+                        {salonState.approvedSalons &&
+                          salonState.approvedSalons.length > 0 &&
+                          salonState.approvedSalons?.map((salon) => <Option value={salon.id}>{salon.name}</Option>)}
+                      </Select>
+                    </Form.Item>
+                  </Col>
+                  <Col sm={10} xs={24} className="mb-25">
+                    <Form.Item name="weekday" label="Day" initialValue="">
+                      <Select size="large" className="sDash_fullwidth-select">
+                        <Option value="">Please Select</Option>
+                        <Option value="Sunday">Sunday</Option>
+                        <Option value="Monday">Monday</Option>
+                        <Option value="Tuesday">Tuesday</Option>
+                        <Option value="Wednesday">Wednesday</Option>
+                        <Option value="Thursday">Thursday</Option>
+                        <Option value="Friday">Friday</Option>
+                        <Option value="Saturday">Saturday</Option>
+                      </Select>
+                    </Form.Item>
+                  </Col>
+                  <Col sm={2} xs={24} className="mb-25 mt-25">
+                    <Button size="default" htmlType="Save" type="primary">
+                      {isLoading ? 'Loading...' : 'Submit'}
+                    </Button>
+                  </Col>
+                  <Col sm={2} xs={24} className="mb-25 mt-25">
+                    <Button
+                      className="btn-cancel"
+                      size="large"
+                      onClick={() => {
+                        return form.resetFields();
+                      }}
+                    >
+                      Reset
+                    </Button>
+                  </Col>
+                </Row>
+              </Form>
               {isLoading ? (
                 <div className="spin">
                   <Spin />
