@@ -8,7 +8,7 @@ import { readNotificationList } from '../../../../redux/notification/actionCreat
 
 function NotificationBox() {
   const dispatch = useDispatch();
-  const notification = useSelector(state => state.notification.data);
+  const notification = useSelector((state) => state.notification.data);
 
   useEffect(() => {
     if (readNotificationList) {
@@ -18,7 +18,7 @@ function NotificationBox() {
 
   const popoverContent = (
     <div>
-      {notification.map(item => {
+      {notification.map((item) => {
         const { id, from } = item;
         return (
           <NavLink key={id} to="#">

@@ -32,7 +32,7 @@ function AddNewEvent({ defaultValue, onHandleAddEvent }) {
   }, [defaultValue]);
 
   const [form] = Form.useForm();
-  const handleSubmit = values => {
+  const handleSubmit = (values) => {
     onHandleAddEvent({
       title: values.title,
       description: values.description,
@@ -50,10 +50,10 @@ function AddNewEvent({ defaultValue, onHandleAddEvent }) {
     setState({ ...state, endDate: dateString });
   };
 
-  const onChangeStartTime = time => {
+  const onChangeStartTime = (time) => {
     setState({ ...state, startTime: time });
   };
-  const onChangeEndTime = time => {
+  const onChangeEndTime = (time) => {
     setState({ ...state, endTime: time });
   };
 

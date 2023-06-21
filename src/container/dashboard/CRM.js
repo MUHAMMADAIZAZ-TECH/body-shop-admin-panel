@@ -1,26 +1,18 @@
-import React, { lazy, Suspense,useEffect } from 'react';
+import React, { Suspense, useEffect, lazy } from 'react';
 import { Row, Col, Skeleton } from 'antd';
 import FeatherIcon from 'feather-icons-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CardBarChart2, EChartCard } from './style';
 import { PageHeader } from '../../components/page-headers/page-headers';
 import { Cards } from '../../components/cards/frame/cards-frame';
-import { Button } from '../../components/buttons/buttons';
 import { Main } from '../styled';
 import Heading from '../../components/heading/heading';
 import { ChartjsBarChartTransparent } from '../../components/charts/chartjs';
-import { ShareButtonPageHeader } from '../../components/buttons/share-button/share-button';
 import { ExportButtonPageHeader } from '../../components/buttons/export-button/export-button';
 import { CalendarButtonPageHeader } from '../../components/buttons/calendar-button/calendar-button';
+import { getSalons, getDashboard } from '../../redux/salon/salonSlice';
 
-import { getSalons } from '../../redux/salon/salonSlice';
-
-const TotalRevenue = lazy(() => import('./overview/crm/TotalRevenue'));
-const UserListTable = lazy(() => import('../pages/overview/UserTable'));
-// const ClosedDeals = lazy(() => import('./overview/crm/ClosedDeals'));
-// const SalesLeaderBoard = lazy(() => import('./overview/crm/SalesLeaderboard'));
-// const EmailSent = lazy(() => import('./overview/crm/EmailSent'));
-// const RecentDeals = lazy(() => import('./overview/crm/RecentDeals'));
+const UserListTable = lazy(() => import('./usertable'));
 
 const chartOptions = {
   legend: {
@@ -58,14 +50,15 @@ const chartOptions = {
 
 function CRM() {
   const dispatch = useDispatch();
-  const { salonState } = useSelector(state => {
+  const { salonState } = useSelector((state) => {
     return {
-      salonState: state.salonStates
+      salonState: state.salonStates,
     };
   });
-  useEffect(()=>{
-    dispatch(getSalons())
-  },[])
+  useEffect(() => {
+    dispatch(getDashboard());
+    dispatch(getSalons());
+  }, []);
   return (
     <>
       <PageHeader
@@ -75,11 +68,6 @@ function CRM() {
           <div key="1" className="page-header-actions">
             <CalendarButtonPageHeader />
             <ExportButtonPageHeader />
-            <ShareButtonPageHeader />
-            <Button size="small" type="primary">
-              <FeatherIcon icon="plus" size={14} />
-              Add New
-            </Button>
           </div>,
         ]}
       />
@@ -90,7 +78,9 @@ function CRM() {
               <EChartCard>
                 <div className="card-chunk">
                   <CardBarChart2>
-                    <Heading as="h1">24</Heading>
+                    <Heading as="h1">
+                      {salonState.dashboard.totalBookings && salonState.dashboard.totalBookings}
+                    </Heading>
                     <span>Total Bookings</span>
                     <p>
                       <span className="growth-upward">
@@ -123,7 +113,9 @@ function CRM() {
               <EChartCard>
                 <div className="card-chunk">
                   <CardBarChart2>
-                    <Heading as="h1">849.07$</Heading>
+                    <Heading as="h1">
+                      {salonState.dashboard.totalEarnings && salonState.dashboard.totalEarnings}$
+                    </Heading>
                     <span>Total earnings</span>
                     <p>
                       <span className="growth-downward">
@@ -151,13 +143,12 @@ function CRM() {
               </EChartCard>
             </Cards>
           </Col>
-
           <Col xxl={6} md={12} sm={12} xs={24}>
             <Cards headless>
               <EChartCard>
                 <div className="card-chunk">
                   <CardBarChart2>
-                    <Heading as="h1">10</Heading>
+                    <Heading as="h1">{salonState.dashboard.totalSalons && salonState.dashboard.totalSalons}</Heading>
                     <span>Salons</span>
                     <p>
                       <span className="growth-upward">
@@ -190,7 +181,9 @@ function CRM() {
               <EChartCard>
                 <div className="card-chunk">
                   <CardBarChart2>
-                    <Heading as="h1">7</Heading>
+                    <Heading as="h1">
+                      {salonState.dashboard.totalCustomers && salonState.dashboard.totalCustomers}
+                    </Heading>
                     <span>Total Customers</span>
                     <p>
                       <span className="growth-upward">
@@ -219,7 +212,6 @@ function CRM() {
             </Cards>
           </Col>
         </Row>
-
         <Row gutter={25}>
           <Col xxl={12} xs={24}>
             <Suspense
@@ -228,9 +220,9 @@ function CRM() {
                   <Skeleton active />
                 </Cards>
               }
-            >
-              <TotalRevenue title="Earnings" />
-            </Suspense>
+            />
+            {/* <TotalRevenue title="Earnings" /> */}
+            {/* </Suspense> */}
           </Col>
           <Col xxl={12} xs={24}>
             <Suspense
@@ -240,43 +232,9 @@ function CRM() {
                 </Cards>
               }
             >
-              <UserListTable data={salonState?.approvedSalons}/>
-              {/* <ClosedDeals /> */}
+              <UserListTable data={salonState?.approvedSalons} />
             </Suspense>
           </Col>
-         {/* <Col xxl={8} xl={12} xs={24}>
-            <Suspense
-              fallback={
-                <Cards headless>
-                  <Skeleton active />
-                </Cards>
-              }
-            >
-              <EmailSent />
-            </Suspense>
-          </Col> */}
-          {/* <Col xxl={8} xs={24}>
-            <Suspense
-              fallback={
-                <Cards headless>
-                  <Skeleton active />
-                </Cards>
-              }
-            >
-              <SalesLeaderBoard />
-            </Suspense>
-          </Col>
-          <Col xxl={8} xs={24}>
-            <Suspense
-              fallback={
-                <Cards headless>
-                  <Skeleton active />
-                </Cards>
-              }
-            >
-              <RecentDeals />
-            </Suspense>
-          </Col> */}
         </Row>
       </Main>
     </>

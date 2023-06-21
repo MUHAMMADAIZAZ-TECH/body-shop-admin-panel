@@ -16,17 +16,17 @@ import { getSalons, deleteSalon, selectSalon } from '../../../redux/salon/salonS
 
 const ViewPage = () => {
   const dispatch = useDispatch();
-  const { isLoading, salonState } = useSelector(state => {
+  const { salonState, isLoading } = useSelector((state) => {
     return {
-      isLoading: state.AxiosCrud.loading,
-      salonState: state.salonStates
+      salonState: state.salonStates,
+      isLoading: state.salonStates.loading,
     };
   });
   const dataSource = [];
   const [state, setState] = useState({
     selectedRowKeys: [],
     searchText: '',
-    selectedRows: []
+    selectedRows: [],
   });
 
   const { selectedRowKeys } = state;
@@ -43,14 +43,13 @@ const ViewPage = () => {
     setSearchText('');
   };
 
-
   const getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
       <div
         style={{
           padding: 8,
         }}
-      // onKeyDown={(e) => e.stopPropagation()}
+        // onKeyDown={(e) => e.stopPropagation()}
       >
         <Input
           ref={searchInput}
@@ -76,7 +75,6 @@ const ViewPage = () => {
             Search
           </Button>
           <Button
-
             onClick={() => clearFilters && handleReset(clearFilters)}
             size="small"
             style={{
@@ -117,8 +115,7 @@ const ViewPage = () => {
         }}
       />
     ),
-    onFilter: (value, record) =>
-      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+    onFilter: (value, record) => record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
     onFilterDropdownOpenChange: (visible) => {
       if (visible) {
         setTimeout(() => searchInput.current?.select(), 100);
@@ -139,7 +136,7 @@ const ViewPage = () => {
         <div style={{ width: 'auto', wordWrap: 'break-word', whiteSpace: 'normal' }}>{text}</div>
       ),
   });
-  const handleDelete = id => {
+  const handleDelete = (id) => {
     const confirm = window.confirm('Are you sure delete this?');
     if (confirm) {
       dispatch(
@@ -154,9 +151,9 @@ const ViewPage = () => {
     return false;
   };
   const handleEdit = (salon) => {
-    dispatch(selectSalon(salon))
-    console.log(salon)
-  }
+    dispatch(selectSalon(salon));
+    console.log(salon);
+  };
   const onHandleSearch = (e) => {
     setState({ ...state, searchText: e.target.value });
   };
@@ -180,7 +177,7 @@ const ViewPage = () => {
             </Link>
           </div>
         ),
-        salon
+        salon,
       });
     });
 
@@ -220,7 +217,7 @@ const ViewPage = () => {
       align: 'center',
       sorter: (a, b) => a.updated_at.length - b.updated_at.length,
       sortDirections: ['descend', 'ascend'],
-      render: text => moment(text).fromNow(),
+      render: (text) => moment(text).fromNow(),
     },
     {
       title: 'Actions',
@@ -237,8 +234,8 @@ const ViewPage = () => {
   };
 
   useEffect(() => {
-    dispatch(getSalons())
-  }, [])
+    dispatch(getSalons());
+  }, []);
 
   return (
     <RecordViewWrapper>

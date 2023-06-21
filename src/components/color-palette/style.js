@@ -1,6 +1,6 @@
 import Styled from 'styled-components';
 
-const borderd = type => {
+const borderd = (type) => {
   return `
         background: #ffffff;
         color: #5A5F7D;

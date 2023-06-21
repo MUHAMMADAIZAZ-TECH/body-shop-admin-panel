@@ -17,14 +17,14 @@ const actions = {
     };
   },
 
-  fbLoginSuccess: data => {
+  fbLoginSuccess: (data) => {
     return {
       type: actions.FB_LOGIN_SUCCESS,
       data,
     };
   },
 
-  fbLoginErr: err => {
+  fbLoginErr: (err) => {
     return {
       type: actions.FB_LOGIN_ERR,
       err,
@@ -37,14 +37,14 @@ const actions = {
     };
   },
 
-  fbLogOutSuccess: data => {
+  fbLogOutSuccess: (data) => {
     return {
       type: actions.FB_LOGOUT_SUCCESS,
       data,
     };
   },
 
-  fbLogOutErr: err => {
+  fbLogOutErr: (err) => {
     return {
       type: actions.FB_LOGOUT_ERR,
       err,
@@ -57,14 +57,14 @@ const actions = {
     };
   },
 
-  fbSignUpSuccess: data => {
+  fbSignUpSuccess: (data) => {
     return {
       type: actions.FB_SIGNUP_SUCCESS,
       data,
     };
   },
 
-  fbSignUpErr: err => {
+  fbSignUpErr: (err) => {
     return {
       type: actions.FB_SIGNUP_ERR,
       err,

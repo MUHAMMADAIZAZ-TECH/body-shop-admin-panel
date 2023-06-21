@@ -58,7 +58,7 @@ const Steps = ({
     boxShadow: '0px -1px 0 0 #e8e8e8 inset',
   };
 
-  const onChanges = curr => {
+  const onChanges = (curr) => {
     setState({ currents: curr });
     if (onChange) onChange(curr);
   };
@@ -80,7 +80,7 @@ const Steps = ({
     <>
       <StepsStyle current={currents} direction={direction} status={status} progressDot={progressDot} size={size}>
         {steps !== undefined &&
-          steps.map(item => (
+          steps.map((item) => (
             <Step
               className={item.className && item.className}
               icon={item.icon && item.icon}

@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { PlusOutlined } from '@ant-design/icons';
-import { Row, Modal, Col, Form, Input, Select, Upload, message } from 'antd';
+import { Row, Modal, Col, Form, Input, Select, Upload } from 'antd';
 import { Link } from 'react-router-dom';
-import { useSelector,useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { PageHeader } from '../../../components/page-headers/page-headers';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { Button } from '../../../components/buttons/buttons';
 import { Main, BasicFormWrapper } from '../../styled';
 import { createSalon } from '../../../redux/salon/salonSlice';
+import { getBase64, draggerprops, uploadButton } from '../../../components/utilities/utilities';
 
 const { Option } = Select;
 const { Dragger } = Upload;
@@ -18,59 +18,28 @@ const selectAfter = (
     <Option value="m">m</Option>
   </Select>
 );
-const draggerprops = {
-  maxCount:1,
-  name: 'document',
-  multiple: false,
-  action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-  onChange(info) {
-    const { status } = info.file;
-    if (status !== 'uploading') {
-      // console.log(info.file, info.fileList);
-    }
-    if (status === 'done') {
-      message.success(`${info.file.name} file uploaded successfully.`);
-    } else if (status === 'error') {
-      message.error(`${info.file.name} file upload failed.`);
-    }
-  },
-};
-const getBase64 = (file) =>
-  new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = (error) => reject(error);
-  });
+
 const AddNew = () => {
   const dispatch = useDispatch();
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   const [previewTitle, setPreviewTitle] = useState('');
-  const { isLoading } = useSelector(state => {
-    return {
-      isLoading: state.AxiosCrud.loading,
-      url: state.AxiosCrud.url,
-      isFileLoading: state.AxiosCrud.fileLoading,
-    };
-  });
 
   const [form] = Form.useForm();
   const [files, setfiles] = useState([]);
-  // const [document, setdocument] = useState(null);
-  const handleSubmit = async values => {
+  const { isLoading } = useSelector((state) => {
+    return {
+      isLoading: state.salonStates.loading,
+    };
+  });
+  const handleSubmit = async (values) => {
     try {
       await form.validateFields(); // Validate all form fields
       dispatch(createSalon({ ...values, files }));
     } catch (error) {
       console.log('Validation error:', error);
     }
-    // form.resetFields();
   };
-
-  // const onChange = (date, value) => {
-  //   console.log(value)
-  // };
 
   const handleCancel = () => setPreviewOpen(false);
   const handlePreview = async (file) => {
@@ -81,17 +50,12 @@ const AddNew = () => {
     setPreviewOpen(true);
     setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1));
   };
-  const handleChange = ({ fileList: newFileList, }) => {
-    const fileList  = newFileList?.map((file)=>{
-      return{...file, status:'done'}
-    })
-    setfiles(fileList)
+  const handleChange = ({ fileList: newFileList }) => {
+    const fileList = newFileList?.map((file) => {
+      return { ...file, status: 'done' };
+    });
+    setfiles(fileList);
   };
-  const uploadButton = (
-    <div><PlusOutlined />
-      <div style={{ marginTop: 8, }}>Upload</div>
-    </div>
-  );
 
   return (
     <>
@@ -112,12 +76,12 @@ const AddNew = () => {
                 <Form name="multi-form" layout="vertical" style={{ width: '100%' }} form={form} onFinish={handleSubmit}>
                   <Row gutter={30}>
                     <Col sm={12} xs={24} className="mb-25">
-                    <Upload
+                      <Upload
                         listType="picture-card"
                         fileList={files}
                         onPreview={handlePreview}
                         onChange={handleChange}
-                        name='files'
+                        name="files"
                       >
                         {files.length >= 5 ? null : uploadButton}
                       </Upload>
@@ -133,26 +97,42 @@ const AddNew = () => {
                       <Form.Item name="name" label="Name" rules={[{ required: true, message: 'Please enter a name' }]}>
                         <Input placeholder="Enter Name" />
                       </Form.Item>
-                      <Form.Item name="description" label="Description" >
+                      <Form.Item name="description" label="Description">
                         <Input.TextArea rows={5} placeholder="Enter Description" />
                       </Form.Item>
                       <div className="sDash_uploader-list">
-                      <Form.Item name="document" label="Document" rules={[{ required: true, message: 'Please select document' }]} >
-                      <Dragger {...draggerprops}>
-                          <p className="ant-upload-text">Drop files here to upload</p>
-                        </Dragger>
-                      </Form.Item>
+                        <Form.Item
+                          name="document"
+                          label="Document"
+                          rules={[{ required: true, message: 'Please select document' }]}
+                        >
+                          <Dragger {...draggerprops}>
+                            <p className="ant-upload-text">Drop files here to upload</p>
+                          </Dragger>
+                        </Form.Item>
                       </div>
                     </Col>
                     <Col sm={12} xs={24} className="mb-25">
-
-                      <Form.Item name="phone_number" label="Phone Number" rules={[{ required: true, message: 'Please enter a phone number' }]}>
+                      <Form.Item
+                        name="phone_number"
+                        label="Phone Number"
+                        rules={[{ required: true, message: 'Please enter a phone number' }]}
+                      >
                         <Input placeholder="Last Name" />
                       </Form.Item>
-                      <Form.Item name="mobile_number" label="Mobile Number" rules={[{ required: true, message: 'Please enter a mobile number' }]}>
+                      <Form.Item
+                        name="mobile_number"
+                        label="Mobile Number"
+                        rules={[{ required: true, message: 'Please enter a mobile number' }]}
+                      >
                         <Input placeholder="Enter Mobile Number" />
                       </Form.Item>
-                      <Form.Item name="address" label="Address" initialValue="" rules={[{ required: true, message: 'Please enter address' }]} >
+                      <Form.Item
+                        name="address"
+                        label="Address"
+                        initialValue=""
+                        rules={[{ required: true, message: 'Please enter address' }]}
+                      >
                         <Select size="large" className="sDash_fullwidth-select">
                           <Option value="">Please Select</Option>
                           <Option value="1">1</Option>
@@ -160,17 +140,23 @@ const AddNew = () => {
                           <Option value="3">3</Option>
                         </Select>
                       </Form.Item>
-                      <Form.Item name="availability_range" label="Availability Range" rules={[{ required: true, message: 'Please enter availibilty range' }]} >
-                      <Input addonAfter={selectAfter} defaultValue={0} type='number'/>
+                      <Form.Item
+                        name="availability_range"
+                        label="Availability Range"
+                        rules={[{ required: true, message: 'Please enter availibilty range' }]}
+                      >
+                        <Input addonAfter={selectAfter} defaultValue={0} type="number" />
                       </Form.Item>
                     </Col>
                   </Row>
                   <div className="record-form-actions text-right">
-                    <div style={{
-                      display: 'flex',
-                      justifyContent: 'flex-end',
-                      alignItems: 'baseline'
-                    }}>
+                    <div
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'flex-end',
+                        alignItems: 'baseline',
+                      }}
+                    >
                       <Button
                         className="btn-cancel"
                         size="large"

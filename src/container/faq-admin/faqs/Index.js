@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Row, Col, Table, Spin } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -7,34 +7,54 @@ import FeatherIcon from 'feather-icons-react';
 import { RecordViewWrapper } from './Style';
 import { Main, TableWrapper } from '../../styled';
 import { Button } from '../../../components/buttons/buttons';
+import { alertModal } from '../../../components/modals/antd-modals';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { PageHeader } from '../../../components/page-headers/page-headers';
-import {deleteFaq, getFaqs} from '../../../redux/faq/faqSlice'
-import {
-  axiosDataSearch,
-} from '../../../redux/crud/axios/actionCreator';
+import { deleteFaq, getFaqs } from '../../../redux/faq/faqSlice';
+import MYExportButton from '../../../components/buttons/my-export-button/my-export-button';
+import { exportToXLSX, handlePrint, getColumnSearchProps } from '../../../components/utilities/utilities';
 
 const ViewPage = () => {
   const dispatch = useDispatch();
-  const { crud, isLoading ,faqStates} = useSelector(state => {
+  const { isLoading, faqStates } = useSelector((state) => {
     return {
-      crud: state.AxiosCrud.data,
-      isLoading: state.AxiosCrud.loading,
-      faqStates: state.faqStates
+      isLoading: state.faqStates.loading,
+      faqStates: state.faqStates,
     };
   });
- console.log(faqStates);
-  const [state, setState] = useState({
-    selectedRowKeys: [],
-  });
-  const { selectedRowKeys } = state;
-
-  useEffect(() => {
-    dispatch(getFaqs())
-  }, [dispatch]);
   const dataSource = [];
+  const [searchText, setSearchText] = useState('');
+  const [searchedColumn, setSearchedColumn] = useState('');
+  const searchInput = useRef(null);
+  const [state, setState] = useState({
+    isModalVisible: false,
+    fileName: 'bodyShop',
+    convertedTo: 'csv',
+    selectedRowKeys: 0,
+    selectedRows: [],
+  });
 
-  const handleDelete = id => {
+  const rowSelection = {
+    onChange: (selectedRowKeys, selectedRows) => {
+      setState({ ...state, selectedRowKeys, selectedRows });
+    },
+    getCheckboxProps: (record) => ({
+      disabled: record.name === 'Disabled User', // Column configuration not to be checked
+      name: record.name,
+    }),
+  };
+
+  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
+  };
+  const handleReset = (clearFilters) => {
+    clearFilters();
+    setSearchText('');
+  };
+
+  const handleDelete = (id) => {
     const confirm = window.confirm('Are you sure delete this?');
     if (confirm) {
       dispatch(
@@ -49,13 +69,13 @@ const ViewPage = () => {
     return false;
   };
 
-  const onHandleSearch = e => {
-    dispatch(axiosDataSearch(e.target.value, crud));
+  const onHandleSearch = (e) => {
+    console.log(e.target.value);
   };
 
   if (faqStates?.faqs.length)
-  faqStates?.faqs?.map((person, key) => {
-      const { id,question,answer,updated_at } = person;
+    faqStates?.faqs?.map((person, key) => {
+      const { id, question, answer, updated_at } = person;
       return dataSource.push({
         key: key + 1,
         question,
@@ -74,23 +94,49 @@ const ViewPage = () => {
         ),
       });
     });
-
+  const csvData = [['id', 'question', 'answer', 'updated_at']];
+  state.selectedRows.map((rows) => {
+    const { key, question, answer, updated_at } = rows;
+    return csvData.push([key, question, answer, updated_at]);
+  });
   const columns = [
     {
       title: 'Question',
       dataIndex: 'question',
       key: 'question',
+      ...getColumnSearchProps(
+        'Question',
+        'question',
+        handleSearch,
+        handleReset,
+        searchInput,
+        searchedColumn,
+        searchText,
+        setSearchText,
+        setSearchedColumn,
+      ),
     },
     {
       title: 'Answer',
       dataIndex: 'answer',
       key: 'answer',
+      ...getColumnSearchProps(
+        'Answer',
+        'answer',
+        handleSearch,
+        handleReset,
+        searchInput,
+        searchedColumn,
+        searchText,
+        setSearchText,
+        setSearchedColumn,
+      ),
     },
     {
       title: 'Update At',
       dataIndex: 'updated_at',
       key: 'updated_at',
-      render: (text)=>moment(text).fromNow()
+      render: (text) => moment(text).fromNow(),
     },
     {
       title: 'Actions',
@@ -99,28 +145,37 @@ const ViewPage = () => {
       width: '90px',
     },
   ];
-  const onSelectChange = selectedRowKey => {
-    setState({ ...state, selectedRowKeys: selectedRowKey });
+  const handlePrinter = () => {
+    if (state.selectedRows.length) {
+      handlePrint(dataSource, columns, 'Faqs', state);
+    } else {
+      alertModal.warning({
+        title: 'Please Select your Required Rows!',
+      });
+    }
   };
-
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChange,
-  };
-
+  useEffect(() => {
+    dispatch(getFaqs());
+  }, [dispatch]);
   return (
     <RecordViewWrapper>
       <PageHeader
-        subTitle={
+        buttons={[
+          <div className="sDash_export-box">
+            <MYExportButton state={state} setState={setState} exportToXLSX={exportToXLSX} csvData={csvData} />
+          </div>,
           <div>
-            <Button className="btn-add_new" size="default" key="1" type="primary">
+            <Button className="btn-add_new" size="small" key="1" type="white" onClick={() => handlePrinter()}>
+              <FeatherIcon icon="printer" size={14} /> <span>Print</span>
+            </Button>
+          </div>,
+          <div>
+            <Button className="btn-add_new" size="small" key="1" type="primary">
               <Link to="/admin/faq-admin/faqs-add">
                 <FeatherIcon icon="plus" size={14} /> <span>Add New</span>
               </Link>
             </Button>
-          </div>
-        }
-        buttons={[
+          </div>,
           <div key={1} className="search-box">
             <span className="search-icon">
               <FeatherIcon icon="search" size={14} />

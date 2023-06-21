@@ -13,7 +13,7 @@ const { Option } = Select;
 
 function UpdateEvent({ data, onCancel }) {
   const dispatch = useDispatch();
-  const { events } = useSelector(state => {
+  const { events } = useSelector((state) => {
     return {
       events: state.Calender.events,
     };
@@ -32,7 +32,7 @@ function UpdateEvent({ data, onCancel }) {
     wrapperCol: { span: 20 },
   };
   const [form] = Form.useForm();
-  const handleSubmit = values => {
+  const handleSubmit = (values) => {
     dispatch(
       updateCurrentEvent(
         events,
@@ -57,10 +57,10 @@ function UpdateEvent({ data, onCancel }) {
     setState({ ...state, endDate: dateString });
   };
 
-  const onChangeStartTime = times => {
+  const onChangeStartTime = (times) => {
     setState({ ...state, startTime: times });
   };
-  const onChangeEndTime = times => {
+  const onChangeEndTime = (times) => {
     setState({ ...state, endTime: times });
   };
 

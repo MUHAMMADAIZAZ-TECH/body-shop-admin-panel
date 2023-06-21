@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Row, Col, Form,Input } from 'antd';
+import { Row, Col, Form, Input } from 'antd';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -11,20 +11,18 @@ import { getSalonReview } from '../../../redux/salon/salonSlice';
 
 const AddNew = ({ match }) => {
   const dispatch = useDispatch();
-  const { salon, isLoading } = useSelector(state => {
+  const { salon } = useSelector((state) => {
     return {
       salon: state.salonStates.salon,
-      isLoading: state.AxiosCrud.loading,
-      url: state.AxiosCrud.url,
-      salonState: state.salonStates
+      salonState: state.salonStates,
     };
   });
   const [form] = Form.useForm();
-  const handleSubmit = async values => {
+  const handleSubmit = async (values) => {
     try {
       await form.validateFields(); // Validate all form fields
       // dispatch(createSalon({ ...values, files }));
-      console.log(values)
+      console.log(values);
     } catch (error) {
       console.log('Validation error:', error);
     }
@@ -33,10 +31,10 @@ const AddNew = ({ match }) => {
 
   useEffect(() => {
     // form.setFieldsValue(salon);
-    console.log(salon)
+    console.log(salon);
   }, [form, salon]);
   useEffect(() => {
-    dispatch(getSalonReview(parseInt(match.params.id, 10)))
+    dispatch(getSalonReview(parseInt(match.params.id, 10)));
   }, [dispatch, match.params.id]);
 
   return (
@@ -60,28 +58,42 @@ const AddNew = ({ match }) => {
                 <Form name="multi-form" layout="vertical" style={{ width: '100%' }} form={form} onFinish={handleSubmit}>
                   <Row gutter={30}>
                     <Col sm={12} xs={24} className="mb-25">
-                    <Form.Item name="description" label="Description" >
+                      <Form.Item name="description" label="Description">
                         <Input.TextArea rows={5} placeholder="Enter Description" />
                       </Form.Item>
-                      <Form.Item name="address" label="Address" rules={[{ required: true, message: 'Please enter address' }]}>
+                      <Form.Item
+                        name="address"
+                        label="Address"
+                        rules={[{ required: true, message: 'Please enter address' }]}
+                      >
                         <Input placeholder="Enter Address" />
                       </Form.Item>
                     </Col>
                     <Col sm={12} xs={24} className="mb-25">
-                    <Form.Item name="latitude" label="Latitude" rules={[{ required: true, message: 'Please enter latitude' }]}>
+                      <Form.Item
+                        name="latitude"
+                        label="Latitude"
+                        rules={[{ required: true, message: 'Please enter latitude' }]}
+                      >
                         <Input placeholder="Enter Latitude" />
                       </Form.Item>
-                      <Form.Item name="longitude" label="Longitude" rules={[{ required: true, message: 'Please enter longitude' }]}>
+                      <Form.Item
+                        name="longitude"
+                        label="Longitude"
+                        rules={[{ required: true, message: 'Please enter longitude' }]}
+                      >
                         <Input placeholder="Enter Longitude" />
                       </Form.Item>
                     </Col>
                   </Row>
                   <div className="record-form-actions text-right">
-                    <div style={{
-                      display: 'flex',
-                      justifyContent: 'flex-end',
-                      alignItems: 'baseline'
-                    }}>
+                    <div
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'flex-end',
+                        alignItems: 'baseline',
+                      }}
+                    >
                       <Button
                         className="btn-cancel"
                         size="large"
@@ -92,7 +104,8 @@ const AddNew = ({ match }) => {
                         Cancel
                       </Button>
                       <Button size="default" htmlType="Save" type="primary">
-                        {isLoading ? 'Loading...' : 'Submit'}
+                        {/* {isLoading ? 'Loading...' : 'Submit'} */}
+                        Submit
                       </Button>
                     </div>
                   </div>

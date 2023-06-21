@@ -17,7 +17,7 @@ import Heading from '../../../../components/heading/heading';
 const SignIn = () => {
   const history = useHistory();
   const dispatch = useDispatch();
-  const { isLoading, error, isFbAuthenticate } = useSelector(state => {
+  const { isLoading, error, isFbAuthenticate } = useSelector((state) => {
     return {
       error: state.firebaseAuth.error,
       isLoading: state.firebaseAuth.loading,
@@ -40,11 +40,11 @@ const SignIn = () => {
     }
   }, [isFbAuthenticate, handleFbLogin]);
 
-  const handleSubmit = values => {
+  const handleSubmit = (values) => {
     dispatch(fbAuthLogin(values));
   };
 
-  const onChange = checked => {
+  const onChange = (checked) => {
     setState({ ...state, checked });
   };
   console.log(isLoading);

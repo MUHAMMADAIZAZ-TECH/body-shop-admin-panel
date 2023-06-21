@@ -8,7 +8,7 @@ import { readMessageList } from '../../../../redux/message/actionCreator';
 
 function MessageBox() {
   const dispatch = useDispatch();
-  const message = useSelector(state => state.message.data);
+  const message = useSelector((state) => state.message.data);
 
   useEffect(() => {
     if (readMessageList) {
@@ -18,7 +18,7 @@ function MessageBox() {
 
   const popoverContent = (
     <div>
-      {message.map(item => {
+      {message.map((item) => {
         const { id, from } = item;
         return (
           <NavLink key={id} to="#">

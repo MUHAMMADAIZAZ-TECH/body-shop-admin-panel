@@ -29,9 +29,9 @@ const ThemeLayout = (WrappedComponent) => {
       this.state = {
         collapsed: false,
         hide: true,
-        searchHide: true,        
+        searchHide: true,
         activeSearch: false,
-        customizerAction: false
+        customizerAction: false,
       };
       this.updateDimensions = this.updateDimensions.bind(this);
     }
@@ -238,11 +238,10 @@ const ThemeLayout = (WrappedComponent) => {
                       }
                       alt=""
                       style={{
-                        width:40,
-                        height:40
+                        width: 40,
+                        height: 40,
                       }}
                     />
-                    
                   </Link>
                 </Col>
 
@@ -440,7 +439,7 @@ const ThemeLayout = (WrappedComponent) => {
                     </li>
                   </ul>
                 </div>
-                <div className="customizer__single">
+                {/* <div className="customizer__single">
                   <h4>Navbar Type</h4>
                   <ul className="customizer-list d-flex">
                     <li className="customizer-list__item">
@@ -470,7 +469,7 @@ const ThemeLayout = (WrappedComponent) => {
                       </Link>
                     </li>
                   </ul>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>

@@ -10,7 +10,7 @@ import { Popover } from '../../popup/popup';
 import Heading from '../../heading/heading';
 
 function NotificationBox() {
-  const { rtl } = useSelector(state => {
+  const { rtl } = useSelector((state) => {
     return {
       rtl: state.ChangeLayoutMode.rtlData,
     };

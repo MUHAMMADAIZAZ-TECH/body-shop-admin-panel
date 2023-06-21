@@ -5,7 +5,7 @@ import useChartData from '../../hooks/useChartData';
 import { customTooltips } from '../utilities/utilities';
 import { ChartContainer } from '../../container/dashboard/style';
 
-const ChartjsBarChart = props => {
+const ChartjsBarChart = (props) => {
   const { labels, datasets, options, height } = props;
   const data = {
     datasets,
@@ -77,7 +77,7 @@ ChartjsBarChart.propTypes = {
   options: PropTypes.object,
 };
 
-const ChartjsHorizontalChart = props => {
+const ChartjsHorizontalChart = (props) => {
   const { labels, datasets, options, height } = props;
   const data = {
     datasets,
@@ -149,7 +149,7 @@ ChartjsHorizontalChart.propTypes = {
   options: PropTypes.object,
 };
 
-const ChartjsStackedChart = props => {
+const ChartjsStackedChart = (props) => {
   const { labels, datasets, options, height } = props;
   const data = {
     datasets,
@@ -223,7 +223,7 @@ ChartjsStackedChart.propTypes = {
   options: PropTypes.object,
 };
 
-const ChartjsLineChart = props => {
+const ChartjsLineChart = (props) => {
   const { labels, datasets, options, height, layout, width, id } = props;
   const data = {
     labels,
@@ -294,7 +294,7 @@ ChartjsLineChart.propTypes = {
   id: PropTypes.string,
 };
 
-const ChartjsAreaChart = props => {
+const ChartjsAreaChart = (props) => {
   const { labels, datasets, options, height, layout, id } = props;
 
   const data = {
@@ -317,7 +317,7 @@ const ChartjsAreaChart = props => {
               callbacks: {
                 labelColor() {
                   return {
-                    backgroundColor: datasets.map(item => item.borderColor),
+                    backgroundColor: datasets.map((item) => item.borderColor),
                     borderColor: 'transparent',
                   };
                 },
@@ -422,7 +422,7 @@ ChartjsAreaChart.propTypes = {
   id: PropTypes.string,
 };
 
-const ChartjsBarChartTransparent = props => {
+const ChartjsBarChartTransparent = (props) => {
   const { labels, datasets, options, height, layout } = props;
 
   const data = {
@@ -548,7 +548,7 @@ ChartjsBarChartTransparent.propTypes = {
   layout: PropTypes.object,
 };
 
-const ChartjsBarChartGrad = props => {
+const ChartjsBarChartGrad = (props) => {
   const { labels, datasets, options, height, layout } = props;
   const data = {
     labels,
@@ -628,7 +628,7 @@ ChartjsBarChartGrad.propTypes = {
   layout: PropTypes.object,
 };
 
-const ChartjsPieChart = props => {
+const ChartjsPieChart = (props) => {
   const { labels, datasets, options, height } = props;
   const data = {
     labels,
@@ -676,7 +676,7 @@ ChartjsPieChart.propTypes = {
       return generatedLegend;} props
  */
 
-const ChartjsDonutChart = props => {
+const ChartjsDonutChart = (props) => {
   const { labels, datasets, options, height } = props;
   const { ref } = useChartData();
   const data = {
@@ -727,7 +727,7 @@ ChartjsDonutChart.propTypes = {
   options: PropTypes.object,
 };
 
-const ChartjsDonutChart2 = props => {
+const ChartjsDonutChart2 = (props) => {
   const { labels, datasets, options, height } = props;
   const { ref } = useChartData();
   const dataInfo = {
@@ -755,7 +755,7 @@ const ChartjsDonutChart2 = props => {
             const { data } = item;
             return (
               <div key={key + 1}>
-                {data.map(value => {
+                {data.map((value) => {
                   return (
                     <p key={value}>
                       <strong>${value}</strong>
@@ -809,7 +809,7 @@ ChartjsDonutChart2.propTypes = {
   options: PropTypes.object,
 };
 
-const ChartjsDonut = props => {
+const ChartjsDonut = (props) => {
   const { labels, datasets, options, height } = props;
   const { ref } = useChartData();
   const dataInfo = {

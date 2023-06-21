@@ -13,7 +13,7 @@ import { Modal } from '../../../components/modals/antd-modals';
 
 function ScheduleCalendar() {
   const dispatch = useDispatch();
-  const { events, isVisible } = useSelector(state => {
+  const { events, isVisible } = useSelector((state) => {
     return {
       events: state.Calender.events,
       isVisible: state.Calender.eventVisible,
@@ -54,9 +54,9 @@ function ScheduleCalendar() {
     dispatch(eventVisible(false));
   };
 
-  const addNew = event => {
+  const addNew = (event) => {
     const arrayData = [];
-    events.map(data => {
+    events.map((data) => {
       return arrayData.push(data.id);
     });
     const max = Math.max(...arrayData);
@@ -88,9 +88,7 @@ function ScheduleCalendar() {
               <FeatherIcon icon="chevron-left" />
             </Button>
             <span className="date-label">
-              {`${moment()
-                .add(currentMonth, 'month')
-                .format('MMM YYYY')} - ${moment()
+              {`${moment().add(currentMonth, 'month').format('MMM YYYY')} - ${moment()
                 .add(currentMonth + 1, 'month')
                 .format('MMM YYYY')}`}
             </span>
@@ -123,16 +121,13 @@ function ScheduleCalendar() {
       <div className="emptyData">There is No Event Available</div>
       <table className="table-event schedule-event" width="100%">
         <tbody ref={dataList}>
-          {events.map(event => {
+          {events.map((event) => {
             uniqueDate.push(event.date[0]);
             return false;
           })}
           {[...new Set(uniqueDate)].map((date, index) => {
             return (
-              moment(date).format('MM') >=
-                moment()
-                  .add(currentMonth, 'month')
-                  .format('MM') &&
+              moment(date).format('MM') >= moment().add(currentMonth, 'month').format('MM') &&
               moment(date).format('MM') <=
                 moment()
                   .add(currentMonth + 1, 'month')
@@ -144,7 +139,7 @@ function ScheduleCalendar() {
                   </td>
                   <td className="schedule-time-data">
                     {events
-                      .filter(item => item.date[0] === date)
+                      .filter((item) => item.date[0] === date)
                       .map((item, ind) => (
                         <Row key={ind + 1}>
                           <Col xxl={6} xl={8} md={6} sm={10} xs={24}>

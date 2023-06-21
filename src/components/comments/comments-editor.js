@@ -11,7 +11,7 @@ const CommentList = ({ comments }) => (
     dataSource={comments}
     header={`${comments.length} ${comments.length > 1 ? 'replies' : 'reply'}`}
     itemLayout="horizontal"
-    renderItem={props => <Comment props={props} />}
+    renderItem={(props) => <Comment props={props} />}
   />
 );
 
@@ -74,7 +74,7 @@ const CommentEditor = () => {
     }, 1000);
   };
 
-  const handleChange = e => {
+  const handleChange = (e) => {
     setState({
       ...state,
       value: e.target.value,

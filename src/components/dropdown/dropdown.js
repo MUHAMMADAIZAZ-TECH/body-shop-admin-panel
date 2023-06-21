@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Content, DropdownStyle } from './dropdown-style';
 
-const Dropdown = props => {
+const Dropdown = (props) => {
   const { content, placement, title, action, children, style, className } = props;
 
   return (

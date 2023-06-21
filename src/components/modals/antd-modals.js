@@ -3,7 +3,7 @@ import PropTypes, { object } from 'prop-types';
 import { ModalStyled } from './styled';
 import { Button } from '../buttons/buttons';
 
-const Modal = props => {
+const Modal = (props) => {
   const { onCancel, className, onOk, visible, title, type, color, footer, width, children } = props;
 
   return (

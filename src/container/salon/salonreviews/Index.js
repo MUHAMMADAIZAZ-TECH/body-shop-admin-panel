@@ -1,35 +1,50 @@
-import React, { useEffect, useState,useRef } from 'react';
-import { Row, Col, Table, Spin, Input, Space, Rate } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
+import React, { useEffect, useState, useRef } from 'react';
+import { Row, Col, Table, Spin, Rate } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
-import Highlighter from 'react-highlight-words';
 import FeatherIcon from 'feather-icons-react';
 import { RecordViewWrapper } from './Style';
 import { Main, TableWrapper } from '../../styled';
+import { alertModal } from '../../../components/modals/antd-modals';
 import { Button } from '../../../components/buttons/buttons';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { PageHeader } from '../../../components/page-headers/page-headers';
 import { deleteSalonReview, getAllReviews } from '../../../redux/salon/salonSlice';
-
+import { exportToXLSX, handlePrint, getColumnSearchProps } from '../../../components/utilities/utilities';
+import MYExportButton from '../../../components/buttons/my-export-button/my-export-button';
 
 const ViewPage = () => {
   const dispatch = useDispatch();
-  const { isLoading,salonState } = useSelector(state => {
+  const { salonState, isLoading } = useSelector((state) => {
     return {
-      crud: state.AxiosCrud.data,
-      isLoading: state.AxiosCrud.loading,
-      salonState: state.salonStates
+      salonState: state.salonStates,
+      isLoading: state.salonStates.loading,
     };
   });
+  const dataSource = [];
+  // search states
   const [searchText, setSearchText] = useState('');
   const searchInput = useRef(null);
   const [searchedColumn, setSearchedColumn] = useState('');
+
   const [state, setState] = useState({
-    selectedRowKeys: [],
+    isModalVisible: false,
+    fileName: 'bodyShop',
+    convertedTo: 'csv',
+    selectedRowKeys: 0,
+    selectedRows: [],
   });
-  const { selectedRowKeys } = state;
+  const rowSelection = {
+    onChange: (selectedRowKeys, selectedRows) => {
+      setState({ ...state, selectedRowKeys, selectedRows });
+    },
+    getCheckboxProps: (record) => ({
+      disabled: record.name === 'Disabled User', // Column configuration not to be checked
+      name: record.name,
+    }),
+  };
+  // search functions
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
@@ -39,129 +54,32 @@ const ViewPage = () => {
     clearFilters();
     setSearchText('');
   };
-
-  const dataSource = [];
-
   const handleDelete = (id) => {
     const confirm = window.confirm('Are you sure delete this?');
     if (confirm) {
-      dispatch(deleteSalonReview({
-        id,
-        getData: () => {
-          dispatch(getAllReviews());
-        },
-      }))
-     console.log("delete")
+      dispatch(
+        deleteSalonReview({
+          id,
+          getData: () => {
+            dispatch(getAllReviews());
+          },
+        }),
+      );
+      console.log('delete');
     }
     return false;
   };
-
   const onHandleSearch = () => {
-    console.log("search")
+    console.log('search');
   };
-  const getColumnSearchProps = (dataIndex) => ({
-    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
-      <div
-        style={{
-          padding: 8,
-        }}
-      // onKeyDown={(e) => e.stopPropagation()}
-      >
-        <Input
-          ref={searchInput}
-          placeholder={`Search ${dataIndex}`}
-          value={selectedKeys[0]}
-          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-          style={{
-            marginBottom: 8,
-            display: 'block',
-          }}
-        />
-        <Space>
-          <Button
-            type="primary"
-            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-            icon={<SearchOutlined />}
-            size="small"
-            style={{
-              width: 90,
-            }}
-          >
-            Search
-          </Button>
-          <Button
-
-            onClick={() => clearFilters && handleReset(clearFilters)}
-            size="small"
-            style={{
-              width: 90,
-            }}
-          >
-            Reset
-          </Button>
-          <Button
-            type="primary"
-            size="small"
-            onClick={() => {
-              confirm({
-                closeDropdown: false,
-              });
-              setSearchText(selectedKeys[0]);
-              setSearchedColumn(dataIndex);
-            }}
-          >
-            Filter
-          </Button>
-          <Button
-            type="primary"
-            size="small"
-            onClick={() => {
-              close();
-            }}
-          >
-            close
-          </Button>
-        </Space>
-      </div>
-    ),
-    filterIcon: (filtered) => (
-      <SearchOutlined
-        style={{
-          color: filtered ? '#1677ff' : undefined,
-        }}
-      />
-    ),
-    onFilter: (value, record) =>
-      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
-    onFilterDropdownOpenChange: (visible) => {
-      if (visible) {
-        setTimeout(() => searchInput.current?.select(), 100);
-      }
-    },
-    render: (text) =>
-      searchedColumn === dataIndex ? (
-        <Highlighter
-          highlightStyle={{
-            backgroundColor: '#ffc069',
-            padding: 0,
-          }}
-          searchWords={[searchText]}
-          autoEscape
-          textToHighlight={text ? text.toString() : ''}
-        />
-      ) : (
-        text
-      ),
-  });
-  console.log(salonState)
+  // rows
   if (salonState?.salonreviews?.data?.length)
-  salonState?.salonreviews?.data?.map((review, key) => {
-      const { id, comment, rating, salon_name, updated_at, user_name, } = review;
+    salonState?.salonreviews?.data?.map((review, key) => {
+      const { id, comment, rating, salon_name, updated_at, user_name } = review;
       return dataSource.push({
         key: key + 1,
         comment,
-        rating:(<Rate disabled defaultValue={rating} />),
+        rating,
         user_name,
         salon_name,
         updated_at,
@@ -176,9 +94,15 @@ const ViewPage = () => {
             </Link>
           </div>
         ),
+        review,
       });
     });
-
+  const csvData = [['id', 'comment', 'rating', 'user_name', 'salon_name', 'updated_at']];
+  state.selectedRows.map((rows) => {
+    const { id, comment, rating, user_name, salon_name, updated_at } = rows.review;
+    return csvData.push([id, comment, rating, user_name, salon_name, updated_at]);
+  });
+  // coloumn
   const columns = [
     {
       title: 'Review',
@@ -186,7 +110,17 @@ const ViewPage = () => {
       key: 'comment',
       sorter: (a, b) => a.comment.length - b.comment.length,
       sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('comment'),
+      ...getColumnSearchProps(
+        'Review',
+        'comment',
+        handleSearch,
+        handleReset,
+        searchInput,
+        searchedColumn,
+        searchText,
+        setSearchText,
+        setSearchedColumn,
+      ),
     },
     {
       title: 'Rate',
@@ -194,6 +128,7 @@ const ViewPage = () => {
       key: 'rating',
       sorter: (a, b) => a.rating.length - b.rating.length,
       sortDirections: ['descend', 'ascend'],
+      render: (rating) => <Rate disabled defaultValue={rating} />,
     },
     {
       title: 'User',
@@ -217,7 +152,7 @@ const ViewPage = () => {
       key: 'updated_at',
       sorter: (a, b) => a.updated_at.length - b.updated_at.length,
       sortDirections: ['descend', 'ascend'],
-      render: text => moment(text).fromNow(),
+      render: (text) => moment(text).fromNow(),
     },
     {
       title: 'Actions',
@@ -226,20 +161,30 @@ const ViewPage = () => {
       width: '90px',
     },
   ];
-  const onSelectChange = selectedRowKey => {
-    setState({ ...state, selectedRowKeys: selectedRowKey });
+  const handlePrinter = () => {
+    if (state.selectedRows.length) {
+      handlePrint(dataSource, columns, 'Salon Reviews', state);
+    } else {
+      alertModal.warning({
+        title: 'Please Select your Required Rows!',
+      });
+    }
   };
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChange,
-  };
-  useEffect(()=>{
-    dispatch(getAllReviews())
-  },[])
+  useEffect(() => {
+    dispatch(getAllReviews());
+  }, []);
   return (
     <RecordViewWrapper>
       <PageHeader
         buttons={[
+          <div className="sDash_export-box">
+            <MYExportButton state={state} setState={setState} exportToXLSX={exportToXLSX} csvData={csvData} />
+          </div>,
+          <div>
+            <Button className="btn-add_new" size="small" key="1" type="white" onClick={() => handlePrinter()}>
+              <FeatherIcon icon="printer" size={14} /> <span>Print</span>
+            </Button>
+          </div>,
           <div key={1} className="search-box">
             <span className="search-icon">
               <FeatherIcon icon="search" size={14} />

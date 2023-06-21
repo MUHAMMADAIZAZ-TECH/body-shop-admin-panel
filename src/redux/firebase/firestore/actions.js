@@ -33,14 +33,14 @@ const actions = {
     };
   },
 
-  fbSearchSuccess: data => {
+  fbSearchSuccess: (data) => {
     return {
       type: actions.FB_SEARCH_SUCCESS,
       data,
     };
   },
 
-  fbSearchErr: err => {
+  fbSearchErr: (err) => {
     return {
       type: actions.FB_SEARCH_ERR,
       err,
@@ -53,14 +53,14 @@ const actions = {
     };
   },
 
-  fbUploadSuccess: data => {
+  fbUploadSuccess: (data) => {
     return {
       type: actions.FB_UPLOAD_SUCCESS,
       data,
     };
   },
 
-  fbUploadErr: err => {
+  fbUploadErr: (err) => {
     return {
       type: actions.FB_UPLOAD_ERR,
       err,
@@ -73,14 +73,14 @@ const actions = {
     };
   },
 
-  fbAddSuccess: data => {
+  fbAddSuccess: (data) => {
     return {
       type: actions.FB_ADD_SUCCESS,
       data,
     };
   },
 
-  fbAddErr: err => {
+  fbAddErr: (err) => {
     return {
       type: actions.FB_ADD_ERR,
       err,
@@ -93,14 +93,14 @@ const actions = {
     };
   },
 
-  fbReadSuccess: data => {
+  fbReadSuccess: (data) => {
     return {
       type: actions.FB_READ_SUCCESS,
       data,
     };
   },
 
-  fbReadErr: err => {
+  fbReadErr: (err) => {
     return {
       type: actions.FB_READ_ERR,
       err,
@@ -113,14 +113,14 @@ const actions = {
     };
   },
 
-  fbUpdateSuccess: data => {
+  fbUpdateSuccess: (data) => {
     return {
       type: actions.FB_UPDATE_SUCCESS,
       data,
     };
   },
 
-  fbUpdateErr: err => {
+  fbUpdateErr: (err) => {
     return {
       type: actions.FB_UPDATE_ERR,
       err,
@@ -133,14 +133,14 @@ const actions = {
     };
   },
 
-  fbDeleteSuccess: data => {
+  fbDeleteSuccess: (data) => {
     return {
       type: actions.FB_DELETE_SUCCESS,
       data,
     };
   },
 
-  fbDeleteErr: err => {
+  fbDeleteErr: (err) => {
     return {
       type: actions.FB_DELETE_ERR,
       err,
@@ -153,14 +153,14 @@ const actions = {
     };
   },
 
-  fbSingleDataSuccess: data => {
+  fbSingleDataSuccess: (data) => {
     return {
       type: actions.FB_SINGLE_DATA_SUCCESS,
       data,
     };
   },
 
-  fbSingleDataErr: err => {
+  fbSingleDataErr: (err) => {
     return {
       type: actions.FB_SINGLE_DATA_ERR,
       err,

@@ -11,33 +11,31 @@ import { getSalonReview, updateSalonReview } from '../../../redux/salon/salonSli
 
 const Edit = ({ match }) => {
   const dispatch = useDispatch();
-  const {  isLoading,salonState} = useSelector(state => {
+  const { salonState, isLoading } = useSelector((state) => {
     return {
-      isLoading: state.AxiosCrud.loading,
-      url: state.AxiosCrud.url,
-      salonState: state.salonStates
+      salonState: state.salonStates,
+      isLoading: state.salonStates.loading,
     };
   });
   const [form] = Form.useForm();
-  const handleSubmit = async values => {
+  const handleSubmit = async (values) => {
     try {
       await form.validateFields(); // Validate all form fields
-      dispatch(updateSalonReview({id:match.params.id,salonId:salonState.salonreview.salon_id, ...values}));
-      form.resetFields();
-      console.log(values)
+      dispatch(updateSalonReview({ id: match.params.id, salonId: salonState.salonreview.salon_id, ...values }));
+      // form.resetFields();
+      console.log(values);
     } catch (error) {
       console.log('Validation error:', error);
     }
-   
   };
-  console.log(salonState.salonreview)
+  console.log(salonState.salonreview);
   useEffect(() => {
-    if(salonState.salonreview!==null){
+    if (salonState.salonreview !== null) {
       form.setFieldsValue(salonState.salonreview);
     }
   }, [form, salonState?.salonreview]);
   useEffect(() => {
-    dispatch(getSalonReview(parseInt(match.params.id,10)))
+    dispatch(getSalonReview(parseInt(match.params.id, 10)));
   }, [dispatch, match.params.id]);
 
   return (
@@ -61,14 +59,14 @@ const Edit = ({ match }) => {
                 <Form name="multi-form" layout="vertical" style={{ width: '100%' }} form={form} onFinish={handleSubmit}>
                   <Row gutter={30}>
                     <Col sm={12} xs={24} className="mb-25">
-                      <Form.Item name="comment" label="Comment" >
+                      <Form.Item name="comment" label="Comment">
                         <Input.TextArea rows={5} placeholder="Enter Description" />
                       </Form.Item>
                     </Col>
                     <Col sm={12} xs={24} className="mb-25">
-                      <Form.Item name="rating" label="Rate" rules={[{ required: true, message: 'Please select rate' }]} >
-                      <Select size="large" className="sDash_fullwidth-select">
-                          <Select.Option value="">Please Select</Select.Option >
+                      <Form.Item name="rating" label="Rate" rules={[{ required: true, message: 'Please select rate' }]}>
+                        <Select size="large" className="sDash_fullwidth-select">
+                          <Select.Option value="">Please Select</Select.Option>
                           <Select.Option value={1}>1</Select.Option>
                           <Select.Option value={2}>2</Select.Option>
                           <Select.Option value={3}>3</Select.Option>
@@ -79,11 +77,13 @@ const Edit = ({ match }) => {
                     </Col>
                   </Row>
                   <div className="record-form-actions text-right">
-                    <div style={{
-                      display: 'flex',
-                      justifyContent: 'flex-end',
-                      alignItems: 'baseline'
-                    }}>
+                    <div
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'flex-end',
+                        alignItems: 'baseline',
+                      }}
+                    >
                       <Button
                         className="btn-cancel"
                         size="large"

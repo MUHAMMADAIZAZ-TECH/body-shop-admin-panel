@@ -18,33 +18,35 @@ const clientId = process.env.REACT_APP_AUTH0_CLIENT_ID;
 function SignIn() {
   const history = useHistory();
   const dispatch = useDispatch();
-  const [username, setUsername] = useState("admin@example.com"); // State variable for username
-  const [password, setPassword] = useState("12345678"); 
-  const isLoading = useSelector((state) => state.auth.loading);
+  const [username, setUsername] = useState('admin@example.com'); // State variable for username
+  const [password, setPassword] = useState('12345678');
+  const isLoading = useSelector((state) => state.authenticationStates.loading);
   const authStates = useSelector((state) => state.authenticationStates);
   const [form] = Form.useForm();
   const [state, setState] = useState({
     checked: null,
   });
-  console.log(authStates)
+  console.log(authStates);
   const lock = new Auth0Lock(clientId, domain, auth0options);
 
   const handleSubmit = useCallback(() => {
     dispatch(login());
     history.push('/admin');
   }, [history, dispatch]);
-  const handleSubmit2 = useCallback(()=>{
-  dispatch(UserLogin({
-    username,
-    password
-  }));
-  },[dispatch])
+  const handleSubmit2 = useCallback(() => {
+    dispatch(
+      UserLogin({
+        username,
+        password,
+      }),
+    );
+  }, [dispatch]);
   const onChange = (checked) => {
     setState({ ...state, checked });
   };
 
-  lock.on('authenticated', authResult => {
-    lock.getUserInfo(authResult.accessToken, error => {
+  lock.on('authenticated', (authResult) => {
+    lock.getUserInfo(authResult.accessToken, (error) => {
       if (error) {
         return;
       }
@@ -80,7 +82,7 @@ function SignIn() {
             <Input value={username} onChange={handleUsernameChange} />
           </Form.Item>
           <Form.Item name="password" initialValue="12345678" label="Password">
-            <Input.Password value={password} onChange={handlePasswordChange} placeholder="Password"  />
+            <Input.Password value={password} onChange={handlePasswordChange} placeholder="Password" />
           </Form.Item>
           <div className="auth-form-action">
             <Checkbox onChange={onChange} checked={state.checked}>

@@ -24,7 +24,7 @@ const ScheduleCalendar = lazy(() => import('./overview/Schedule'));
 
 function Calendars() {
   const dispatch = useDispatch();
-  const { events, isVisible } = useSelector(state => {
+  const { events, isVisible } = useSelector((state) => {
     return {
       events: state.Calender.events,
       isVisible: state.Calender.eventVisible,
@@ -37,7 +37,7 @@ function Calendars() {
     visible: false,
   });
 
-  const onChange = date => setState({ date });
+  const onChange = (date) => setState({ date });
 
   const onHandleVisible = () => {
     dispatch(eventVisible(!isVisible));
@@ -81,7 +81,7 @@ function Calendars() {
                     </Link>
                   </h3>
                   <ul className="event-list">
-                    {events.map(event => {
+                    {events.map((event) => {
                       const { id, title, label } = event;
                       return (
                         <li key={id}>
