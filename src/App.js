@@ -16,7 +16,7 @@ import 'antd/dist/antd.less';
 const { theme } = config;
 
 const ProviderConfig = () => {
-  const { rtl, topMenu, darkMode,isLoggedIn } = useSelector((state) => {
+  const { rtl, topMenu, darkMode } = useSelector((state) => {
     return {
       darkMode: state.ChangeLayoutMode.data,
       rtl: state.ChangeLayoutMode.rtlData,
@@ -26,7 +26,7 @@ const ProviderConfig = () => {
   });
 
   const [path, setPath] = useState(window.location.pathname);
-  // const token = localStorage.getItem('access_token');
+  const token = localStorage.getItem('access_token');
   useEffect(() => {
     let unmounted = false;
     if (!unmounted) {
@@ -34,14 +34,13 @@ const ProviderConfig = () => {
     }
     // eslint-disable-next-line no-return-assign
     return () => (unmounted = true);
-  }, [setPath,isLoggedIn]);
-  // console.log(isLoggedIn,token)
+  }, [setPath,token]);
   return (
     <ConfigProvider direction={rtl ? 'rtl' : 'ltr'}>
       <ThemeProvider theme={{ ...theme, rtl, topMenu, darkMode }}>
         <Router basename={process.env.PUBLIC_URL}>
-          {!isLoggedIn ? <Route path="/" component={Auth} /> : <ProtectedRoute path="/admin" component={Admin} />}
-          {isLoggedIn && (path === process.env.PUBLIC_URL || path === `${process.env.PUBLIC_URL}/`) && (
+          {token==null? <Route path="/" component={Auth} /> : <ProtectedRoute path="/admin" component={Admin} />}
+          {token!==null && (path === process.env.PUBLIC_URL || path === `${process.env.PUBLIC_URL}/`) && (
             <Redirect to="/admin" />
           )}
         </Router>

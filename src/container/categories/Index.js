@@ -33,6 +33,10 @@ const ViewPage = () => {
     selectedRowKeys: 0,
     selectedRows: [],
   });
+  const [pageSize, setPageSize] = useState(7);
+  const handlePageSizeChange = (current, size) => {
+    setPageSize(size);
+  };
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
       setState({ ...state, selectedRowKeys, selectedRows });
@@ -171,7 +175,7 @@ const ViewPage = () => {
       key: 'created_at',
       sorter: (a, b) => a.created_at.length - b.created_at.length,
       sortDirections: ['descend', 'ascend'],
-      render: (text) => moment(text).fromNow(),
+      render: (text) => moment(text).format('DD/MM/YY HH:MM:SS'),
     },
     {
       title: 'Updated At',
@@ -242,7 +246,12 @@ const ViewPage = () => {
                   <TableWrapper className="table-data-view table-responsive">
                     <Table
                       rowSelection={rowSelection}
-                      pagination={{ pageSize: 10, showSizeChanger: true }}
+                      pagination={{ 
+                        pageSize,
+                        showSizeChanger: true ,
+                        pageSizeOptions: ['5', '10', '20', '50'], 
+                        onShowSizeChange: handlePageSizeChange
+                      }}
                       dataSource={dataSource}
                       columns={columns}
                     />

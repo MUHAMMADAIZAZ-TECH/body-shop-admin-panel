@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Row, Modal, Col, Form, Input, Select, Upload } from 'antd';
+import { Row, Modal, Col, Form, Input, Select, Upload, TimePicker } from 'antd';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { PageHeader } from '../../../components/page-headers/page-headers';
@@ -15,7 +15,6 @@ const { Dragger } = Upload;
 const selectAfter = (
   <Select defaultValue="km" style={{ width: 70 }}>
     <Option value="km">km</Option>
-    <Option value="m">m</Option>
   </Select>
 );
 
@@ -35,7 +34,12 @@ const AddNew = () => {
   const handleSubmit = async (values) => {
     try {
       await form.validateFields(); // Validate all form fields
-      dispatch(createSalon({ ...values, files }));
+      dispatch(createSalon({
+        ...values,
+        closing_time: values.closing_time.format('HH:mm:ss'),
+        opening_time: values.opening_time.format('HH:mm:ss'),
+        files
+      }));
     } catch (error) {
       console.log('Validation error:', error);
     }
@@ -112,21 +116,8 @@ const AddNew = () => {
                         </Form.Item>
                       </div>
                     </Col>
+
                     <Col sm={12} xs={24} className="mb-25">
-                      <Form.Item
-                        name="phone_number"
-                        label="Phone Number"
-                        rules={[{ required: true, message: 'Please enter a phone number' }]}
-                      >
-                        <Input placeholder="Last Name" />
-                      </Form.Item>
-                      <Form.Item
-                        name="mobile_number"
-                        label="Mobile Number"
-                        rules={[{ required: true, message: 'Please enter a mobile number' }]}
-                      >
-                        <Input placeholder="Enter Mobile Number" />
-                      </Form.Item>
                       <Form.Item
                         name="address"
                         label="Address"
@@ -147,6 +138,76 @@ const AddNew = () => {
                       >
                         <Input addonAfter={selectAfter} defaultValue={0} type="number" />
                       </Form.Item>
+                      <Row gutter={30}>
+                        <Col sm={12} xs={24} className="mb-25">
+                          <Form.Item
+                            name="phone_number"
+                            label="Phone Number"
+                            rules={[{ required: true, message: 'Please enter a phone number' }]}
+                          >
+                            <Input placeholder="Last Name" type='number' />
+                          </Form.Item>
+                        </Col>
+                        <Col sm={12} xs={24} className="mb-25">
+                          <Form.Item
+                            name="mobile_number"
+                            label="Mobile Number"
+                            rules={[{ required: true, message: 'Please enter a mobile number' }]}
+                          >
+                            <Input placeholder="Enter Mobile Number" type='number' />
+                          </Form.Item>
+                        </Col>
+                      </Row>
+                      <Form.Item label="Availibility hours" />
+                      <Form.Item
+                        name="weekday"
+                        label="Day"
+                        initialValue=""
+                        rules={[{ required: true, message: 'Please select Day' }]}
+                      >
+                        <Select size="large" className="sDash_fullwidth-select">
+                          <Option value="">Please Select</Option>
+                          <Option value="Sunday">Sunday</Option>
+                          <Option value="Monday">Monday</Option>
+                          <Option value="Tuesday">Tuesday</Option>
+                          <Option value="Wednesday">Wednesday</Option>
+                          <Option value="Thursday">Thursday</Option>
+                          <Option value="Friday">Friday</Option>
+                          <Option value="Saturday">Saturday</Option>
+                        </Select>
+                      </Form.Item>
+                      <Row gutter={30}>
+                        <Col sm={12} xs={24} className="mb-25">
+                          <Form.Item
+                            name="opening_time"
+                            label="Start At"
+                            rules={[{ required: true, message: 'Please select start at' }]}
+                          >
+                            <TimePicker
+                              style={{ marginRight: '10px' }}
+                              className="sDash_fullwidth-select"
+                              onChange={(time) => {
+                                form.setFieldsValue({ opening_time: time });
+                              }}
+                            />
+                          </Form.Item>
+                        </Col>
+                        <Col sm={12} xs={24} className="mb-25">
+                          <Form.Item
+                            name="closing_time"
+                            label="End At"
+                            rules={[{ required: true, message: 'Please select end at' }]}
+                          >
+                            <TimePicker
+                              style={{ marginRight: '10px' }}
+                              className="sDash_fullwidth-select"
+                              onChange={(time) => {
+                                form.setFieldsValue({ closing_time: time });
+                              }}
+                            />
+                          </Form.Item>
+                        </Col>
+                      </Row>
                     </Col>
                   </Row>
                   <div className="record-form-actions text-right">

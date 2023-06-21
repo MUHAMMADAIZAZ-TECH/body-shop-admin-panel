@@ -38,7 +38,10 @@ const ViewPage = () => {
     selectedRowKeys: 0,
     selectedRows: [],
   });
-
+  const [pageSize, setPageSize] = useState(6);
+  const handlePageSizeChange = (current, size) => {
+    setPageSize(size);
+  };
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
       setState({ ...state, selectedRowKeys, selectedRows });
@@ -134,12 +137,12 @@ const ViewPage = () => {
       title: 'Image',
       dataIndex: 'images',
       key: 'images',
+      fixed: 'left',
     },
     {
       title: 'Name',
       dataIndex: 'name',
       key: 'name',
-      width: 350,
       sorter: (a, b) => a.name.length - b.name.length,
       sortDirections: ['descend', 'ascend'],
       ...getColumnSearchProps(
@@ -254,6 +257,7 @@ const ViewPage = () => {
       title: 'Actions',
       dataIndex: 'action',
       key: 'action',
+      fixed: 'right',
     },
   ];
   const csvData = [
@@ -349,7 +353,12 @@ const ViewPage = () => {
                   <TableWrapper className="table-data-view table-responsive">
                     <Table
                       rowSelection={rowSelection}
-                      pagination={{ pageSize: 10, showSizeChanger: true }}
+                      pagination={{ 
+                        pageSize,
+                        showSizeChanger: true ,
+                        pageSizeOptions: ['5', '10', '20', '50'], 
+                        onShowSizeChange: handlePageSizeChange
+                      }}
                       dataSource={dataSource}
                       columns={columns}
                     />

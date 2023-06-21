@@ -20,13 +20,12 @@ export const getsalon = async (id) => {
 export const createsalon = async (body) => {
   const AvailabilityHours = [
     {
-      weekday: 'Friday',
-      opening_time: '09:00 AM',
-      closing_time: '17:00 PM',
+      weekday: body.weekday,
+      opening_time: body.opening_time,
+      closing_time: body.closing_time,
     },
   ];
   const files = body?.files.map((file) => file.originFileObj);
-  console.log(files);
   const formData = new FormData();
   formData.append('name', body?.name);
   formData.append('description', body?.description);
@@ -55,16 +54,9 @@ export const createsalon = async (body) => {
   }
 };
 export const updatesalon = async (body) => {
-  const AvailabilityHours = [
-    {
-      weekday: 'Friday',
-      opening_time: '09:00 AM',
-      closing_time: '17:00 PM',
-    },
-  ];
+
   const files = body?.files.map((file) => file.originFileObj);
   const formData = new FormData();
-
   formData.append('name', body?.name);
   formData.append('description', body?.description);
   formData.append('phone_number', body?.phone_number);
@@ -73,7 +65,6 @@ export const updatesalon = async (body) => {
   formData.append('longitude', '23');
   formData.append('latitude', '33');
   formData.append('availability_range', body?.availability_range.toString());
-  formData.append('availability_hours', JSON.stringify(AvailabilityHours));
   if (body.isApproved === true || body.isApproved === 1) {
     formData.append('isApproved', 1);
   } else if (body.isApproved === false || body.isApproved === 0) {

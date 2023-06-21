@@ -172,8 +172,8 @@ const salonSlice = createSlice({
         state.loading = false;
         state.salons = action?.payload?.data;
         if (action.payload) {
-          state.approvedSalons = action?.payload?.data.filter((salon) => salon.isApproved === 1);
-          state.unapprovedSalons = action?.payload?.data.filter((salon) => salon.isApproved === 0);
+          state.approvedSalons = action?.payload?.data?.filter((salon) => salon.isApproved === 1);
+          state.unapprovedSalons = action?.payload?.data?.filter((salon) => salon.isApproved === 0);
         }
       })
       .addCase(getSalons.rejected, (state, action) => {

@@ -28,18 +28,20 @@ const Edit = ({ match }) => {
       dispatch(
         updateBooking({
           id: match.params.id,
-          ...values,
-          booking_date: values.booking_date.format('YYYY/MM/DD'),
-          appointmentDate: values.appointmentDate.format('YYYY/MM/DD'),
-          startTime: values.startTime.format('HH:mm:ss'),
+          ...values.booking_status,
+          // booking_date: values.booking_date.format('YYYY/MM/DD'),
+          // appointmentDate: values.appointmentDate.format('YYYY/MM/DD'),
+          // startTime: values.startTime.format('HH:mm:ss'),
         }),
       );
       console.log(values);
     } catch (error) {
+      console.log(values);
       console.log('Validation error:', error);
     }
     // form.resetFields();
   };
+  console.log(bookingStates.Booking);
   useEffect(() => {
     if (bookingStates.Booking !== null) {
       form.setFieldsValue(bookingStates.Booking);

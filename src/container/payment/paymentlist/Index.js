@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Row, Col, Table, Spin } from 'antd';
+import { Row, Col, Table, Spin, Tag } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import FeatherIcon from 'feather-icons-react';
@@ -32,7 +32,10 @@ const ViewPage = () => {
     selectedRowKeys: 0,
     selectedRows: [],
   });
-
+  const [pageSize, setPageSize] = useState(12);
+  const handlePageSizeChange = (current, size) => {
+    setPageSize(size);
+  };
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
       setState({ ...state, selectedRowKeys, selectedRows });
@@ -135,6 +138,7 @@ const ViewPage = () => {
         setSearchText,
         setSearchedColumn,
       ),
+      render: (text) => <Tag className={text === "success"? 'complete': 'early'}>{text}</Tag>,
     },
     {
       title: 'User',
@@ -216,7 +220,12 @@ const ViewPage = () => {
                   <TableWrapper className="table-data-view table-responsive">
                     <Table
                       rowSelection={rowSelection}
-                      pagination={{ pageSize: 10, showSizeChanger: true }}
+                      pagination={{ 
+                        pageSize,
+                        showSizeChanger: true ,
+                        pageSizeOptions: ['5', '10', '20', '50'], 
+                        onShowSizeChange: handlePageSizeChange
+                      }}
                       dataSource={dataSource}
                       columns={columns}
                     />

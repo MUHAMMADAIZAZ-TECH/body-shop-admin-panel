@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Row, Col, Table, Spin } from 'antd';
+import { Row, Col, Table, Spin, Tag } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
@@ -33,6 +33,10 @@ const ViewPage = () => {
     selectedRowKeys: 0,
     selectedRows: [],
   });
+  const [pageSize, setPageSize] = useState(13);
+  const handlePageSizeChange = (current, size) => {
+    setPageSize(size);
+  };
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
       setState({ ...state, selectedRowKeys, selectedRows });
@@ -141,6 +145,8 @@ const ViewPage = () => {
         setSearchText,
         setSearchedColumn,
       ),
+      fixed: 'left',
+      render:(text)=><Tag className='early'>{text}</Tag>
     },
     {
       title: 'Discount',
@@ -215,6 +221,7 @@ const ViewPage = () => {
       dataIndex: 'action',
       key: 'action',
       width: '90px',
+      fixed: 'right',
     },
   ];
   const handlePrinter = () => {
@@ -271,7 +278,12 @@ const ViewPage = () => {
                   <TableWrapper className="table-data-view table-responsive">
                     <Table
                       rowSelection={rowSelection}
-                      pagination={{ pageSize: 10, showSizeChanger: true }}
+                      pagination={{ 
+                        pageSize,
+                        showSizeChanger: true ,
+                        pageSizeOptions: ['5', '10', '20', '50'], 
+                        onShowSizeChange: handlePageSizeChange
+                      }}
                       dataSource={dataSource}
                       columns={columns}
                     />

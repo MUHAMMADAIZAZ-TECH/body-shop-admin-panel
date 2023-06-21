@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Row, Col, Table, Spin } from 'antd';
+import { Row, Col, Table, Spin, Tag } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
@@ -33,6 +33,10 @@ const ViewPage = () => {
     selectedRowKeys: 0,
     selectedRows: [],
   });
+  const [pageSize, setPageSize] = useState(12);
+  const handlePageSizeChange = (current, size) => {
+    setPageSize(size);
+  };
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
       setState({ ...state, selectedRowKeys, selectedRows });
@@ -54,6 +58,7 @@ const ViewPage = () => {
   const onHandleSearch = (e) => {
     setState({ ...state, searchText: e.target.value });
   };
+  console.log(dataSource);
   if (bookingStates?.Bookings?.length)
     bookingStates?.Bookings?.map((booking, key) => {
       const {
@@ -141,7 +146,7 @@ const ViewPage = () => {
   });
   const columns = [
     {
-      title: 'Booking ID',
+      title: 'ID',
       dataIndex: 'id',
       key: 'id',
       sorter: (a, b) => a.id.length - b.id.length,
@@ -158,6 +163,7 @@ const ViewPage = () => {
         setSearchedColumn,
       ),
       render: (text) => <div>#{text}</div>,
+      fixed: 'left',
     },
     {
       title: 'Services',
@@ -248,6 +254,14 @@ const ViewPage = () => {
         setSearchText,
         setSearchedColumn,
       ),
+      render: (text) => <Tag 
+      className={text === 'completed'
+      ? 'complete'
+      : text === 'inProgress'
+      ? 'late'
+      : text === 'pending'
+      ? 'early'
+      : ''}>{text}</Tag>,
     },
     {
       title: 'Payment Status',
@@ -266,6 +280,12 @@ const ViewPage = () => {
         setSearchText,
         setSearchedColumn,
       ),
+      render: (text) => <Tag 
+      className={text === "Paid"
+      ? 'complete'
+      : text === 'UnPaid'
+      ? 'early'
+      : ''}>{text}</Tag>,
     },
     {
       title: 'Coupon',
@@ -347,6 +367,7 @@ const ViewPage = () => {
       dataIndex: 'action',
       key: 'action',
       width: '90px',
+      fixed: 'right',
     },
   ];
   const handlePrinter = () => {
@@ -397,7 +418,12 @@ const ViewPage = () => {
                   <TableWrapper className="table-data-view table-responsive">
                     <Table
                       rowSelection={rowSelection}
-                      pagination={{ pageSize: 10, showSizeChanger: true }}
+                      pagination={{ 
+                        pageSize,
+                        showSizeChanger: true ,
+                        pageSizeOptions: ['5', '10', '20', '50'], 
+                        onShowSizeChange: handlePageSizeChange
+                      }}
                       dataSource={dataSource}
                       columns={columns}
                     />
