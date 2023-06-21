@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Col, Form, Input } from 'antd';
+import { Row, Col, Form, Input,Select } from 'antd';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { PageHeader } from '../../../components/page-headers/page-headers';
@@ -8,6 +8,7 @@ import { Button } from '../../../components/buttons/buttons';
 import { Main, BasicFormWrapper } from '../../styled';
 import { createFaq } from '../../../redux/faq/faqSlice';
 
+const { Option } = Select;
 const AddNew = () => {
   const dispatch = useDispatch();
   const { isLoading } = useSelector((state) => {
@@ -47,6 +48,13 @@ const AddNew = () => {
                 <Form name="multi-form" layout="vertical" style={{ width: '100%' }} form={form} onFinish={handleSubmit}>
                   <Row gutter={30}>
                     <Col sm={12} xs={24} className="mb-25">
+                    <Form.Item name="app_type" initialValue="" label="App Type"  rules={[{ required: true, message: 'Please select app type' }]}>
+                        <Select style={{ width: '100%' }}>
+                          <Option value="">Please Select</Option>
+                          <Option value="owner">Owner</Option>
+                          <Option value="customer">Customer</Option>
+                        </Select>
+                      </Form.Item>
                       <Form.Item
                         name="question"
                         label="Question"

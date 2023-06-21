@@ -2,7 +2,7 @@ import { DataService } from '../../config/dataService/mydataService';
 
 export const userLogin = async (state) => {
   try {
-    const response = await DataService.post(`/api/v1/users/login`, {
+    const response = await DataService.post(`/api/v1/users/admin-login`, {
       email: state.username,
       password: state.password,
     });

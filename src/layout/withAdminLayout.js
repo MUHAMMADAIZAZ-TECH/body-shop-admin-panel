@@ -439,7 +439,7 @@ const ThemeLayout = (WrappedComponent) => {
                     </li>
                   </ul>
                 </div>
-                <div className="customizer__single">
+                {/* <div className="customizer__single">
                   <h4>Navbar Type</h4>
                   <ul className="customizer-list d-flex">
                     <li className="customizer-list__item">
@@ -469,7 +469,7 @@ const ThemeLayout = (WrappedComponent) => {
                       </Link>
                     </li>
                   </ul>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>

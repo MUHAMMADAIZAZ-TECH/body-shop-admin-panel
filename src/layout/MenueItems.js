@@ -13,7 +13,7 @@ function MenuItems({ darkMode, toggleCollapsed, topMenu, events }) {
   const pathArray = pathName.split(path);
   const mainPath = pathArray[1];
   const mainPathSplit = mainPath.split('/');
-  const { onRtlChange, onLtrChange, modeChangeDark, modeChangeLight, modeChangeTopNav, modeChangeSideNav } = events;
+  const { onRtlChange, onLtrChange, modeChangeDark, modeChangeLight } = events;
   const [openKeys, setOpenKeys] = React.useState(
     !topMenu ? [`${mainPathSplit.length > 2 ? mainPathSplit[1] : 'dashboard'}`] : [],
   );
@@ -175,7 +175,7 @@ function MenuItems({ darkMode, toggleCollapsed, topMenu, events }) {
             Dark Mode
           </NavLink>
         </Menu.Item>
-        <Menu.Item key="topMenu">
+        {/* <Menu.Item key="topMenu">
           <NavLink
             onClick={() => {
               toggleCollapsed();
@@ -185,8 +185,8 @@ function MenuItems({ darkMode, toggleCollapsed, topMenu, events }) {
           >
             Top Menu
           </NavLink>
-        </Menu.Item>
-        <Menu.Item key="sideMenu">
+        </Menu.Item> */}
+        {/* <Menu.Item key="sideMenu">
           <NavLink
             onClick={() => {
               toggleCollapsed();
@@ -196,7 +196,7 @@ function MenuItems({ darkMode, toggleCollapsed, topMenu, events }) {
           >
             Side Menu
           </NavLink>
-        </Menu.Item>
+        </Menu.Item> */}
         <Menu.Item key="rtl">
           <NavLink
             onClick={() => {
