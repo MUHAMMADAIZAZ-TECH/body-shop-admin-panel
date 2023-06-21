@@ -91,7 +91,6 @@ function UserListTable({ data }) {
       name: record.name,
     }),
   };
-  console.log(data);
   return (
     <Cards headless>
       <UserTableStyleWrapper>

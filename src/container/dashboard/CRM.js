@@ -13,7 +13,7 @@ import { CalendarButtonPageHeader } from '../../components/buttons/calendar-butt
 import { getSalons, getDashboard } from '../../redux/salon/salonSlice';
 
 const UserListTable = lazy(() => import('./usertable'));
-
+const TotalRevenue = lazy(() => import('./TotalRevenue'));
 const chartOptions = {
   legend: {
     display: false,
@@ -220,9 +220,9 @@ function CRM() {
                   <Skeleton active />
                 </Cards>
               }
-            />
-            {/* <TotalRevenue title="Earnings" /> */}
-            {/* </Suspense> */}
+            >
+            <TotalRevenue title="Earnings" DashboardData={salonState.dashboard}/> 
+           </Suspense>
           </Col>
           <Col xxl={12} xs={24}>
             <Suspense

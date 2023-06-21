@@ -14,6 +14,7 @@ import couponSlice from './coupons/couponSlice';
 import transactionSlice from './transactions/transactionSlice';
 import bookingSlice from './bookings/bookingSlice';
 import faqSlice from './faq/faqSlice';
+import chartContentReducer from './chartContent/reducers';
 
 const rootReducers = combineReducers({
   fb: firebaseReducer,
@@ -31,6 +32,7 @@ const rootReducers = combineReducers({
   transactionStates: transactionSlice,
   bookingStates: bookingSlice,
   faqStates: faqSlice,
+  chartContent: chartContentReducer,
 });
 
 export default rootReducers;
