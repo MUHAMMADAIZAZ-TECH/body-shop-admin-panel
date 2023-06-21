@@ -54,7 +54,6 @@ const ViewPage = () => {
   const onHandleSearch = (e) => {
     setState({ ...state, searchText: e.target.value });
   };
-  console.log(bookingStates?.Bookings);
   if (bookingStates?.Bookings?.length)
     bookingStates?.Bookings?.map((booking, key) => {
       const {

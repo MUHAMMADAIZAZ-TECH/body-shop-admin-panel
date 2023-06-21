@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { message } from 'antd';
 import { getcoupons, getcoupon, createcoupon, updatecoupon, deletecoupon } from './couponApis';
 
 const initialState = {
@@ -72,12 +73,14 @@ const CouponSlice = createSlice({
       .addCase(createCoupon.fulfilled, (state) => {
         state.loading = false;
         state.message = 'Successfully Created';
+        message.success('Successfully Created')
         state.success = true;
       })
       .addCase(createCoupon.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error;
         state.message = 'Something Went Wrong';
+        message.error('Something Went Wrong')
         state.success = false;
       });
     builder
@@ -90,12 +93,14 @@ const CouponSlice = createSlice({
         state.loading = false;
         state.service = null;
         state.message = 'Successfully Updated';
+        message.success('Successfully Updated')
         state.success = true;
       })
       .addCase(updateCoupon.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error;
         state.message = 'Something Went Wrong';
+        message.error('Something Went Wrong')
         state.success = false;
       });
     builder
@@ -107,12 +112,14 @@ const CouponSlice = createSlice({
       .addCase(deleteCoupon.fulfilled, (state) => {
         state.loading = false;
         state.message = 'Successfully Deleted';
+        message.success('Successfully Deleted')
         state.success = true;
       })
       .addCase(deleteCoupon.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error;
         state.message = 'Something Went Wrong';
+        message.error('Something Went Wrong')
         state.success = false;
       });
   },

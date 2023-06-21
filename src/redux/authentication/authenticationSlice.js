@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { message } from 'antd';
 import { userLogin } from './authApis';
 
 const initialState = {
@@ -19,6 +20,10 @@ const authenticationSlice = createSlice({
     openProfile: (state, action) => {
       state.opencommentsection = action.payload;
     },
+    UserLogout: (state)=>{
+      localStorage.clear()
+      state.isLogin = false;
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -32,6 +37,7 @@ const authenticationSlice = createSlice({
         state.isLogin = true;
         state.user = action?.payload?.data?.user;
         state.message = action.payload.message;
+        message.success('Successfuly Login')
       })
       .addCase(UserLogin.rejected, (state, action) => {
         state.loading = false;
@@ -41,6 +47,6 @@ const authenticationSlice = createSlice({
   },
 });
 
-export const { openProfile } = authenticationSlice.actions;
+export const { openProfile,UserLogout } = authenticationSlice.actions;
 
 export default authenticationSlice.reducer;

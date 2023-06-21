@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { message } from 'antd';
 import { getbookings, getbooking, updatebooking } from './bookingApis';
 
 const initialState = {
@@ -61,6 +62,7 @@ const bookingSlice = createSlice({
       .addCase(updateBooking.fulfilled, (state) => {
         state.loading = false;
         state.message = 'Successfully Updated';
+        message.success('Successfuly Updated')
       })
       .addCase(updateBooking.rejected, (state, action) => {
         state.loading = false;

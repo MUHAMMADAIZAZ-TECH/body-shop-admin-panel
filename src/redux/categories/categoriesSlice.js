@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { message } from 'antd';
 import { createcategory, deletecategory, getcategories, getcategory, updatecategory } from './categoriesApis';
 
 const initialState = {
@@ -79,11 +80,13 @@ const categoriesSlice = createSlice({
         state.loading = false;
         state.message = 'Successfully Created';
         state.success = true;
+        message.success('Successfully Created')
       })
       .addCase(createCategory.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error;
         state.message = 'Something Went Wrong';
+        message.error('Something Went Wrong')
         state.success = false;
       });
     builder
@@ -95,12 +98,14 @@ const categoriesSlice = createSlice({
       .addCase(updateCategory.fulfilled, (state) => {
         state.loading = false;
         state.message = 'Successfully Updated';
+        message.success('Successfully Updated')
         state.success = true;
       })
       .addCase(updateCategory.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error;
         state.message = 'Something Went Wrong';
+        message.error('Something Went Wrong')
         state.success = false;
       });
     builder
@@ -112,11 +117,13 @@ const categoriesSlice = createSlice({
       .addCase(deleteCategory.fulfilled, (state) => {
         state.loading = false;
         state.message = 'Successfully Deleted';
+        message.success('Successfully Deleted')
         state.success = true;
       })
       .addCase(deleteCategory.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error;
+        message.error('Something Went Wrong')
         state.message = 'Something Went Wrong';
         state.success = false;
       });

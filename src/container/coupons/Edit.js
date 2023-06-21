@@ -46,7 +46,7 @@ const Edit = ({ match }) => {
           end_date: values.end_date.format('YYYY/MM/DD'),
         }),
       );
-      form.resetFields();
+      // form.resetFields();
     } catch (error) {
       console.log('Validation error:', error);
     }

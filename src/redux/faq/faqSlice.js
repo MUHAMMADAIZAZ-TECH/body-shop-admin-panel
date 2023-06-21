@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { message } from 'antd';
 import { getfaqs, getfaq, createfaq, updatefaq, deletefaq } from './faqApis';
 
 const initialState = {
@@ -73,12 +74,14 @@ const FaqSlice = createSlice({
       .addCase(createFaq.fulfilled, (state) => {
         state.loading = false;
         state.message = 'Successfully Created';
+        message.success('Successfully Created')
         state.success = true;
       })
       .addCase(createFaq.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error;
         state.message = 'Something Went Wrong';
+        message.error('Something Went Wrong')
         state.success = false;
       });
     builder
@@ -91,12 +94,14 @@ const FaqSlice = createSlice({
         state.loading = false;
         state.service = null;
         state.message = 'Successfully Updated';
+        message.success('Successfully Updated')
         state.success = true;
       })
       .addCase(updateFaq.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error;
         state.message = 'Something Went Wrong';
+        message.error('Something Went Wrong')
         state.success = false;
       });
     builder
@@ -108,11 +113,13 @@ const FaqSlice = createSlice({
       .addCase(deleteFaq.fulfilled, (state) => {
         state.loading = false;
         state.message = 'Successfully Deleted';
+        message.success('Successfully Deleted')
         state.faqs = true;
       })
       .addCase(deleteFaq.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error;
+        message.error('Something Went Wrong')
         state.message = 'Something Went Wrong';
         state.success = false;
       });

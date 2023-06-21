@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { message } from 'antd';
 import {
   getdashboard,
   createaddress,
@@ -209,12 +210,14 @@ const salonSlice = createSlice({
         state.status = true;
         state.loading = false;
         state.message = 'Successfuly created';
+        message.success('Successfuly created')
       })
       .addCase(createSalon.rejected, (state, action) => {
         state.status = false;
         state.loading = false;
         state.error = action.error;
         state.message = 'Something went wrong';
+        message.error('Something went wrong')
       });
     builder
       .addCase(updateSalon.pending, (state) => {
@@ -226,12 +229,14 @@ const salonSlice = createSlice({
         state.status = true;
         state.loading = false;
         state.message = 'Successfuly updated';
+        message.success('Successfuly updated')
       })
       .addCase(updateSalon.rejected, (state, action) => {
         state.loading = false;
         state.status = false;
         state.error = action.error;
         state.message = 'Something went wrong';
+        message.error('Something went wrong')
       });
     builder
       .addCase(deleteSalon.pending, (state) => {
@@ -243,12 +248,14 @@ const salonSlice = createSlice({
         state.status = true;
         state.loading = false;
         state.message = 'Successfuly deleted';
+        message.success('Successfuly deleted')
       })
       .addCase(deleteSalon.rejected, (state, action) => {
         state.status = false;
         state.loading = false;
         state.error = action.error;
         state.message = 'Something went wrong';
+        message.error('Something went wrong')
       });
     builder
       .addCase(getAvailibilityHours.pending, (state) => {
@@ -314,12 +321,14 @@ const salonSlice = createSlice({
         state.status = true;
         state.loading = false;
         state.message = 'Successfully created';
+        message.success('Successfuly created')
       })
       .addCase(createAvailibilityHours.rejected, (state, action) => {
         state.loading = false;
         state.status = false;
         state.error = action.error;
         state.message = 'Something went wrong';
+        message.error('Something went wrong')
       });
     builder
       .addCase(updateAvailibilityHours.pending, (state) => {
@@ -331,12 +340,14 @@ const salonSlice = createSlice({
         state.status = true;
         state.loading = false;
         state.message = 'Successfully updated';
+        message.success('Successfuly updated')
       })
       .addCase(updateAvailibilityHours.rejected, (state, action) => {
         state.status = false;
         state.loading = false;
         state.error = action.error;
         state.message = 'Something went wrong';
+        message.error('Something went wrong')
       });
     builder
       .addCase(deleteAvailibilityHours.pending, (state) => {
@@ -348,12 +359,14 @@ const salonSlice = createSlice({
         state.status = true;
         state.loading = false;
         state.message = 'Successfully deleted';
+        message.success('Successfuly deleted')
       })
       .addCase(deleteAvailibilityHours.rejected, (state, action) => {
         state.status = false;
         state.loading = false;
         state.error = action.error;
         state.message = 'Something went wrong';
+        message.error('Something went wrong')
       });
     builder
       .addCase(getAllReviews.pending, (state) => {
@@ -401,12 +414,14 @@ const salonSlice = createSlice({
         state.status = true;
         state.loading = false;
         state.message = 'Successfully deleted';
+        message.success('Successfuly deleted')
       })
       .addCase(deleteSalonReview.rejected, (state, action) => {
         state.status = false;
         state.loading = false;
         state.error = action.error;
         state.message = 'Something went wrong';
+        message.error('Something went wrong')
       });
   },
 });
