@@ -28,7 +28,7 @@ function MenuItems({ darkMode, toggleCollapsed, topMenu, events }) {
   const subMenuArray = [
     {
       key: 'salon',
-      icon: !topMenu && <FeatherIcon icon="database" />,
+      icon: !topMenu && <FeatherIcon icon="scissors" />,
       title: 'Salons',
       items: [
         {
@@ -61,37 +61,37 @@ function MenuItems({ darkMode, toggleCollapsed, topMenu, events }) {
   ];
   const menuItems = [
     {
-      icon: !topMenu && <FeatherIcon icon="database" />,
+      icon: !topMenu && <FeatherIcon icon="grid" />,
       key: 'Categories',
       link: `${path}/categories/category-view`,
       label: 'Categories',
     },
     {
-      icon: !topMenu && <FeatherIcon icon="database" />,
+      icon: !topMenu && <FeatherIcon icon="layers" />,
       key: 'services-list',
       link: `${path}/services/services-list-view`,
       label: 'Services',
     },
     {
-      icon: !topMenu && <FeatherIcon icon="database" />,
+      icon: !topMenu && <FeatherIcon icon="calendar" />,
       key: 'bookings',
       link: `${path}/bookings/bookings-view`,
       label: 'Bookings',
     },
     {
-      icon: !topMenu && <FeatherIcon icon="database" />,
+      icon: !topMenu && <FeatherIcon icon="gift" />,
       key: 'Coupons',
       link: `${path}/coupons/coupons-view`,
       label: 'Coupons',
     },
     {
-      icon: !topMenu && <FeatherIcon icon="database" />,
+      icon: !topMenu && <FeatherIcon icon="help-circle" />,
       key: 'faq',
       link: `${path}/faq-admin/faqs-view`,
       label: 'Faqs',
     },
     {
-      icon: !topMenu && <FeatherIcon icon="database" />,
+      icon: !topMenu && <FeatherIcon icon="dollar-sign" />,
       key: 'Payments',
       link: `${path}/payment/paymentlist-view`,
       label: 'Payments',
@@ -140,15 +140,15 @@ function MenuItems({ darkMode, toggleCollapsed, topMenu, events }) {
         </Menu.Item>
       ))}
       {!topMenu && <NavTitle className="sidebar-nav-title">Settings</NavTitle>}
-      <SubMenu key="crud" icon={!topMenu && <FeatherIcon icon="database" />} title="Settings">
-        <Menu.Item key="Users">
-          <NavLink onClick={toggleCollapsed} to={`${path}/crud/axios-add`}>
-            Users
+      <SubMenu key="Settings" icon={!topMenu && <FeatherIcon icon="settings" />} title="Settings">
+        <Menu.Item key="custompages">
+          <NavLink onClick={toggleCollapsed} to={`${path}/settings/custompages/view`}>
+            Custom Pages
           </NavLink>
         </Menu.Item>
         <Menu.Item key="Taxes">
-          <NavLink onClick={toggleCollapsed} to={`${path}/crud/axios-add`}>
-            Taxes
+          <NavLink onClick={toggleCollapsed} to={`${path}/settings/config/view`}>
+            Config Settings
           </NavLink>
         </Menu.Item>
       </SubMenu>
@@ -175,28 +175,6 @@ function MenuItems({ darkMode, toggleCollapsed, topMenu, events }) {
             Dark Mode
           </NavLink>
         </Menu.Item>
-        {/* <Menu.Item key="topMenu">
-          <NavLink
-            onClick={() => {
-              toggleCollapsed();
-              modeChangeTopNav();
-            }}
-            to="#"
-          >
-            Top Menu
-          </NavLink>
-        </Menu.Item> */}
-        {/* <Menu.Item key="sideMenu">
-          <NavLink
-            onClick={() => {
-              toggleCollapsed();
-              modeChangeSideNav();
-            }}
-            to="#"
-          >
-            Side Menu
-          </NavLink>
-        </Menu.Item> */}
         <Menu.Item key="rtl">
           <NavLink
             onClick={() => {

@@ -12,6 +12,7 @@ const Bookings = lazy(() => import('./bookings'));
 const Coupons = lazy(() => import('./coupons'));
 const Faq = lazy(() => import('./faq'));
 const Payments = lazy(() => import('./payments'));
+const Settings = lazy(()=> import('./settings'));
 function Admin() {
   const { path } = useRouteMatch();
 
@@ -32,6 +33,7 @@ function Admin() {
         <Route path={`${path}`} component={Coupons} />
         <Route path={`${path}`} component={Faq} />
         <Route path={`${path}`} component={Payments} />
+        <Route path={`${path}`} component={Settings} />
       </Suspense>
     </Switch>
   );
