@@ -9,8 +9,8 @@ const initialState = {
   Bookings: [],
   Booking: null,
 };
-export const getBookings = createAsyncThunk('get/getBookings', async () => {
-  const response = await getbookings();
+export const getBookings = createAsyncThunk('get/getBookings', async (body) => {
+  const response = await getbookings(body);
   return response;
 });
 export const getBooking = createAsyncThunk('get/getBooking', async (id) => {
@@ -33,7 +33,7 @@ const bookingSlice = createSlice({
       })
       .addCase(getBookings.fulfilled, (state, action) => {
         state.loading = false;
-        state.Bookings = action.payload.data;
+        state.Bookings = action.payload;
       })
       .addCase(getBookings.rejected, (state, action) => {
         state.loading = false;
