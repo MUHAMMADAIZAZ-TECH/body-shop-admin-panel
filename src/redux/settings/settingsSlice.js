@@ -44,7 +44,6 @@ const CustomPageSlice = createSlice({
       })
       .addCase(getCustomPages.fulfilled, (state, action) => {
         state.loading = false;
-        state.message = action.payload.status;
         state.CustomPages = action.payload.data;
       })
       .addCase(getCustomPages.rejected, (state, action) => {

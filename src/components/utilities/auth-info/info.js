@@ -34,7 +34,7 @@ function AuthInfo() {
         </figure>
         <ul className="user-dropdwon__links">
           <li>
-            <Link to="#">
+            <Link to="/admin/profile/view">
               <FeatherIcon icon="user" /> Profile
             </Link>
           </li>

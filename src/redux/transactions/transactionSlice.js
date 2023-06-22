@@ -4,7 +4,6 @@ import { gettransactions } from './transactionApis';
 const initialState = {
   loading: false,
   error: false,
-  message: '',
   transactions: [],
 };
 export const getTransactions = createAsyncThunk('get/getTransactions', async () => {
@@ -24,7 +23,6 @@ const TransactionSlice = createSlice({
       })
       .addCase(getTransactions.fulfilled, (state, action) => {
         state.loading = false;
-        state.message = action.payload.status;
         state.transactions = action.payload.data;
       })
       .addCase(getTransactions.rejected, (state, action) => {

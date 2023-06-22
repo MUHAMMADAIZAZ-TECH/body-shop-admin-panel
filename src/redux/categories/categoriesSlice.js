@@ -47,7 +47,6 @@ const categoriesSlice = createSlice({
       })
       .addCase(getCategories.fulfilled, (state, action) => {
         state.loading = false;
-        state.message = action.payload.status;
         state.categories = action.payload.data;
       })
       .addCase(getCategories.rejected, (state, action) => {
@@ -62,7 +61,7 @@ const categoriesSlice = createSlice({
       })
       .addCase(getCategory.fulfilled, (state, action) => {
         state.loading = false;
-        state.message = action.payload.status;
+
         state.category = action.payload.data;
       })
       .addCase(getCategory.rejected, (state, action) => {

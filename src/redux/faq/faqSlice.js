@@ -43,7 +43,7 @@ const FaqSlice = createSlice({
       })
       .addCase(getFaqs.fulfilled, (state, action) => {
         state.loading = false;
-        state.message = action.payload.status;
+
         state.faqs = action.payload.data;
       })
       .addCase(getFaqs.rejected, (state, action) => {
