@@ -1,227 +1,63 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { Row, Col, Table, Spin } from 'antd';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
-import moment from 'moment';
-import FeatherIcon from 'feather-icons-react';
-import { RecordViewWrapper } from './Style';
-import { Main, TableWrapper } from '../../styled';
-import { Button } from '../../../components/buttons/buttons';
-import { alertModal } from '../../../components/modals/antd-modals';
-import { Cards } from '../../../components/cards/frame/cards-frame';
+import React, { useEffect } from 'react';
+import { Row, Col } from 'antd';
+import { useDispatch } from 'react-redux';
+import DatabaseConfig from './DatabaseConfig';
+import JwtConfig from './JwtConfig';
+import DigitalOceanConfig from './DigitalOceanConfig';
 import { PageHeader } from '../../../components/page-headers/page-headers';
-import { deleteFaq, getFaqs } from '../../../redux/faq/faqSlice';
-import MYExportButton from '../../../components/buttons/my-export-button/my-export-button';
-import { exportToXLSX, handlePrint, getColumnSearchProps } from '../../../components/utilities/utilities';
+import { Main } from '../../styled';
+import { getConfigs, updateConfigs } from '../../../redux/settings/settingsSlice';
 
-const ViewPage = () => {
+const AddNew = () => {
   const dispatch = useDispatch();
-  const { isLoading, faqStates } = useSelector((state) => {
-    return {
-      isLoading: state.faqStates.loading,
-      faqStates: state.faqStates,
-    };
-  });
-  const dataSource = [];
-  const [searchText, setSearchText] = useState('');
-  const [searchedColumn, setSearchedColumn] = useState('');
-  const searchInput = useRef(null);
-  const [state, setState] = useState({
-    isModalVisible: false,
-    fileName: 'bodyShop',
-    convertedTo: 'csv',
-    selectedRowKeys: 0,
-    selectedRows: [],
-  });
-  const [pageSize, setPageSize] = useState(12);
-  const handlePageSizeChange = (current, size) => {
-    setPageSize(size);
-  };
-  const rowSelection = {
-    onChange: (selectedRowKeys, selectedRows) => {
-      setState({ ...state, selectedRowKeys, selectedRows });
-    },
-    getCheckboxProps: (record) => ({
-      disabled: record.name === 'Disabled User', // Column configuration not to be checked
-      name: record.name,
-    }),
-  };
-
-  const handleSearch = (selectedKeys, confirm, dataIndex) => {
-    confirm();
-    setSearchText(selectedKeys[0]);
-    setSearchedColumn(dataIndex);
-  };
-  const handleReset = (clearFilters) => {
-    clearFilters();
-    setSearchText('');
-  };
-
-  const handleDelete = (id) => {
-    const confirm = window.confirm('Are you sure delete this?');
-    if (confirm) {
-      dispatch(
-        deleteFaq({
-          id,
-          getData: () => {
-            dispatch(getFaqs());
-          },
-        }),
-      );
+  const handleDatabase = async (formValues) => {
+    try {
+      const valuesArray = Object.entries(formValues).map(([title, value]) => ({ title, value }));
+      dispatch(updateConfigs(valuesArray));
+    } catch (error) {
+      console.log('Validation error:', error);
     }
-    return false;
   };
-
-  const onHandleSearch = (e) => {
-    console.log(e.target.value);
+  const handleJWT = async (formValues) => {
+    try {
+      const valuesArray = Object.entries(formValues).map(([title, value]) => ({ title, value }));
+      dispatch(updateConfigs(valuesArray));
+    } catch (error) {
+      console.log('Validation error:', error);
+    }
   };
-
-  if (faqStates?.faqs.length)
-    faqStates?.faqs?.map((person, key) => {
-      const { id, question, answer, updated_at } = person;
-      return dataSource.push({
-        key: key + 1,
-        question,
-        answer,
-        updated_at,
-        action: (
-          <div className="table-actions">
-            <Link className="edit" to={`/admin/faq-admin/faqs-edit/${id}`}>
-              <FeatherIcon icon="edit" size={14} />
-            </Link>
-            &nbsp;&nbsp;&nbsp;
-            <Link className="delete" onClick={() => handleDelete(id)} to="#">
-              <FeatherIcon icon="trash-2" size={14} />
-            </Link>
-          </div>
-        ),
-      });
-    });
-  const csvData = [['id', 'question', 'answer', 'updated_at']];
-  state.selectedRows.map((rows) => {
-    const { key, question, answer, updated_at } = rows;
-    return csvData.push([key, question, answer, updated_at]);
-  });
-  const columns = [
-    {
-      title: 'Question',
-      dataIndex: 'question',
-      key: 'question',
-      ...getColumnSearchProps(
-        'Question',
-        'question',
-        handleSearch,
-        handleReset,
-        searchInput,
-        searchedColumn,
-        searchText,
-        setSearchText,
-        setSearchedColumn,
-      ),
-      fixed: 'left',
-    },
-    {
-      title: 'Answer',
-      dataIndex: 'answer',
-      key: 'answer',
-      ...getColumnSearchProps(
-        'Answer',
-        'answer',
-        handleSearch,
-        handleReset,
-        searchInput,
-        searchedColumn,
-        searchText,
-        setSearchText,
-        setSearchedColumn,
-      ),
-    },
-    {
-      title: 'Update At',
-      dataIndex: 'updated_at',
-      key: 'updated_at',
-      render: (text) => moment(text).fromNow(),
-    },
-    {
-      title: 'Actions',
-      dataIndex: 'action',
-      key: 'action',
-      width: '90px',
-      fixed: 'right',
-    },
-  ];
-  const handlePrinter = () => {
-    if (state.selectedRows.length) {
-      handlePrint(dataSource, columns, 'Faqs', state);
-    } else {
-      alertModal.warning({
-        title: 'Please Select your Required Rows!',
-      });
+  const handleDO = async (formValues) => {
+    try {
+      const valuesArray = Object.entries(formValues).map(([title, value]) => ({ title, value }));
+      dispatch(updateConfigs(valuesArray));
+    } catch (error) {
+      console.log('Validation error:', error);
     }
   };
   useEffect(() => {
-    dispatch(getFaqs());
-  }, [dispatch]);
+    dispatch(getConfigs());
+  }, []);
   return (
-    <RecordViewWrapper>
+    <>
       <PageHeader
-        buttons={[
-          <div className="sDash_export-box">
-            <MYExportButton state={state} setState={setState} exportToXLSX={exportToXLSX} csvData={csvData} />
-          </div>,
-          <div>
-            <Button className="btn-add_new" size="small" key="1" type="white" onClick={() => handlePrinter()}>
-              <FeatherIcon icon="printer" size={14} /> <span>Print</span>
-            </Button>
-          </div>,
-          <div>
-            <Button className="btn-add_new" size="small" key="1" type="primary">
-              <Link to="/admin/faq-admin/faqs-add">
-                <FeatherIcon icon="plus" size={14} /> <span>Add New</span>
-              </Link>
-            </Button>
-          </div>,
-          <div key={1} className="search-box">
-            <span className="search-icon">
-              <FeatherIcon icon="search" size={14} />
-            </span>
-            <input onChange={onHandleSearch} type="text" name="recored-search" placeholder="Search Here" />
-          </div>,
-        ]}
         ghost
-        title="Faqs | Faqs Management"
+        title="Configuration | Configuration Settings"
       />
       <Main>
         <Row gutter={15}>
-          <Col className="w-100" md={24}>
-            <Cards headless>
-              {isLoading ? (
-                <div className="spin">
-                  <Spin />
-                </div>
-              ) : (
-                <div>
-                  <TableWrapper className="table-data-view table-responsive">
-                    <Table
-                      rowSelection={rowSelection}
-                      pagination={{ 
-                        pageSize,
-                        showSizeChanger: true ,
-                        pageSizeOptions: ['5', '10', '20', '50'], 
-                        onShowSizeChange: handlePageSizeChange
-                      }}
-                      dataSource={dataSource}
-                      columns={columns}
-                    />
-                  </TableWrapper>
-                </div>
-              )}
-            </Cards>
+          <Col xs={12}>
+            <DatabaseConfig handleDatabase={handleDatabase} />
+          </Col>
+          <Col xs={12}>
+            <JwtConfig handleJWT={handleJWT} />
+          </Col>
+          <Col xs={12}>
+            <DigitalOceanConfig handleDO={handleDO} />
           </Col>
         </Row>
       </Main>
-    </RecordViewWrapper>
+    </>
   );
 };
 
-export default ViewPage;
+export default AddNew;

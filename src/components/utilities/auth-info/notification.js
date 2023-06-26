@@ -1,21 +1,24 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Badge } from 'antd';
+import moment from 'moment';
 import FeatherIcon from 'feather-icons-react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Scrollbars } from 'react-custom-scrollbars';
-import { useSelector } from 'react-redux';
+import { useSelector,useDispatch } from 'react-redux';
 import { AtbdTopDropdwon } from './auth-info-style';
 import { Popover } from '../../popup/popup';
 import Heading from '../../heading/heading';
+import { getNotifications } from '../../../redux/notification/notificationSlice';
 
 function NotificationBox() {
-  const { rtl } = useSelector((state) => {
+  const dispatch = useDispatch()
+  const { rtl, NotificationStates } = useSelector((state) => {
     return {
       rtl: state.ChangeLayoutMode.rtlData,
+      NotificationStates: state.NotificationStates,
     };
   });
-
   function renderThumb({ style, ...props }) {
     const thumbStyle = {
       borderRadius: 6,
@@ -68,27 +71,31 @@ function NotificationBox() {
         renderTrackVertical={renderTrackVertical}
       >
         <ul className="atbd-top-dropdwon__nav notification-list">
-          <li>
-            <Link to="#">
-              <div className="atbd-top-dropdwon__content notifications">
-                <div className="notification-icon bg-primary">
-                  <FeatherIcon icon="hard-drive" />
-                </div>
-                <div className="notification-content d-flex">
-                  <div className="notification-text">
-                    <Heading as="h5">
-                      <span>James</span> sent you a message
-                    </Heading>
-                    <p>5 hours ago</p>
+          {NotificationStates?.Notifications?.data?.map((item) => (
+            <li>
+              <Link to="#">
+                <div className="atbd-top-dropdwon__content notifications">
+                  <div className="notification-icon bg-primary">
+                    <FeatherIcon icon="hard-drive" />
                   </div>
-                  <div className="notification-status">
-                    <Badge dot />
+                  <div className="notification-content d-flex">
+                    <div className="notification-text">
+                      <Heading as="h5">
+                        
+                        <span>{item.title}</span> {item.body}
+                      </Heading>
+                      <p>{moment(item.created_at).fromNow()}</p>
+                    </div>
+                    <div className="notification-status">
+                      <Badge dot />
+                    </div>
                   </div>
                 </div>
-              </div>
-            </Link>
-          </li>
-          <li>
+              </Link>
+            </li>
+          ))}
+
+          {/* <li>
             <Link to="#">
               <div className="atbd-top-dropdwon__content notifications">
                 <div className="notification-icon bg-secondary">
@@ -171,7 +178,7 @@ function NotificationBox() {
                 </div>
               </div>
             </Link>
-          </li>
+          </li> */}
         </ul>
       </Scrollbars>
       <Link className="btn-seeAll" to="#">
@@ -179,7 +186,9 @@ function NotificationBox() {
       </Link>
     </AtbdTopDropdwon>
   );
-
+ useEffect(()=>{
+  dispatch(getNotifications())
+ },[])
   return (
     <div className="notification">
       <Popover placement="bottomLeft" content={content} action="click">

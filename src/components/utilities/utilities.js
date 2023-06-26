@@ -296,6 +296,24 @@ const handlePrint = (dataSource, columns, printname, state) => {
     printWindow.close();
   }, 1000); // Delay of 1 second (adjust the delay as needed)
 };
+
+const exporttojson = (formData) =>{
+  const jsonString = JSON.stringify(formData, null, 2);
+
+  // Create a download link for the JSON file
+  const element = document.createElement("a");
+  element.setAttribute(
+    "href",
+    `data:text/json;charset=utf-8,${encodeURIComponent(jsonString)}`
+  );
+  element.setAttribute("download", "Config.json");
+
+  // Trigger the download
+  element.style.display = "none";
+  document.body.appendChild(element);
+  element.click();
+  document.body.removeChild(element);
+}
 export {
   textRefactor,
   chartLinearGradient,
@@ -307,4 +325,5 @@ export {
   handlePrint,
   draggerprops,
   uploadButton,
+  exporttojson
 };

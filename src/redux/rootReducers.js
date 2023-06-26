@@ -17,6 +17,7 @@ import faqSlice from './faq/faqSlice';
 import chartContentReducer from './chartContent/reducers';
 import settingsSlice from './settings/settingsSlice';
 import MyProfileSlice from './profile/profileSlice'
+import notificationSlice from './notification/notificationSlice';
 
 const rootReducers = combineReducers({
   fb: firebaseReducer,
@@ -36,7 +37,8 @@ const rootReducers = combineReducers({
   faqStates: faqSlice,
   settingStates: settingsSlice,
   chartContent: chartContentReducer,
-  MyProfileStates: MyProfileSlice
+  MyProfileStates: MyProfileSlice,
+  NotificationStates: notificationSlice
 });
 
 export default rootReducers;

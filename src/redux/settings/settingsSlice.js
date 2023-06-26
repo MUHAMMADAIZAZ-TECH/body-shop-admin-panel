@@ -1,6 +1,14 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { message } from 'antd';
-import { getcustompages, getcustompage, createcustompage, updatecustompage, deletecustompage } from './settingsApis';
+import {
+  getconfigs,
+  getcustompages,
+  getcustompage,
+  createcustompage,
+  updatecustompage,
+  deletecustompage,
+  updateconfigs,
+} from './settingsApis';
 
 const initialState = {
   loading: false,
@@ -9,7 +17,16 @@ const initialState = {
   message: '',
   CustomPages: [],
   CustomPage: null,
+  configs: [],
 };
+export const getConfigs = createAsyncThunk('get/getConfigs', async () => {
+  const response = await getconfigs();
+  return response;
+});
+export const updateConfigs = createAsyncThunk('patch/updateConfigs', async (body) => {
+  const response = await updateconfigs(body);
+  return response;
+});
 export const getCustomPages = createAsyncThunk('get/getCustomPages', async () => {
   const response = await getcustompages();
   return response;
@@ -38,6 +55,35 @@ const CustomPageSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+      .addCase(getConfigs.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getConfigs.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = action.payload;
+        state.configs = action.payload.data;
+      })
+      .addCase(getConfigs.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error;
+        state.message = action.error.message;
+      });
+    builder
+      .addCase(updateConfigs.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateConfigs.fulfilled, (state) => {
+        state.loading = false;
+        state.success = true;
+      })
+      .addCase(updateConfigs.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error;
+        state.message = action.error.message;
+      });
+    builder
       .addCase(getCustomPages.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -51,6 +97,7 @@ const CustomPageSlice = createSlice({
         state.error = action.error;
         state.message = action.error.message;
       });
+
     builder
       .addCase(getCustomPage.pending, (state) => {
         state.loading = true;
@@ -74,14 +121,14 @@ const CustomPageSlice = createSlice({
       .addCase(createCustomPage.fulfilled, (state) => {
         state.loading = false;
         state.message = 'Successfully Created';
-        message.success('Successfully Created')
+        message.success('Successfully Created');
         state.success = true;
       })
       .addCase(createCustomPage.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error;
         state.message = 'Something Went Wrong';
-        message.error('Something Went Wrong')
+        message.error('Something Went Wrong');
         state.success = false;
       });
     builder
@@ -94,14 +141,14 @@ const CustomPageSlice = createSlice({
         state.loading = false;
         state.service = null;
         state.message = 'Successfully Updated';
-        message.success('Successfully Updated')
+        message.success('Successfully Updated');
         state.success = true;
       })
       .addCase(updateCustomPage.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error;
         state.message = 'Something Went Wrong';
-        message.error('Something Went Wrong')
+        message.error('Something Went Wrong');
         state.success = false;
       });
     builder
@@ -113,13 +160,13 @@ const CustomPageSlice = createSlice({
       .addCase(deleteCustomPage.fulfilled, (state) => {
         state.loading = false;
         state.message = 'Successfully Deleted';
-        message.success('Successfully Deleted')
+        message.success('Successfully Deleted');
         state.faqs = true;
       })
       .addCase(deleteCustomPage.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error;
-        message.error('Something Went Wrong')
+        message.error('Something Went Wrong');
         state.message = 'Something Went Wrong';
         state.success = false;
       });

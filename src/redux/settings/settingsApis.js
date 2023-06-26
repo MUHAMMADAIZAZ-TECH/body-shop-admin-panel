@@ -42,3 +42,22 @@ export const deletecustompage = async (body) => {
     return error;
   }
 };
+
+export const getconfigs = async () => {
+  try {
+    const { data } = await DataService.get(`/api/v1/configs`);
+    return data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const updateconfigs = async (data) => {
+  console.log(data);
+  try {
+    const response = await DataService.patch(`/api/v1/configs/`, data);
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};

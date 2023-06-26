@@ -8,8 +8,11 @@ import { readNotificationList } from '../../../../redux/notification/actionCreat
 
 function NotificationBox() {
   const dispatch = useDispatch();
-  const notification = useSelector((state) => state.notification.data);
-
+  const {notification,NotificationStates} = useSelector((state) => {
+    state.notification.data,
+    state.NotificationStates
+  });
+  console.log(NotificationStates);
   useEffect(() => {
     if (readNotificationList) {
       dispatch(readNotificationList());
