@@ -23,6 +23,8 @@ const ViewPage = () => {
     };
   });
   const dataSource = [];
+  const [currentPage, setCurrentPage] = useState(1); // Initial current page
+  const [totalPages, setTotalPages] = useState(0); 
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef(null);
@@ -33,9 +35,10 @@ const ViewPage = () => {
     selectedRowKeys: 0,
     selectedRows: [],
   });
-  const [pageSize, setPageSize] = useState(12);
+  const [pageSize, setPageSize] = useState(10);
   const handlePageSizeChange = (current, size) => {
     setPageSize(size);
+    setCurrentPage(1);
   };
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
@@ -156,8 +159,12 @@ const ViewPage = () => {
     }
   };
   useEffect(() => {
-    dispatch(getFaqs());
-  }, [dispatch]);
+    dispatch(getFaqs({
+      currentPage,
+      pageSize,
+      setTotalPages
+    }));
+  }, [dispatch,currentPage, pageSize]);
   return (
     <RecordViewWrapper>
       <PageHeader
@@ -196,9 +203,12 @@ const ViewPage = () => {
                       rowSelection={rowSelection}
                       pagination={{ 
                         pageSize,
+                        total: totalPages * pageSize,
                         showSizeChanger: true ,
-                        pageSizeOptions: ['5', '10', '20', '50'], 
-                        onShowSizeChange: handlePageSizeChange
+                        pageSizeOptions: ['10', '25', '50', '100'], 
+                        onShowSizeChange: handlePageSizeChange,
+                        current: currentPage,
+                        onChange: setCurrentPage,
                       }}
                       dataSource={dataSource}
                       columns={columns}

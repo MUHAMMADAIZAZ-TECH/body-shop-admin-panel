@@ -1,8 +1,13 @@
 import { DataService } from '../../config/dataService/mydataService';
 
-export const getcoupons = async () => {
+export const getcoupons = async ({
+  currentPage,
+  pageSize,
+  setTotalPages
+}) => {
   try {
-    const { data } = await DataService.get(`/api/v1/coupons`);
+    const { data } = await DataService.get(`/api/v1/coupons?page=${currentPage}&limit=${pageSize}`);
+    setTotalPages(data.totalPages)
     console.log(data);
     return data;
   } catch (error) {

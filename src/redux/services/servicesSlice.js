@@ -10,8 +10,8 @@ const initialState = {
   services: [],
   service: null,
 };
-export const getServices = createAsyncThunk('get/getServices', async () => {
-  const response = await getservvices();
+export const getServices = createAsyncThunk('get/getServices', async (body) => {
+  const response = await getservvices(body);
   return response;
 });
 export const getService = createAsyncThunk('get/getService', async (id) => {

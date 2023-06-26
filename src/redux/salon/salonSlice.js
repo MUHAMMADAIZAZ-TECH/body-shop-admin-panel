@@ -101,8 +101,8 @@ export const deleteAvailibilityHours = createAsyncThunk('delete/deleteAvailibili
   return response;
 });
 // reviews
-export const getAllReviews = createAsyncThunk('get/getallreviews', async () => {
-  const response = await getallreviews();
+export const getAllReviews = createAsyncThunk('get/getallreviews', async (body) => {
+  const response = await getallreviews(body);
   return response;
 });
 export const getSalonReview = createAsyncThunk('get/getSalonReview', async (id) => {

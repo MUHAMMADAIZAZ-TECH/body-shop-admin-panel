@@ -38,7 +38,7 @@ const ViewPage = () => {
     selectedRowKeys: 0,
     selectedRows: [],
   });
-  const [pageSize, setPageSize] = useState(salonState?.salonreviews?.results);
+  const [pageSize, setPageSize] = useState(10);
   const handlePageSizeChange = (current, size) => {
     setPageSize(size);
   };

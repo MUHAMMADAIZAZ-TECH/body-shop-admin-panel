@@ -157,9 +157,14 @@ export const deleteavailibityhours = async (body) => {
   }
 };
 // salon reviews
-export const getallreviews = async () => {
+export const getallreviews = async ({
+  currentPage,
+  pageSize,
+  setTotalPages
+}) => {
   try {
-    const response = await DataService.get(`/api/v1/reviews/`);
+    const response = await DataService.get(`/api/v1/reviews/?page=${currentPage}&limit=${pageSize}`);
+    setTotalPages(response.data.totalPages)
     return response.data;
   } catch (error) {
     return error;

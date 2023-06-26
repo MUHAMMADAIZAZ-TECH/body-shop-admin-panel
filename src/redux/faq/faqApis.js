@@ -1,8 +1,13 @@
 import { DataService } from '../../config/dataService/mydataService';
 
-export const getfaqs = async () => {
+export const getfaqs = async ({
+  currentPage,
+  pageSize,
+  setTotalPages
+}) => {
   try {
-    const { data } = await DataService.get(`/api/v1/faqs`);
+    const { data } = await DataService.get(`/api/v1/faqs?page=${currentPage}&limit=${pageSize}`);
+    setTotalPages(data.totalPages)
     return data;
   } catch (error) {
     return error;

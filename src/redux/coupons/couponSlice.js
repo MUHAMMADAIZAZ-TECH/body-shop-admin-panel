@@ -9,8 +9,8 @@ const initialState = {
   coupons: [],
   coupon: null,
 };
-export const getCoupons = createAsyncThunk('get/getCoupons', async () => {
-  const response = await getcoupons();
+export const getCoupons = createAsyncThunk('get/getCoupons', async (body) => {
+  const response = await getcoupons(body);
   return response;
 });
 export const getCoupon = createAsyncThunk('get/getCoupon', async (id) => {

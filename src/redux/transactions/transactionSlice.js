@@ -6,8 +6,8 @@ const initialState = {
   error: false,
   transactions: [],
 };
-export const getTransactions = createAsyncThunk('get/getTransactions', async () => {
-  const response = await gettransactions();
+export const getTransactions = createAsyncThunk('get/getTransactions', async (Body) => {
+  const response = await gettransactions(Body);
   return response;
 });
 
