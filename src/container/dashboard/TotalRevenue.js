@@ -1,31 +1,31 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Link, NavLink } from 'react-router-dom';
-import FeatherIcon from 'feather-icons-react';
+// import { NavLink } from 'react-router-dom';
+// import FeatherIcon from 'feather-icons-react';
 import { Spin } from 'antd';
 import PropTypes from 'prop-types';
 import { RevenueWrapper } from './style';
 import { ChartjsAreaChart } from '../../components/charts/chartjs';
 import { customTooltips, chartLinearGradient } from '../../components/utilities/utilities';
-import { performanceFilterData, performanceGetData } from '../../redux/chartContent/actionCreator';
+import { performanceGetData } from '../../redux/chartContent/actionCreator';
 import { Cards } from '../../components/cards/frame/cards-frame';
 
-const moreContent = (
-  <>
-    <NavLink to="#">
-      <FeatherIcon size={16} icon="printer" />
-      <span>Printer</span>
-    </NavLink>
-    <NavLink to="#">
-      <FeatherIcon size={16} icon="x" />
-      <span>Excel (XLSX)</span>
-    </NavLink>
-    <NavLink to="#">
-      <FeatherIcon size={16} icon="file" />
-      <span>CSV</span>
-    </NavLink>
-  </>
-);
+// const moreContent = (
+//   <>
+//     <NavLink to="#">
+//       <FeatherIcon size={16} icon="printer" />
+//       <span>Printer</span>
+//     </NavLink>
+//     <NavLink to="#">
+//       <FeatherIcon size={16} icon="x" />
+//       <span>Excel (XLSX)</span>
+//     </NavLink>
+//     <NavLink to="#">
+//       <FeatherIcon size={16} icon="file" />
+//       <span>CSV</span>
+//     </NavLink>
+//   </>
+// );
 function TotalRevenue({ title ,DashboardData}) {
   const dispatch = useDispatch();
   const { performanceState, preIsLoading,salonStates } = useSelector(state => {
@@ -35,16 +35,15 @@ function TotalRevenue({ title ,DashboardData}) {
       salonStates: state.salonStates,
     };
   });
-  const [state, setState] = useState({
-    revenue: 'year',
-  });
+  // const [state, setState] = useState({
+  //   revenue: 'year',
+  // });
 
   useEffect(() => {
     if (performanceGetData) {
       dispatch(performanceGetData());
     }
   }, [dispatch]);
-console.log(salonStates);
 const earningdatasets = (array) =>{
   if(array){
     const seperated = array?.map((item)=>Number(item.monthly_earnings))
@@ -58,13 +57,13 @@ const earningdatasets = (array) =>{
 //  return seperated
 
 // }
-  const handleActiveChangeRevenue = value => {
-    setState({
-      ...state,
-      revenue: value,
-    });
-    return dispatch(performanceFilterData(value));
-  };
+  // const handleActiveChangeRevenue = value => {
+  //   setState({
+  //     ...state,
+  //     revenue: value,
+  //   });
+  //   return dispatch(performanceFilterData(value));
+  // };
 
   const performanceDatasets = performanceState !== null && [
     {
@@ -87,55 +86,54 @@ const earningdatasets = (array) =>{
       amount: `$${DashboardData?.totalEarnings}`,
       amountClass: 'current-amount',
     },
-    {
-      data: [],
-      borderColor: '#5F63F2',
-      borderWidth: 4,
-      fill: true,
-      backgroundColor: () =>
-        chartLinearGradient(document.getElementById('performance'), 300, {
-          start: '#5F63F230',
-          end: '#ffffff05',
-        }),
-      label: 'Total Bookings',
-      pointStyle: 'circle',
-      pointRadius: '0',
-      hoverRadius: '9',
-      pointBorderColor: '#fff',
-      pointBackgroundColor: '#5F63F2',
-      hoverBorderWidth: 5,
-      amount: `${DashboardData?.totalBookings}`,
-      amountClass: 'current-amount',
-    },
+    // {
+    //   data: [],
+    //   borderColor: '#5F63F2',
+    //   borderWidth: 4,
+    //   fill: true,
+    //   backgroundColor: () =>
+    //     chartLinearGradient(document.getElementById('performance'), 300, {
+    //       start: '#5F63F230',
+    //       end: '#ffffff05',
+    //     }),
+    //   label: 'Total Bookings',
+    //   pointStyle: 'circle',
+    //   pointRadius: '0',
+    //   hoverRadius: '9',
+    //   pointBorderColor: '#fff',
+    //   pointBackgroundColor: '#5F63F2',
+    //   hoverBorderWidth: 5,
+    //   amount: `${DashboardData?.totalBookings}`,
+    //   amountClass: 'current-amount',
+    // },
   ];
   
-console.log(DashboardData.totalBookings);
   return (
     <RevenueWrapper>
       {performanceState !== null && (
         <Cards
-          isbutton={
-            <div className="card-nav">
-              <ul>
-                <li className={state.revenue === 'week' ? 'active' : 'deactivate'}>
-                  <Link onClick={() => handleActiveChangeRevenue('week')} to="#">
-                    Week
-                  </Link>
-                </li>
-                <li className={state.revenue === 'month' ? 'active' : 'deactivate'}>
-                  <Link onClick={() => handleActiveChangeRevenue('month')} to="#">
-                    Month
-                  </Link>
-                </li>
-                <li className={state.revenue === 'year' ? 'active' : 'deactivate'}>
-                  <Link onClick={() => handleActiveChangeRevenue('year')} to="#">
-                    Year
-                  </Link>
-                </li>
-              </ul>
-            </div>
-          }
-          more={moreContent}
+          // isbutton={
+          //   <div className="card-nav">
+          //     <ul>
+          //       <li className={state.revenue === 'week' ? 'active' : 'deactivate'}>
+          //         <Link onClick={() => handleActiveChangeRevenue('week')} to="#">
+          //           Week
+          //         </Link>
+          //       </li>
+          //       <li className={state.revenue === 'month' ? 'active' : 'deactivate'}>
+          //         <Link onClick={() => handleActiveChangeRevenue('month')} to="#">
+          //           Month
+          //         </Link>
+          //       </li>
+          //       <li className={state.revenue === 'year' ? 'active' : 'deactivate'}>
+          //         <Link onClick={() => handleActiveChangeRevenue('year')} to="#">
+          //           Year
+          //         </Link>
+          //       </li>
+          //     </ul>
+          //   </div>
+          // }
+          // more={moreContent}
           title={title}
           size="large"
         >

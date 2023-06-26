@@ -8,8 +8,8 @@ import { Cards } from '../../components/cards/frame/cards-frame';
 import { Main } from '../styled';
 import Heading from '../../components/heading/heading';
 import { ChartjsBarChartTransparent } from '../../components/charts/chartjs';
-import { ExportButtonPageHeader } from '../../components/buttons/export-button/export-button';
-import { CalendarButtonPageHeader } from '../../components/buttons/calendar-button/calendar-button';
+// import { ExportButtonPageHeader } from '../../components/buttons/export-button/export-button';
+// import { CalendarButtonPageHeader } from '../../components/buttons/calendar-button/calendar-button';
 import { getSalons, getDashboard } from '../../redux/salon/salonSlice';
 
 const UserListTable = lazy(() => import('./usertable'));
@@ -55,7 +55,6 @@ function CRM() {
       salonState: state.salonStates,
     };
   });
-  console.log(salonState);
   const earningdatasets = (array) => {
     if (array) {
       const seperated = array?.map((item) => Number(item.monthly_earnings))
@@ -98,12 +97,12 @@ function CRM() {
       <PageHeader
         ghost
         title="Dashboard | System overview"
-        buttons={[
-          <div key="1" className="page-header-actions">
-            <CalendarButtonPageHeader />
-            <ExportButtonPageHeader />
-          </div>,
-        ]}
+        // buttons={[
+        //   <div key="1" className="page-header-actions">
+        //     <CalendarButtonPageHeader />
+        //     <ExportButtonPageHeader />
+        //   </div>,
+        // ]}
       />
       <Main>
         <Row gutter={25}>
