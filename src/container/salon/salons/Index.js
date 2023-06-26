@@ -25,6 +25,8 @@ const ViewPage = () => {
     };
   });
   const dataSource = [];
+  const [currentPage, setCurrentPage] = useState(1); // Initial current page
+  const [totalPages, setTotalPages] = useState(0); 
   const [searchText, setSearchText] = useState('');
   const [previewImages, setPreviewImages] = useState([]);
   const [searchedColumn, setSearchedColumn] = useState('');
@@ -38,9 +40,11 @@ const ViewPage = () => {
     selectedRowKeys: 0,
     selectedRows: [],
   });
-  const [pageSize, setPageSize] = useState(6);
+  console.log(salonState);
+  const [pageSize, setPageSize] = useState(10);
   const handlePageSizeChange = (current, size) => {
     setPageSize(size);
+    setCurrentPage(1);
   };
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
@@ -304,7 +308,11 @@ const ViewPage = () => {
     }
   };
   useEffect(() => {
-    dispatch(getSalons());
+    dispatch(getSalons({
+      currentPage,
+      pageSize,
+      setTotalPages
+    }));
   }, []);
   return (
     <RecordViewWrapper>
@@ -350,9 +358,12 @@ const ViewPage = () => {
                       rowSelection={rowSelection}
                       pagination={{ 
                         pageSize,
+                        total: totalPages * pageSize,
                         showSizeChanger: true ,
-                        pageSizeOptions: ['5', '10', '20', '50'], 
-                        onShowSizeChange: handlePageSizeChange
+                        pageSizeOptions: ['10', '25', '50', '100'], 
+                        onShowSizeChange: handlePageSizeChange,
+                        current: currentPage,
+                        onChange: setCurrentPage,
                       }}
                       dataSource={dataSource}
                       columns={columns}

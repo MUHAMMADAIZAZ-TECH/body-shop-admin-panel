@@ -55,6 +55,40 @@ function CRM() {
       salonState: state.salonStates,
     };
   });
+  console.log(salonState);
+  const earningdatasets = (array) => {
+    if (array) {
+      const seperated = array?.map((item) => Number(item.monthly_earnings))
+      return seperated
+    }
+    return []
+
+  }
+  const bookingsdatasets = (array) => {
+    if (array) {
+      const seperated = array?.map((item) => Number(item.monthly_bookings))
+      return seperated
+    }
+    return []
+
+  }
+  const salonsdatasets = (array) => {
+    if (array) {
+      const seperated = array?.map((item) => Number(item.monthly_salons))
+      return seperated
+    }
+    return []
+
+  }
+  const userdatasets = (array) => {
+    if (array) {
+      const seperated = array?.map((item) => Number(item.monthly_users))
+      return seperated
+    }
+    return []
+
+  }
+  const month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   useEffect(() => {
     dispatch(getDashboard());
     dispatch(getSalons());
@@ -92,13 +126,13 @@ function CRM() {
                 </div>
                 <div className="card-chunk">
                   <ChartjsBarChartTransparent
-                    labels={['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul']}
+                    labels={month}
                     datasets={[
                       {
-                        data: [20, 60, 50, 45, 50, 60, 70],
+                        data: bookingsdatasets(salonState?.dashboardDetails),
                         backgroundColor: '#EFEFFE',
                         hoverBackgroundColor: '#5F63F2',
-                        label: 'Orders',
+                        label: 'Bookings',
                         barPercentage: 1,
                       },
                     ]}
@@ -114,7 +148,7 @@ function CRM() {
                 <div className="card-chunk">
                   <CardBarChart2>
                     <Heading as="h1">
-                      {salonState.dashboard.totalEarnings && salonState.dashboard.totalEarnings}$
+                      ${salonState.dashboard.totalEarnings && salonState.dashboard.totalEarnings}
                     </Heading>
                     <span>Total earnings</span>
                     <p>
@@ -127,10 +161,10 @@ function CRM() {
                 </div>
                 <div className="card-chunk">
                   <ChartjsBarChartTransparent
-                    labels={['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul']}
+                    labels={month}
                     datasets={[
                       {
-                        data: [20, 60, 50, 45, 50, 60, 70],
+                        data: earningdatasets(salonState?.dashboardDetails),
                         backgroundColor: '#FFF0F6',
                         hoverBackgroundColor: '#FF69A5',
                         label: 'Revenue',
@@ -160,13 +194,13 @@ function CRM() {
                 </div>
                 <div className="card-chunk">
                   <ChartjsBarChartTransparent
-                    labels={['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul']}
+                    labels={month}
                     datasets={[
                       {
-                        data: [20, 60, 50, 45, 50, 60, 70],
+                        data: salonsdatasets(salonState?.dashboardDetails),
                         backgroundColor: '#E8FAF4',
                         hoverBackgroundColor: '#20C997',
-                        label: 'Avg Orders',
+                        label: 'Salons Registered',
                         barPercentage: 1,
                       },
                     ]}
@@ -195,13 +229,13 @@ function CRM() {
                 </div>
                 <div className="card-chunk">
                   <ChartjsBarChartTransparent
-                    labels={['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul']}
+                    labels={month}
                     datasets={[
                       {
-                        data: [20, 60, 50, 45, 50, 60, 70],
+                        data: userdatasets(salonState?.dashboardDetails),
                         backgroundColor: '#E9F5FF',
                         hoverBackgroundColor: '#2C99FF',
-                        label: 'Visitors',
+                        label: 'User Registerd',
                         barPercentage: 1,
                       },
                     ]}
@@ -221,8 +255,8 @@ function CRM() {
                 </Cards>
               }
             >
-            <TotalRevenue title="Earnings" DashboardData={salonState.dashboard}/> 
-           </Suspense>
+              <TotalRevenue title="Earnings" DashboardData={salonState.dashboard} />
+            </Suspense>
           </Col>
           <Col xxl={12} xs={24}>
             <Suspense

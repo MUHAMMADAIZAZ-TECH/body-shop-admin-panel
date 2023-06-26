@@ -77,9 +77,6 @@ const ViewPage = () => {
     }
     return false;
   };
-  const onHandleSearch = (e) => {
-    setState({ ...state, searchText: e.target.value });
-  };
   console.log(salonState?.availibilityhoursBysalon);
   if (salonState?.availibilityhoursBysalon?.length)
     salonState?.availibilityhoursBysalon?.map((availhour, key) => {
@@ -195,12 +192,6 @@ const ViewPage = () => {
                 <FeatherIcon icon="plus" size={14} /> <span>Add New</span>
               </Link>
             </Button>
-          </div>,
-          <div key={1} className="search-box">
-            <span className="search-icon">
-              <FeatherIcon icon="search" size={14} />
-            </span>
-            <input onChange={onHandleSearch} type="text" name="recored-search" placeholder="Search Here" />
           </div>,
         ]}
         ghost

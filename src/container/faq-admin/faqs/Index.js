@@ -72,10 +72,6 @@ const ViewPage = () => {
     return false;
   };
 
-  const onHandleSearch = (e) => {
-    console.log(e.target.value);
-  };
-
   if (faqStates?.faqs.length)
     faqStates?.faqs?.map((person, key) => {
       const { id, question, answer, updated_at } = person;
@@ -180,12 +176,6 @@ const ViewPage = () => {
                 <FeatherIcon icon="plus" size={14} /> <span>Add New</span>
               </Link>
             </Button>
-          </div>,
-          <div key={1} className="search-box">
-            <span className="search-icon">
-              <FeatherIcon icon="search" size={14} />
-            </span>
-            <input onChange={onHandleSearch} type="text" name="recored-search" placeholder="Search Here" />
           </div>,
         ]}
         ghost

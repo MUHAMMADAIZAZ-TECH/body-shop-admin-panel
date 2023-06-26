@@ -71,10 +71,6 @@ const ViewPage = () => {
     return false;
   };
 
-  const onHandleSearch = (e) => {
-    console.log(e.target.value);
-  };
-
   if (settingStates?.CustomPages.length)
   settingStates?.CustomPages?.map((CustomPage, key) => {
       const { id, title, content } = CustomPage;
@@ -172,12 +168,6 @@ const ViewPage = () => {
                 <FeatherIcon icon="plus" size={14} /> <span>Add New</span>
               </Link>
             </Button>
-          </div>,
-          <div key={1} className="search-box">
-            <span className="search-icon">
-              <FeatherIcon icon="search" size={14} />
-            </span>
-            <input onChange={onHandleSearch} type="text" name="recored-search" placeholder="Search Here" />
           </div>,
         ]}
         ghost

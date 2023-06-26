@@ -21,7 +21,10 @@ const ViewPage = () => {
       TransactionStates: state.transactionStates,
     };
   });
+  console.log(TransactionStates);
   const dataSource = [];
+  const [currentPage, setCurrentPage] = useState(1); // Initial current page
+  const [totalPages, setTotalPages] = useState(0); 
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef(null);
@@ -32,7 +35,7 @@ const ViewPage = () => {
     selectedRowKeys: 0,
     selectedRows: [],
   });
-  const [pageSize, setPageSize] = useState(12);
+  const [pageSize, setPageSize] = useState(TransactionStates?.transactions?.result);
   const handlePageSizeChange = (current, size) => {
     setPageSize(size);
   };
@@ -57,14 +60,18 @@ const ViewPage = () => {
   };
 
   useEffect(() => {
-    dispatch(getTransactions());
-  }, [dispatch]);
+    dispatch(getTransactions({
+      currentPage,
+      pageSize,
+      setTotalPages
+    }));
+  }, [dispatch,currentPage, pageSize]);
 
   const onHandleSearch = (e) => {
     setState({ ...state, searchText: e.target.value });
   };
-  if (TransactionStates?.transactions?.length)
-    TransactionStates?.transactions?.map((transaction, key) => {
+  if (TransactionStates?.transactions?.data?.length)
+    TransactionStates?.transactions?.data?.map((transaction, key) => {
       const { booking_id, amount, status, user_name, created_at, updated_at } = transaction;
       return dataSource.push({
         key: key + 1,
@@ -222,9 +229,12 @@ const ViewPage = () => {
                       rowSelection={rowSelection}
                       pagination={{ 
                         pageSize,
+                        total: totalPages * pageSize,
                         showSizeChanger: true ,
-                        pageSizeOptions: ['5', '10', '20', '50'], 
-                        onShowSizeChange: handlePageSizeChange
+                        pageSizeOptions: ['10', '25', '50', '100'], 
+                        onShowSizeChange: handlePageSizeChange,
+                        current: currentPage,
+                        onChange: setCurrentPage,
                       }}
                       dataSource={dataSource}
                       columns={columns}

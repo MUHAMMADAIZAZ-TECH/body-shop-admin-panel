@@ -42,7 +42,7 @@ const CouponSlice = createSlice({
       })
       .addCase(getCoupons.fulfilled, (state, action) => {
         state.loading = false;
-        state.coupons = action.payload.data;
+        state.coupons = action.payload;
       })
       .addCase(getCoupons.rejected, (state, action) => {
         state.loading = false;

@@ -19,7 +19,7 @@ function SignIn() {
   const history = useHistory();
   const dispatch = useDispatch();
   const [username, setUsername] = useState('admin@example.com'); // State variable for username
-  const [password, setPassword] = useState('12345678');
+  const [password, setPassword] = useState('admin1234');
   const isLoading = useSelector((state) => state.authenticationStates.loading);
   const authStates = useSelector((state) => state.authenticationStates);
   const [form] = Form.useForm();
@@ -81,7 +81,7 @@ function SignIn() {
           >
             <Input value={username} onChange={handleUsernameChange} />
           </Form.Item>
-          <Form.Item name="password" initialValue="12345678" label="Password">
+          <Form.Item name="password" initialValue="admin1234" label="Password">
             <Input.Password value={password} onChange={handlePasswordChange} placeholder="Password" />
           </Form.Item>
           <div className="auth-form-action">

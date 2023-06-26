@@ -23,6 +23,8 @@ const ViewPage = () => {
     };
   });
   const dataSource = [];
+  const [currentPage, setCurrentPage] = useState(1); // Initial current page
+  const [totalPages, setTotalPages] = useState(0); 
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef(null);
@@ -33,7 +35,7 @@ const ViewPage = () => {
     selectedRowKeys: 0,
     selectedRows: [],
   });
-  const [pageSize, setPageSize] = useState(13);
+  const [pageSize, setPageSize] = useState(couponStates?.coupons?.results);
   const handlePageSizeChange = (current, size) => {
     setPageSize(size);
   };
@@ -74,9 +76,9 @@ const ViewPage = () => {
   const onHandleSearch = (e) => {
     setState({ ...state, searchText: e.target.value });
   };
-  console.log(couponStates?.coupons);
-  if (couponStates?.coupons?.length)
-    couponStates?.coupons?.map((coupon, key) => {
+  console.log(couponStates);
+  if (couponStates?.coupons?.data?.length)
+    couponStates?.coupons?.data?.map((coupon, key) => {
       const { id, code, discount_value, discount_type, redeemed_count, max_redemptions, end_date, updated_at } = coupon;
       return dataSource.push({
         key: key + 1,
@@ -234,8 +236,12 @@ const ViewPage = () => {
     }
   };
   useEffect(() => {
-    dispatch(getCoupons());
-  }, [dispatch]);
+    dispatch(getCoupons({
+      currentPage,
+      pageSize,
+      setTotalPages
+    }));
+  }, [dispatch,currentPage, pageSize]);
   return (
     <RecordViewWrapper>
       <PageHeader
@@ -280,9 +286,12 @@ const ViewPage = () => {
                       rowSelection={rowSelection}
                       pagination={{ 
                         pageSize,
+                        total: totalPages * pageSize,
                         showSizeChanger: true ,
-                        pageSizeOptions: ['5', '10', '20', '50'], 
-                        onShowSizeChange: handlePageSizeChange
+                        pageSizeOptions: ['10', '25', '50', '100'], 
+                        onShowSizeChange: handlePageSizeChange,
+                        current: currentPage,
+                        onChange: setCurrentPage,
                       }}
                       dataSource={dataSource}
                       columns={columns}

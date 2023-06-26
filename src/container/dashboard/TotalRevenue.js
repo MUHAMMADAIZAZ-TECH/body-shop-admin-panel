@@ -28,13 +28,13 @@ const moreContent = (
 );
 function TotalRevenue({ title ,DashboardData}) {
   const dispatch = useDispatch();
-  const { performanceState, preIsLoading } = useSelector(state => {
+  const { performanceState, preIsLoading,salonStates } = useSelector(state => {
     return {
       performanceState: state.chartContent.performanceData,
       preIsLoading: state.chartContent.perLoading,
+      salonStates: state.salonStates,
     };
   });
-  console.log(DashboardData);
   const [state, setState] = useState({
     revenue: 'year',
   });
@@ -44,7 +44,20 @@ function TotalRevenue({ title ,DashboardData}) {
       dispatch(performanceGetData());
     }
   }, [dispatch]);
+console.log(salonStates);
+const earningdatasets = (array) =>{
+  if(array){
+    const seperated = array?.map((item)=>Number(item.monthly_earnings))
+    return seperated
+  }
+  return []
 
+}
+// const bookingsdatasets = (array) =>{
+//   const seperated = array.map((item)=>Number(item.monthly_bookings))
+//  return seperated
+
+// }
   const handleActiveChangeRevenue = value => {
     setState({
       ...state,
@@ -55,7 +68,7 @@ function TotalRevenue({ title ,DashboardData}) {
 
   const performanceDatasets = performanceState !== null && [
     {
-      data: performanceState.users[1],
+      data: earningdatasets(salonStates?.dashboardDetails),
       borderColor: '#5F63F2',
       borderWidth: 4,
       fill: true,
@@ -71,11 +84,11 @@ function TotalRevenue({ title ,DashboardData}) {
       pointBorderColor: '#fff',
       pointBackgroundColor: '#5F63F2',
       hoverBorderWidth: 5,
-      amount: '$7,596',
+      amount: `$${DashboardData?.totalEarnings}`,
       amountClass: 'current-amount',
     },
     {
-      data: performanceState.users[1],
+      data: [],
       borderColor: '#5F63F2',
       borderWidth: 4,
       fill: true,
@@ -91,11 +104,12 @@ function TotalRevenue({ title ,DashboardData}) {
       pointBorderColor: '#fff',
       pointBackgroundColor: '#5F63F2',
       hoverBorderWidth: 5,
-      amount: '$7,596',
+      amount: `${DashboardData?.totalBookings}`,
       amountClass: 'current-amount',
     },
   ];
-
+  
+console.log(DashboardData.totalBookings);
   return (
     <RevenueWrapper>
       {performanceState !== null && (
@@ -205,10 +219,10 @@ function TotalRevenue({ title ,DashboardData}) {
                           fontSize: 13,
                           fontColor: '#182b49',
                           suggestedMin: 50,
-                          suggestedMax: 80,
-                          stepSize: 20,
+                          suggestedMax: DashboardData?.totalEarnings,
+                          stepSize: 50,
                           callback(label) {
-                            return `${label}k`;
+                            return `${label}$`;
                           },
                         },
                       },

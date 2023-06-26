@@ -22,7 +22,10 @@ const ViewPage = () => {
       servicesStates: state.servicesStates,
     };
   });
+  console.log(servicesStates.services);
   const dataSource = [];
+  const [currentPage, setCurrentPage] = useState(1); // Initial current page
+  const [totalPages, setTotalPages] = useState(0); 
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef(null);
@@ -34,7 +37,7 @@ const ViewPage = () => {
     selectedRowKeys: 0,
     selectedRows: [],
   });
-  const [pageSize, setPageSize] = useState(6);
+  const [pageSize, setPageSize] = useState(servicesStates?.services?.results);
   const handlePageSizeChange = (current, size) => {
     setPageSize(size);
   };
@@ -74,8 +77,8 @@ const ViewPage = () => {
     setState({ ...state, searchText: e.target.value });
   };
 
-  if (servicesStates?.services?.length)
-    servicesStates?.services?.map((services, key) => {
+  if (servicesStates?.services?.data?.length)
+    servicesStates?.services?.data?.map((services, key) => {
       const { id, image, name, salon_name, price, category_name, is_available, updated_at } = services;
       return dataSource.push({
         key: key + 1,
@@ -186,8 +189,12 @@ const ViewPage = () => {
     }
   };
   useEffect(() => {
-    dispatch(getServices());
-  }, []);
+    dispatch(getServices({
+      currentPage,
+      pageSize,
+      setTotalPages
+    }));
+  }, [currentPage, pageSize]);
   return (
     <RecordViewWrapper>
       <PageHeader
@@ -232,9 +239,12 @@ const ViewPage = () => {
                       rowSelection={rowSelection}
                       pagination={{ 
                         pageSize,
+                        total: totalPages * pageSize,
                         showSizeChanger: true ,
-                        pageSizeOptions: ['5', '10', '20', '50'], 
-                        onShowSizeChange: handlePageSizeChange
+                        pageSizeOptions: ['10', '25', '50', '100'], 
+                        onShowSizeChange: handlePageSizeChange,
+                        current: currentPage,
+                        onChange: setCurrentPage,
                       }}
                       dataSource={dataSource}
                       columns={columns}

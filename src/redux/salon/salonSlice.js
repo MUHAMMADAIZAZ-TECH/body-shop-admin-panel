@@ -47,6 +47,7 @@ const initialState = {
     totalEarnings: '',
     totalSalons: 0,
   },
+  dashboardDetails:null
 };
 // Dashboard
 export const getDashboard = createAsyncThunk('get/getDashboard', async () => {
@@ -153,6 +154,48 @@ const salonSlice = createSlice({
         state.status = true;
         state.loading = false;
         state.dashboard = action?.payload?.data;
+        const bookings = action?.payload?.data?.monthlyBookings;
+        const earnings = action?.payload?.data?.monthlyEarnings;
+        const salondatasets = action?.payload?.data?.salonCount;
+        const usersdatasets = action?.payload?.data?.usersCount;
+        const allMonths = Array.from({ length: 12 }, (_, month) => {
+          const monthIndex = month + 1;
+          return {
+            year: 2023,
+            month: monthIndex,
+            month_name: new Date(2023, month, 1).toLocaleString('en-us', { month: 'long' }),
+            monthly_bookings: 0,
+            monthly_earnings: '0.00',
+            monthly_salons:0,
+            monthly_users:0
+          };
+        });
+        
+        // Populate monthly bookings
+        bookings.forEach((booking) => {
+          const { month, monthly_bookings } = booking;
+          const index = month - 1;
+          allMonths[index].monthly_bookings = monthly_bookings;
+        });
+        
+        // Populate monthly earnings
+        earnings.forEach((earning) => {
+          const { month, monthly_earnings } = earning;
+          const index = month - 1;
+          allMonths[index].monthly_earnings = monthly_earnings;
+        });
+        salondatasets.forEach((earning) => {
+          const { month, salon_count } = earning;
+          const index = month - 1;
+          allMonths[index].monthly_salons = salon_count;
+        });
+        usersdatasets.forEach((earning) => {
+          const { month, user_count } = earning;
+          const index = month - 1;
+          allMonths[index].monthly_users = user_count;
+        });
+        state.dashboardDetails = allMonths;
+        console.log(allMonths);
       })
       .addCase(getDashboard.rejected, (state, action) => {
         state.loading = false;

@@ -23,7 +23,10 @@ const ViewPage = () => {
     };
   });
   const dataSource = [];
+  console.log(salonState.salonreviews.results);
   // search states
+  const [currentPage, setCurrentPage] = useState(1); // Initial current page
+  const [totalPages, setTotalPages] = useState(0); 
   const [searchText, setSearchText] = useState('');
   const searchInput = useRef(null);
   const [searchedColumn, setSearchedColumn] = useState('');
@@ -35,7 +38,7 @@ const ViewPage = () => {
     selectedRowKeys: 0,
     selectedRows: [],
   });
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(salonState?.salonreviews?.results);
   const handlePageSizeChange = (current, size) => {
     setPageSize(size);
   };
@@ -177,8 +180,12 @@ const ViewPage = () => {
     }
   };
   useEffect(() => {
-    dispatch(getAllReviews());
-  }, []);
+    dispatch(getAllReviews({
+      currentPage,
+      pageSize,
+      setTotalPages
+    }));
+  }, [currentPage, pageSize]);
   return (
     <RecordViewWrapper>
       <PageHeader
@@ -216,9 +223,12 @@ const ViewPage = () => {
                       rowSelection={rowSelection}
                       pagination={{ 
                         pageSize,
+                        total: totalPages * pageSize,
                         showSizeChanger: true ,
-                        pageSizeOptions: ['5', '10', '20', '50'], 
-                        onShowSizeChange: handlePageSizeChange
+                        pageSizeOptions: ['10', '25', '50', '100'], 
+                        onShowSizeChange: handlePageSizeChange,
+                        current: currentPage,
+                        onChange: setCurrentPage,
                       }}
                       dataSource={dataSource}
                       columns={columns}
