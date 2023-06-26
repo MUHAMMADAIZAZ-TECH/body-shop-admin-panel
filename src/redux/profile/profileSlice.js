@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { message } from 'antd';
-import { getmyprofile,updatemyprofile } from './profileApis';
+import { getmyprofile,updatemyprofile,changepassword } from './profileApis';
 
 const initialState = {
   loading: false,
@@ -20,6 +20,11 @@ export const updateMyProfile = createAsyncThunk('patch/updateMyProfile', async (
   return response;
 });
 
+export const ChangePassword = createAsyncThunk('patch/ChangePassword', async (body) => {
+  const response = await changepassword(body);
+  return response;
+});
+
 
 const MyProfileSlice = createSlice({
   name: 'MyProfileSlice',
@@ -36,6 +41,23 @@ const MyProfileSlice = createSlice({
         state.MyProfile = action.payload.data;
       })
       .addCase(getMyprofile.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error;
+        state.message = action.error.message;
+      });
+      builder
+      .addCase(ChangePassword.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(ChangePassword.fulfilled, (state,action) => {
+        console.log(action.payload);
+        state.loading = false;
+        state.message = 'Successfully Updated';
+        message.success('Successfully Updated')
+        state.success = true;
+      })
+      .addCase(ChangePassword.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error;
         state.message = action.error.message;

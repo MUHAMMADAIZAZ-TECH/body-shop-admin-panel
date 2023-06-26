@@ -27,3 +27,14 @@ export const updatemyprofile = async (data) => {
   }
 };
 
+export const changepassword = async (data) => {
+  try {
+    const response = await DataService.patch(`/api/v1/users/updatePasswordAdmin`,data);
+    if(response.data!==undefined || response.data!==null){
+      console.log(response);
+      return response.data;
+    }
+  } catch (error) {
+    return error;
+  }
+};

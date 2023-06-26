@@ -38,6 +38,11 @@ function AuthInfo() {
               <FeatherIcon icon="user" /> Profile
             </Link>
           </li>
+          <li>
+            <Link to="/admin/profile/change-password">
+              <FeatherIcon icon="lock" /> Change Password
+            </Link>
+          </li>
         </ul>
         <Link className="user-dropdwon__bottomAction" onClick={SignOut} to="#">
           <FeatherIcon icon="log-out" /> Sign Out

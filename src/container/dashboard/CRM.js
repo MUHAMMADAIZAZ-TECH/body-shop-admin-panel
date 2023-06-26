@@ -1,6 +1,6 @@
 import React, { Suspense, useEffect, lazy } from 'react';
 import { Row, Col, Skeleton } from 'antd';
-import FeatherIcon from 'feather-icons-react';
+// import FeatherIcon from 'feather-icons-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CardBarChart2, EChartCard } from './style';
 import { PageHeader } from '../../components/page-headers/page-headers';
@@ -118,9 +118,9 @@ function CRM() {
                     <span>Total Bookings</span>
                     <p>
                       <span className="growth-upward">
-                        <FeatherIcon icon="arrow-up" /> 25%
+                      Since last year
+                        {/* <FeatherIcon icon="arrow-up" />  */}
                       </span>
-                      <span>Since last week</span>
                     </p>
                   </CardBarChart2>
                 </div>
@@ -152,10 +152,10 @@ function CRM() {
                     </Heading>
                     <span>Total earnings</span>
                     <p>
-                      <span className="growth-downward">
-                        <FeatherIcon icon="arrow-down" /> 25%
+                      <span className="growth-upward">
+                      Since last year
+                        {/* <FeatherIcon icon="arrow-up" />  */}
                       </span>
-                      <span>Since last week</span>
                     </p>
                   </CardBarChart2>
                 </div>
@@ -186,9 +186,9 @@ function CRM() {
                     <span>Salons</span>
                     <p>
                       <span className="growth-upward">
-                        <FeatherIcon icon="arrow-up" /> 25%
+                      Since last year
+                        {/* <FeatherIcon icon="arrow-up" />  */}
                       </span>
-                      <span>Since last week</span>
                     </p>
                   </CardBarChart2>
                 </div>
@@ -221,9 +221,9 @@ function CRM() {
                     <span>Total Customers</span>
                     <p>
                       <span className="growth-upward">
-                        <FeatherIcon icon="arrow-up" /> 25%
+                      Since last year
+                        {/* <FeatherIcon icon="arrow-up" />  */}
                       </span>
-                      <span>Since last week</span>
                     </p>
                   </CardBarChart2>
                 </div>

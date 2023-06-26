@@ -77,7 +77,7 @@ const earningdatasets = (array) =>{
           start: '#5F63F230',
           end: '#ffffff05',
         }),
-      label: 'Total Earnings',
+      label: 'Revenue',
       pointStyle: 'circle',
       pointRadius: '0',
       hoverRadius: '9',
@@ -196,11 +196,11 @@ console.log(DashboardData.totalBookings);
                     custom: customTooltips,
                     callbacks: {
                       title() {
-                        return `Total Revenue`;
+                        return `This Month`;
                       },
                       label(t, d) {
                         const { yLabel, datasetIndex } = t;
-                        return `<span class="chart-data">${yLabel}k</span> <span class="data-label">${d.datasets[datasetIndex].label}</span>`;
+                        return `<span class="chart-data">$${yLabel}</span> <span class="data-label">${d.datasets[datasetIndex].label}</span>`;
                       },
                     },
                   },
