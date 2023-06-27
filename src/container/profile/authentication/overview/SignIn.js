@@ -1,9 +1,9 @@
 import React, { useState, useCallback } from 'react';
-import { Link, NavLink, useHistory } from 'react-router-dom';
+import { NavLink, useHistory } from 'react-router-dom';
 import { Form, Input, Button } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { FacebookOutlined, TwitterOutlined } from '@ant-design/icons';
+// import { FacebookOutlined, TwitterOutlined } from '@ant-design/icons';
 import { Auth0Lock } from 'auth0-lock';
 import { AuthWrapper } from './style';
 import { login } from '../../../../redux/authentication/actionCreator';
@@ -19,7 +19,7 @@ function SignIn() {
   const history = useHistory();
   const dispatch = useDispatch();
   const [username, setUsername] = useState('testadmin@example.com'); // State variable for username
-  const [password, setPassword] = useState('12345678');
+  const [password, setPassword] = useState('11221122');
   const isLoading = useSelector((state) => state.authenticationStates.loading);
   const authStates = useSelector((state) => state.authenticationStates);
   const [form] = Form.useForm();
@@ -65,9 +65,9 @@ function SignIn() {
 
   return (
     <AuthWrapper>
-      <p className="auth-notice">
+      {/* <p className="auth-notice">
         Don&rsquo;t have an account? <NavLink to="/register">Sign up now</NavLink>
-      </p>
+      </p> */}
       <div className="auth-contents">
         <Form name="login" form={form} onFinish={handleSubmit2} layout="vertical">
           <Heading as="h3">
@@ -76,12 +76,12 @@ function SignIn() {
           <Form.Item
             name="username"
             rules={[{ message: 'Please input your username or Email!', required: true }]}
-            initialValue="testadmin@example.com"
+            initialValue={username}
             label="Username or Email Address"
           >
             <Input value={username} onChange={handleUsernameChange} />
           </Form.Item>
-          <Form.Item name="password" initialValue="12345678" label="Password">
+          <Form.Item name="password" initialValue={password} label="Password">
             <Input.Password value={password} onChange={handlePasswordChange} placeholder="Password" />
           </Form.Item>
           <div className="auth-form-action">
@@ -97,7 +97,7 @@ function SignIn() {
               {isLoading ? 'Loading...' : 'Sign In'}
             </Button>
           </Form.Item>
-          <p className="form-divider">
+          {/* <p className="form-divider">
             <span>Or</span>
           </p>
           <ul className="social-login">
@@ -123,7 +123,7 @@ function SignIn() {
               Sign In with Auth0
             </Link>
             <Link to="/fbSignIn">Sign In With Firebase</Link>
-          </div>
+          </div> */}
         </Form>
       </div>
     </AuthWrapper>

@@ -12,7 +12,7 @@ import ImagePreviewModal from '../../../components/modals/my-modal';
 import { Button } from '../../../components/buttons/buttons';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { PageHeader } from '../../../components/page-headers/page-headers';
-import { getSalons, deleteSalon, selectSalon } from '../../../redux/salon/salonSlice';
+import { getSalons, deleteSalon, selectSalon,getSalonsBySearch } from '../../../redux/salon/salonSlice';
 import { exportToXLSX, handlePrint, getColumnSearchProps } from '../../../components/utilities/utilities';
 import MYExportButton from '../../../components/buttons/my-export-button/my-export-button';
 
@@ -40,7 +40,6 @@ const ViewPage = () => {
     selectedRowKeys: 0,
     selectedRows: [],
   });
-  console.log(salonState);
   const [pageSize, setPageSize] = useState(10);
   const handlePageSizeChange = (current, size) => {
     setPageSize(size);
@@ -88,10 +87,10 @@ const ViewPage = () => {
   };
   const handleEdit = (salon) => dispatch(selectSalon(salon));
   const onHandleSearch = (e) => {
-    setState({ ...state, searchText: e.target.value });
+    setSearchText(e.target.value);
   };
-  if (salonState?.approvedSalons?.length)
-    salonState?.approvedSalons?.map((salon, key) => {
+  if (salonState?.salons?.length)
+    salonState?.salons?.map((salon, key) => {
       const {
         id,
         images,
@@ -307,13 +306,25 @@ const ViewPage = () => {
       });
     }
   };
+  const Search = () => {
+    console.log(state);
+    dispatch(getSalonsBySearch({
+      currentPage,
+      pageSize,
+      setTotalPages,
+      approved:1,
+      searchText
+    }));
+  };
+ 
   useEffect(() => {
     dispatch(getSalons({
       currentPage,
       pageSize,
-      setTotalPages
+      setTotalPages,
+      approved:1
     }));
-  }, []);
+  }, [currentPage, pageSize]);
   return (
     <RecordViewWrapper>
       <PageHeader
@@ -335,9 +346,14 @@ const ViewPage = () => {
           </div>,
           <div key={1} className="search-box">
             <span className="search-icon">
-              <FeatherIcon icon="search" size={14} />
+              <FeatherIcon icon="search" size={14} onClick={Search} />
             </span>
-            <input onChange={onHandleSearch} type="text" name="recored-search" placeholder="Search Here" />
+            <input 
+            onChange={onHandleSearch} 
+            // onKeyDown={Search}
+            type="text" 
+            name="recored-search" 
+            placeholder="Search Here" />
           </div>,
         ]}
         ghost

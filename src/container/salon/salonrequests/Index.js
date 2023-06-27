@@ -12,7 +12,7 @@ import { Button } from '../../../components/buttons/buttons';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { PageHeader } from '../../../components/page-headers/page-headers';
 import { alertModal } from '../../../components/modals/antd-modals';
-import { getSalons, deleteSalon, selectSalon } from '../../../redux/salon/salonSlice';
+import { getSalons, deleteSalon, selectSalon,getSalonsBySearch } from '../../../redux/salon/salonSlice';
 import { exportToXLSX, handlePrint, getColumnSearchProps } from '../../../components/utilities/utilities';
 import MYExportButton from '../../../components/buttons/my-export-button/my-export-button';
 
@@ -41,7 +41,7 @@ const ViewPage = () => {
     selectedRowKeys: 0,
     selectedRows: [],
   });
-  const [pageSize, setPageSize] = useState(6);
+  const [pageSize, setPageSize] = useState(10);
   const handlePageSizeChange = (current, size) => {
     setPageSize(size);
   };
@@ -92,8 +92,8 @@ const ViewPage = () => {
   const onHandleSearch = (e) => {
     setState({ ...state, searchText: e.target.value });
   };
-  if (salonState?.unapprovedSalons?.length)
-    salonState?.unapprovedSalons?.map((salon, key) => {
+  if (salonState?.salons?.length)
+    salonState?.salons?.map((salon, key) => {
       const {
         id,
         images,
@@ -310,11 +310,22 @@ const ViewPage = () => {
       });
     }
   };
+  const Search = () => {
+    console.log(state);
+    dispatch(getSalonsBySearch({
+      currentPage,
+      pageSize,
+      setTotalPages,
+      approved:1,
+      searchText
+    }));
+  };
   useEffect(() => {
     dispatch(getSalons({
       currentPage,
       pageSize,
-      setTotalPages
+      setTotalPages,
+      approved:0
     }));
   }, [currentPage, pageSize]);
 
@@ -338,11 +349,16 @@ const ViewPage = () => {
             </Button>
           </div>,
           <div key={1} className="search-box">
-            <span className="search-icon">
-              <FeatherIcon icon="search" size={14} />
-            </span>
-            <input onChange={onHandleSearch} type="text" name="recored-search" placeholder="Search Here" />
-          </div>,
+          <span className="search-icon">
+            <FeatherIcon icon="search" size={14} onClick={Search} />
+          </span>
+          <input 
+          onChange={onHandleSearch} 
+          // onKeyDown={Search}
+          type="text" 
+          name="recored-search" 
+          placeholder="Search Here" />
+        </div>,
         ]}
         ghost
         title="Salons | Salons Management"

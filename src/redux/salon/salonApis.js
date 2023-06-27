@@ -1,9 +1,30 @@
 import { DataService } from '../../config/dataService/mydataService';
 
 // salon
-export const getsalons = async () => {
+export const getsalons = async ({
+  currentPage,
+  pageSize,
+  setTotalPages,
+  approved
+}) => {
   try {
-    const response = await DataService.get(`/api/v1/salons/all`);
+    const response = await DataService.get(`/api/v1/salons/all?isApproved=${approved}&page=${currentPage}&limit=${pageSize}`);
+    setTotalPages(response.data.totalPages)
+    return response?.data;
+  } catch (error) {
+    return error;
+  }
+};
+export const searchsalons = async ({
+  currentPage,
+  pageSize,
+  setTotalPages,
+  approved,
+  searchText
+}) => {
+  try {
+    const response = await DataService.get(`/api/v1/salons/all?isApproved=${approved}&page=${currentPage}&limit=${pageSize}&name=${searchText}`);
+    setTotalPages(response.data.totalPages)
     return response?.data;
   } catch (error) {
     return error;

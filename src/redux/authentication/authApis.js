@@ -17,3 +17,13 @@ export const userLogin = async (state) => {
     return error;
   }
 };
+export const forgotpassword = async (state) => {
+  try {
+    const response = await DataService.patch(`/api/v1/users/forgetpassword/admin`,state);
+    console.log(response);
+    return response.data;
+  } catch (error) {
+    console.log('Error', error);
+    return error;
+  }
+};

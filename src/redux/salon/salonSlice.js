@@ -21,6 +21,7 @@ import {
   updateavailibityhours,
   updatesalon,
   updatesalonreview,
+  searchsalons
 } from './salonApis';
 
 const initialState = {
@@ -55,8 +56,8 @@ export const getDashboard = createAsyncThunk('get/getDashboard', async () => {
   return response;
 });
 // salon-crud
-export const getSalons = createAsyncThunk('get/getsalons', async () => {
-  const response = await getsalons();
+export const getSalons = createAsyncThunk('get/getsalons', async (body) => {
+  const response = await getsalons(body);
   return response;
 });
 export const getSalon = createAsyncThunk('get/getSalon', async (id) => {
@@ -134,6 +135,10 @@ export const deleteAddress = createAsyncThunk('delete/deleteAddress', async (id)
   const response = await deleteaddress(id);
   return response;
 });
+export const getSalonsBySearch = createAsyncThunk('search/searchsalons', async (body) => {
+  const response = await searchsalons(body);
+  return response;
+});
 const salonSlice = createSlice({
   name: 'salonslice',
   initialState,
@@ -154,48 +159,51 @@ const salonSlice = createSlice({
         state.status = true;
         state.loading = false;
         state.dashboard = action?.payload?.data;
-        const bookings = action?.payload?.data?.monthlyBookings;
-        const earnings = action?.payload?.data?.monthlyEarnings;
-        const salondatasets = action?.payload?.data?.salonCount;
-        const usersdatasets = action?.payload?.data?.usersCount;
-        const allMonths = Array.from({ length: 12 }, (_, month) => {
-          const monthIndex = month + 1;
-          return {
-            year: 2023,
-            month: monthIndex,
-            month_name: new Date(2023, month, 1).toLocaleString('en-us', { month: 'long' }),
-            monthly_bookings: 0,
-            monthly_earnings: '0.00',
-            monthly_salons:0,
-            monthly_users:0
-          };
-        });
-        
-        // Populate monthly bookings
-        bookings.forEach((booking) => {
-          const { month, monthly_bookings } = booking;
-          const index = month - 1;
-          allMonths[index].monthly_bookings = monthly_bookings;
-        });
-        
-        // Populate monthly earnings
-        earnings.forEach((earning) => {
-          const { month, monthly_earnings } = earning;
-          const index = month - 1;
-          allMonths[index].monthly_earnings = monthly_earnings;
-        });
-        salondatasets.forEach((earning) => {
-          const { month, salon_count } = earning;
-          const index = month - 1;
-          allMonths[index].monthly_salons = salon_count;
-        });
-        usersdatasets.forEach((earning) => {
-          const { month, user_count } = earning;
-          const index = month - 1;
-          allMonths[index].monthly_users = user_count;
-        });
-        state.dashboardDetails = allMonths;
-        console.log(allMonths);
+        if(action.payload.data){
+          const bookings = action?.payload?.data?.monthlyBookings;
+          const earnings = action?.payload?.data?.monthlyEarnings;
+          const salondatasets = action?.payload?.data?.salonCount;
+          const usersdatasets = action?.payload?.data?.usersCount;
+          const allMonths = Array.from({ length: 12 }, (_, month) => {
+            const monthIndex = month + 1;
+            return {
+              year: 2023,
+              month: monthIndex,
+              month_name: new Date(2023, month, 1).toLocaleString('en-us', { month: 'long' }),
+              monthly_bookings: 0,
+              monthly_earnings: '0.00',
+              monthly_salons:0,
+              monthly_users:0
+            };
+          });
+          
+          // Populate monthly bookings
+          bookings.forEach((booking) => {
+            const { month, monthly_bookings } = booking;
+            const index = month - 1;
+            allMonths[index].monthly_bookings = monthly_bookings;
+          });
+          
+          // Populate monthly earnings
+          earnings.forEach((earning) => {
+            const { month, monthly_earnings } = earning;
+            const index = month - 1;
+            allMonths[index].monthly_earnings = monthly_earnings;
+          });
+          salondatasets.forEach((earning) => {
+            const { month, salon_count } = earning;
+            const index = month - 1;
+            allMonths[index].monthly_salons = salon_count;
+          });
+          usersdatasets.forEach((earning) => {
+            const { month, user_count } = earning;
+            const index = month - 1;
+            allMonths[index].monthly_users = user_count;
+          });
+          state.dashboardDetails = allMonths;
+          console.log(allMonths);
+        }
+      
       })
       .addCase(getDashboard.rejected, (state, action) => {
         state.loading = false;
@@ -214,12 +222,26 @@ const salonSlice = createSlice({
         state.status = true;
         state.loading = false;
         state.salons = action?.payload?.data;
-        if (action.payload) {
-          state.approvedSalons = action?.payload?.data?.filter((salon) => salon.isApproved === 1);
-          state.unapprovedSalons = action?.payload?.data?.filter((salon) => salon.isApproved === 0);
-        }
       })
       .addCase(getSalons.rejected, (state, action) => {
+        state.loading = false;
+        state.status = false;
+        state.error = action.error;
+        state.message = 'Something went wrong';
+      });
+      builder
+      .addCase(getSalonsBySearch.pending, (state) => {
+        state.loading = true;
+        state.status = false;
+        state.error = null;
+        state.message = null;
+      })
+      .addCase(getSalonsBySearch.fulfilled, (state, action) => {
+        state.status = true;
+        state.loading = false;
+        state.salons = action?.payload?.data;
+      })
+      .addCase(getSalonsBySearch.rejected, (state, action) => {
         state.loading = false;
         state.status = false;
         state.error = action.error;

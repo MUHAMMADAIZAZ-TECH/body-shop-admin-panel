@@ -8,7 +8,7 @@ const SignUp = lazy(() => import('../container/profile/authentication/overview/S
 const FbLogin = lazy(() => import('../container/profile/authentication/overview/FbSignIn'));
 const FbSignUp = lazy(() => import('../container/profile/authentication/overview/FbSignup'));
 const ForgotPass = lazy(() => import('../container/profile/authentication/overview/ForgotPassword'));
-
+const NewPassword = lazy(() => import('../container/profile/authentication/overview/NewPassword'));
 function NotFound() {
   return <Redirect to="/" />;
 }
@@ -23,6 +23,7 @@ function FrontendRoutes() {
           </div>
         }
       >
+        <Route exact path="/new-password" component={NewPassword} />
         <Route exact path="/forgotPassword" component={ForgotPass} />
         <Route exact path="/register" component={SignUp} />
         <Route exact path="/" component={Login} />

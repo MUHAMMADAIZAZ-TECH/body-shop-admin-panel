@@ -126,7 +126,7 @@ const AddNew = () => {
               </Form.Item>
 
               <Form.Item name="mobile_number" label="Mobile Number">
-                <Input placeholder="+440 2546 5236" type='number' />
+                <Input placeholder="+440 2546 5236" />
               </Form.Item>
 
               <Form.Item name="address" label="Address"  rules={[{ message: 'Please enter your address!' }]}>
