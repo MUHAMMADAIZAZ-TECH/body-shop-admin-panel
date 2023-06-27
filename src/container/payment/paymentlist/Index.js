@@ -9,7 +9,7 @@ import { Cards } from '../../../components/cards/frame/cards-frame';
 import { Button } from '../../../components/buttons/buttons';
 import { alertModal } from '../../../components/modals/antd-modals';
 import { PageHeader } from '../../../components/page-headers/page-headers';
-import { getTransactions } from '../../../redux/transactions/transactionSlice';
+import { getTransactions,SearchTransactions } from '../../../redux/transactions/transactionSlice';
 import { exportToXLSX, handlePrint, getColumnSearchProps } from '../../../components/utilities/utilities';
 import MYExportButton from '../../../components/buttons/my-export-button/my-export-button';
 
@@ -59,17 +59,9 @@ const ViewPage = () => {
     setSearchText('');
   };
 
-  useEffect(() => {
-    dispatch(getTransactions({
-      currentPage,
-      pageSize,
-      setTotalPages
-    }));
-  }, [dispatch,currentPage, pageSize]);
 
-  const onHandleSearch = (e) => {
-    setState({ ...state, searchText: e.target.value });
-  };
+
+
   if (TransactionStates?.transactions?.data?.length)
     TransactionStates?.transactions?.data?.map((transaction, key) => {
       const { booking_id, amount, status, user_name, created_at, updated_at } = transaction;
@@ -192,6 +184,21 @@ const ViewPage = () => {
       });
     }
   };
+  const Search = () => {
+    dispatch(SearchTransactions({
+      currentPage,
+      pageSize,
+      setTotalPages,
+      searchText
+    }));
+  };
+  useEffect(() => {
+    dispatch(getTransactions({
+      currentPage,
+      pageSize,
+      setTotalPages
+    }));
+  }, [dispatch,currentPage, pageSize]);
   return (
     <RecordViewWrapper>
       <PageHeader
@@ -206,9 +213,9 @@ const ViewPage = () => {
           </div>,
           <div key={1} className="search-box">
             <span className="search-icon">
-              <FeatherIcon icon="search" size={14} />
+              <FeatherIcon icon="search" size={14} onClick={Search}/>
             </span>
-            <input onChange={onHandleSearch} type="text" name="recored-search" placeholder="Search Here" />
+            <input onChange={(e)=>setSearchText(e.target.value)} type="text" name="recored-search" placeholder="Enter Booking ID" />
           </div>,
         ]}
         ghost

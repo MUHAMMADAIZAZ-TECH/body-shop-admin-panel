@@ -6,7 +6,7 @@ import { PageHeader } from '../../../components/page-headers/page-headers';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { Button } from '../../../components/buttons/buttons';
 import { Main, BasicFormWrapper } from '../../styled';
-import { getSalons } from '../../../redux/salon/salonSlice';
+import { getSalonsList } from '../../../redux/salon/salonSlice';
 import { getCategories } from '../../../redux/categories/categoriesSlice';
 import { createService } from '../../../redux/services/servicesSlice';
 import { getBase64, uploadButton } from '../../../components/utilities/utilities';
@@ -28,6 +28,8 @@ const AddNew = () => {
     };
   });
   const [form] = Form.useForm();
+  const [totalPages, setTotalPages] = useState(0); 
+  console.log(totalPages);
   const [files, setfiles] = useState([]);
   const handleSubmit = async (values) => {
     try {
@@ -64,7 +66,11 @@ const AddNew = () => {
     setfiles(fileList);
   };
   useEffect(() => {
-    dispatch(getSalons());
+    dispatch(getSalonsList({
+      currentPage:1,
+      pageSize:10,
+      setTotalPages
+    }));
     dispatch(getCategories());
   }, []);
   return (
@@ -115,9 +121,9 @@ const AddNew = () => {
                       >
                         <Select size="large" className="sDash_fullwidth-select">
                           <Option value="">Please Select</Option>
-                          {salonState.approvedSalons &&
-                            salonState.approvedSalons.length > 0 &&
-                            salonState.approvedSalons?.map((salon) => <Option value={salon.id}>{salon.name}</Option>)}
+                          {salonState.salons &&
+                            salonState.salons.length > 0 &&
+                            salonState.salons?.map((salon) => <Option value={salon.id}>{salon.name}</Option>)}
                         </Select>
                       </Form.Item>
 

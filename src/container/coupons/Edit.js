@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect,useState } from 'react';
 import { Row, Col, Form, Input, Select, DatePicker } from 'antd';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
@@ -9,12 +9,13 @@ import { Cards } from '../../components/cards/frame/cards-frame';
 import { Button } from '../../components/buttons/buttons';
 import { Main, BasicFormWrapper } from '../styled';
 import { getCoupon, updateCoupon } from '../../redux/coupons/couponSlice';
-import { getSalons } from '../../redux/salon/salonSlice';
+import { getSalonsList } from '../../redux/salon/salonSlice';
 
 const { Option } = Select;
 const dateFormat = 'YYYY/MM/DD';
 const Edit = ({ match }) => {
   const dispatch = useDispatch();
+  const [totalPages, setTotalPages] = useState(0); 
   const { isLoading, salonState, couponStates } = useSelector((state) => {
     return {
       isLoading: state.couponStates.loading,
@@ -22,7 +23,7 @@ const Edit = ({ match }) => {
       couponStates: state.couponStates,
     };
   });
-
+  console.log(totalPages);
   const [form] = Form.useForm();
   useEffect(() => {
     if (couponStates.coupon !== null) {
@@ -54,7 +55,11 @@ const Edit = ({ match }) => {
   console.log(couponStates.coupon);
   useEffect(() => {
     dispatch(getCoupon(parseInt(match.params.id, 10)));
-    dispatch(getSalons());
+    dispatch(getSalonsList({
+      currentPage:1,
+      pageSize:10,
+      setTotalPages
+    }));
   }, [dispatch, match.params.id]);
 
   return (
@@ -112,9 +117,9 @@ const Edit = ({ match }) => {
                       >
                         <Select style={{ width: '100%' }}>
                           <Option value="">Please Select</Option>
-                          {salonState.approvedSalons &&
-                            salonState.approvedSalons.length > 0 &&
-                            salonState.approvedSalons?.map((salon) => <Option value={salon.id}>{salon.name}</Option>)}
+                          {salonState.salons &&
+                            salonState.salons.length > 0 &&
+                            salonState.salons?.map((salon) => <Option value={salon.id}>{salon.name}</Option>)}
                         </Select>
                       </Form.Item>
                       <Form.Item

@@ -17,6 +17,10 @@ export const getBooking = createAsyncThunk('get/getBooking', async (id) => {
   const response = await getbooking(id);
   return response;
 });
+export const searchBooking = createAsyncThunk('get/searchBooking', async (id) => {
+  const response = await getbooking(id);
+  return response;
+});
 export const updateBooking = createAsyncThunk('patch/updateBooking', async (body) => {
   const response = await updatebooking(body);
   return response;
@@ -33,6 +37,7 @@ const bookingSlice = createSlice({
       })
       .addCase(getBookings.fulfilled, (state, action) => {
         state.loading = false;
+        console.log(action.payload);
         state.Bookings = action.payload;
       })
       .addCase(getBookings.rejected, (state, action) => {
@@ -50,6 +55,22 @@ const bookingSlice = createSlice({
         state.Booking = action.payload.data;
       })
       .addCase(getBooking.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error;
+        state.message = action.error.message;
+      });
+      builder
+      .addCase(searchBooking.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(searchBooking.fulfilled, (state, action) => {
+        state.loading = false;
+        if(action.payload.status==='success' && action.payload.data){
+          state.Bookings = {...action.payload,data:[action.payload.data]};
+        }
+      })
+      .addCase(searchBooking.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error;
         state.message = action.error.message;

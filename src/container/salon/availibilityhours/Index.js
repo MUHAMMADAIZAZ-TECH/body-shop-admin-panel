@@ -14,7 +14,7 @@ import {
   deleteAvailibilityHours,
   getAvailibilityHourbysalon,
   getAvailibilityHours,
-  getSalons,
+  getSalonsList,
 } from '../../../redux/salon/salonSlice';
 import { exportToXLSX, handlePrint, getColumnSearchProps } from '../../../components/utilities/utilities';
 import MYExportButton from '../../../components/buttons/my-export-button/my-export-button';
@@ -30,6 +30,8 @@ const ViewPage = () => {
   });
   const [form] = Form.useForm();
   const dataSource = [];
+  const [currentPage, setCurrentPage] = useState(1); // Initial current page
+  const [totalPages, setTotalPages] = useState(0); 
   const [searchText, setSearchText] = useState('');
   const searchInput = useRef(null);
   const [searchedColumn, setSearchedColumn] = useState('');
@@ -41,7 +43,7 @@ const ViewPage = () => {
     selectedRowKeys: 0,
     selectedRows: [],
   });
-  const [pageSize, setPageSize] = useState(8);
+  const [pageSize, setPageSize] = useState(10);
   const handlePageSizeChange = (current, size) => {
     setPageSize(size);
   };
@@ -150,7 +152,11 @@ const ViewPage = () => {
   ];
 
   useEffect(() => {
-    dispatch(getSalons());
+    dispatch(getSalonsList({
+      currentPage,
+      pageSize,
+      setTotalPages
+    }));
   }, []);
   const handleSubmit = async (values) => {
     try {
@@ -212,9 +218,9 @@ const ViewPage = () => {
                     >
                       <Select size="large" className="sDash_fullwidth-select">
                         <Option value="">Please Select</Option>
-                        {salonState.approvedSalons &&
-                          salonState.approvedSalons.length > 0 &&
-                          salonState.approvedSalons?.map((salon) => <Option value={salon.id}>{salon.name}</Option>)}
+                        {salonState.salons &&
+                          salonState.salons.length > 0 &&
+                          salonState.salons?.map((salon) => <Option value={salon.id}>{salon.name}</Option>)}
                       </Select>
                     </Form.Item>
                   </Col>
@@ -261,9 +267,12 @@ const ViewPage = () => {
                       rowSelection={rowSelection}
                       pagination={{ 
                         pageSize,
+                        total: totalPages * pageSize,
                         showSizeChanger: true ,
-                        pageSizeOptions: ['5', '10', '20', '50'], 
-                        onShowSizeChange: handlePageSizeChange
+                        pageSizeOptions: ['10', '25', '50', '100'], 
+                        onShowSizeChange: handlePageSizeChange,
+                        current: currentPage,
+                        onChange: setCurrentPage,
                       }}
                       dataSource={dataSource}
                       columns={columns}

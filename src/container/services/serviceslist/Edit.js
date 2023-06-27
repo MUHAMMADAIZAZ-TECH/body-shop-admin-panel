@@ -9,7 +9,7 @@ import { Cards } from '../../../components/cards/frame/cards-frame';
 import { Button } from '../../../components/buttons/buttons';
 import { Main, BasicFormWrapper } from '../../styled';
 import { getService, updateService } from '../../../redux/services/servicesSlice';
-import { getSalons } from '../../../redux/salon/salonSlice';
+import { getSalonsList } from '../../../redux/salon/salonSlice';
 import { getCategories } from '../../../redux/categories/categoriesSlice';
 import { getBase64, uploadButton } from '../../../components/utilities/utilities';
 
@@ -33,7 +33,8 @@ const Edit = ({ match }) => {
   console.log(servicesStates);
   const [form] = Form.useForm();
   const [files, setfiles] = useState([]);
-
+  const [totalPages, setTotalPages] = useState(0); 
+  console.log(totalPages);
   const handleSubmit = async (values) => {
     try {
       await form.validateFields(); // Validate all form fields
@@ -97,7 +98,11 @@ const Edit = ({ match }) => {
   }, [form, servicesStates.service]);
   useEffect(() => {
     dispatch(getService(match.params.id));
-    dispatch(getSalons());
+    dispatch(getSalonsList({
+      currentPage:1,
+      pageSize:10,
+      setTotalPages
+    }));
     dispatch(getCategories());
   }, [dispatch, match.params.id]);
   console.log(is_available);
@@ -149,9 +154,9 @@ const Edit = ({ match }) => {
                       >
                         <Select size="large" className="sDash_fullwidth-select">
                           <Option value="">Please Select</Option>
-                          {salonState.approvedSalons &&
-                            salonState.approvedSalons.length > 0 &&
-                            salonState.approvedSalons?.map((salon) => <Option value={salon.id}>{salon.name}</Option>)}
+                          {salonState.salons &&
+                            salonState.salons.length > 0 &&
+                            salonState.salons?.map((salon) => <Option value={salon.id}>{salon.name}</Option>)}
                         </Select>
                       </Form.Item>
 

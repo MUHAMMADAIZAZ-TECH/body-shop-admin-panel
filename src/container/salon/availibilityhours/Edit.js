@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect,useState } from 'react';
 import { Row, Col, Form, TimePicker, Select } from 'antd';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,7 +8,7 @@ import { PageHeader } from '../../../components/page-headers/page-headers';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { Button } from '../../../components/buttons/buttons';
 import { Main, BasicFormWrapper } from '../../styled';
-import { getAvailibilityHour, getSalons, updateAvailibilityHours } from '../../../redux/salon/salonSlice';
+import { getAvailibilityHour, getSalonsList, updateAvailibilityHours } from '../../../redux/salon/salonSlice';
 
 const { Option } = Select;
 const Edit = ({ match }) => {
@@ -20,6 +20,8 @@ const Edit = ({ match }) => {
     };
   });
   const [form] = Form.useForm();
+  const [totalPages, setTotalPages] = useState(0); 
+  console.log(totalPages);
   const handleSubmit = async (values) => {
     try {
       await form.validateFields(); // Validate all form fields
@@ -54,7 +56,11 @@ const Edit = ({ match }) => {
     }
   }, [form, salonState.availibilityhour]);
   useEffect(() => {
-    dispatch(getSalons());
+    dispatch(getSalonsList({
+      currentPage:1,
+      pageSize:10,
+      setTotalPages
+    }));
     dispatch(getAvailibilityHour(parseInt(match.params.id, 10)));
   }, [dispatch, match.params.id]);
   return (
@@ -103,9 +109,9 @@ const Edit = ({ match }) => {
                       >
                         <Select size="large" className="sDash_fullwidth-select">
                           <Option value="">Please Select</Option>
-                          {salonState.approvedSalons &&
-                            salonState.approvedSalons.length > 0 &&
-                            salonState.approvedSalons?.map((salon) => <Option value={salon.id}>{salon.name}</Option>)}
+                          {salonState.salons &&
+                            salonState.salons.length > 0 &&
+                            salonState.salons?.map((salon) => <Option value={salon.id}>{salon.name}</Option>)}
                         </Select>
                       </Form.Item>
                     </Col>

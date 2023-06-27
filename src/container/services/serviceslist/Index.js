@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Row, Col, Table, Spin, Avatar, Tag } from 'antd';
+import { Row, Col, Table, Spin, Avatar, Tag,Form,Select } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
@@ -10,18 +10,23 @@ import { Button } from '../../../components/buttons/buttons';
 import { alertModal } from '../../../components/modals/antd-modals';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { PageHeader } from '../../../components/page-headers/page-headers';
-import { deleteService, getServices } from '../../../redux/services/servicesSlice';
+import { deleteService, getServices, getServicesofSalon } from '../../../redux/services/servicesSlice';
 import { getColumnSearchProps, handlePrint, exportToXLSX } from '../../../components/utilities/utilities';
 import MYExportButton from '../../../components/buttons/my-export-button/my-export-button';
+import { getSalonsList } from '../../../redux/salon/salonSlice';
 
+
+const { Option } = Select;
 const ViewPage = () => {
   const dispatch = useDispatch();
-  const { isLoading, servicesStates } = useSelector((state) => {
+  const { isLoading, servicesStates,salonState } = useSelector((state) => {
     return {
       isLoading: state.servicesStates.loading,
+      salonState: state.salonStates,
       servicesStates: state.servicesStates,
     };
   });
+  const [form] = Form.useForm();
   console.log(servicesStates.services);
   const dataSource = [];
   const [currentPage, setCurrentPage] = useState(1); // Initial current page
@@ -73,10 +78,6 @@ const ViewPage = () => {
     }
     return false;
   };
-  const onHandleSearch = (e) => {
-    setState({ ...state, searchText: e.target.value });
-  };
-
   if (servicesStates?.services?.data?.length)
     servicesStates?.services?.data?.map((services, key) => {
       const { id, image, name, salon_name, price, category_name, is_available, updated_at } = services;
@@ -188,13 +189,22 @@ const ViewPage = () => {
       });
     }
   };
+  const handleSubmit = async () => {
+    try {
+      await form.validateFields(); // Validate all form fields
+      console.log(searchText);
+      dispatch(getServicesofSalon(searchText))
+    } catch (error) {
+      console.log('Validation error:', error);
+    }
+  };
   useEffect(() => {
-    dispatch(getServices({
+    dispatch(getSalonsList({
       currentPage,
       pageSize,
       setTotalPages
     }));
-  }, [currentPage, pageSize]);
+  }, []);
   return (
     <RecordViewWrapper>
       <PageHeader
@@ -214,12 +224,6 @@ const ViewPage = () => {
               </Link>
             </Button>
           </div>,
-          <div key={1} className="search-box">
-            <span className="search-icon">
-              <FeatherIcon icon="search" size={14} />
-            </span>
-            <input onChange={onHandleSearch} type="text" name="recored-search" placeholder="Search Here" />
-          </div>,
         ]}
         ghost
         title="Services | Services Management"
@@ -228,6 +232,34 @@ const ViewPage = () => {
         <Row gutter={15}>
           <Col className="w-100" md={24}>
             <Cards headless>
+            <Form name="multi-form" layout="vertical" style={{ width: '100%' }} form={form} onFinish={handleSubmit}>
+                <Row gutter={30}>
+                  <Col sm={10} xs={24} className="mb-25">
+                    <Form.Item
+                      name="salon_id"
+                      label="Salon"
+                      initialValue=""
+                      rules={[{ required: true, message: 'Please select salon' }]}
+                    >
+                      <Select size="large" className="sDash_fullwidth-select" onChange={(e,select)=>{
+                        const { value } = select;
+                        setSearchText(value)
+                      }}>
+                        <Option value="">Please Select</Option>
+                        {salonState.salons &&
+                          salonState.salons.length > 0 &&
+                          salonState.salons?.map((salon) => <Option value={salon.id}>{salon.name}</Option>)}
+                     
+                       </Select>
+                    </Form.Item>
+                  </Col>
+                  <Col sm={2} xs={24} className="mb-25 mt-25">
+                    <Button size="default" htmlType="Save" type="primary">
+                     Search
+                    </Button>
+                  </Col>
+                </Row>
+              </Form>
               {isLoading ? (
                 <div className="spin">
                   <Spin />

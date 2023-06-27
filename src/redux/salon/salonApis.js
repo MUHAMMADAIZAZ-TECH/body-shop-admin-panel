@@ -15,6 +15,19 @@ export const getsalons = async ({
     return error;
   }
 };
+export const getsalonsList = async ({
+  currentPage,
+  pageSize,
+  setTotalPages,
+}) => {
+  try {
+    const response = await DataService.get(`/api/v1/salons/admin/all?page=${currentPage}&limit=${pageSize}`);
+    setTotalPages(response.data.totalPages)
+    return response?.data;
+  } catch (error) {
+    return error;
+  }
+};
 export const searchsalons = async ({
   currentPage,
   pageSize,

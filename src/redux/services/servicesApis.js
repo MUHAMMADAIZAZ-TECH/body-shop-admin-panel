@@ -1,13 +1,8 @@
 import { DataService } from '../../config/dataService/mydataService';
 
-export const getservvices = async ({
-  currentPage,
-  pageSize,
-  setTotalPages
-}) => {
+export const getservvices = async () => {
   try {
-    const { data } = await DataService.get(`/api/v1/services?page=${currentPage}&limit=${pageSize}`);
-    setTotalPages(data.totalPages)
+    const { data } = await DataService.get(`/api/v1/services`);
     return data;
   } catch (error) {
     return error;
@@ -16,6 +11,14 @@ export const getservvices = async ({
 export const getservice = async (id) => {
   try {
     const { data } = await DataService.get(`/api/v1/services/getone/${id}`);
+    return data;
+  } catch (error) {
+    return error;
+  }
+};
+export const getservicesofsalon = async (salonid) => {
+  try {
+    const { data } = await DataService.get(`/api/v1/services/${salonid}`);
     return data;
   } catch (error) {
     return error;

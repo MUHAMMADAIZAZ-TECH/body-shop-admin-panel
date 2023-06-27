@@ -10,7 +10,7 @@ import { Cards } from '../../../components/cards/frame/cards-frame';
 import { alertModal } from '../../../components/modals/antd-modals';
 import { Button } from '../../../components/buttons/buttons';
 import { PageHeader } from '../../../components/page-headers/page-headers';
-import { getBookings } from '../../../redux/bookings/bookingSlice';
+import { getBookings,searchBooking } from '../../../redux/bookings/bookingSlice';
 import { getColumnSearchProps, handlePrint, exportToXLSX } from '../../../components/utilities/utilities';
 import MYExportButton from '../../../components/buttons/my-export-button/my-export-button';
 
@@ -58,8 +58,17 @@ const ViewPage = () => {
     clearFilters();
     setSearchText('');
   };
-  const onHandleSearch = (e) => {
-    setState({ ...state, searchText: e.target.value });
+  const onHandleSearch = () => {
+    if(searchText!==''){
+      dispatch(searchBooking(searchText))
+    }
+    else{
+      dispatch(getBookings({
+        currentPage,
+        pageSize,
+        setTotalPages
+      }));
+    }
   };
   console.log(bookingStates.Bookings);
   if (bookingStates?.Bookings?.data?.length)
@@ -403,9 +412,9 @@ const ViewPage = () => {
           </div>,
           <div key={1} className="search-box">
             <span className="search-icon">
-              <FeatherIcon icon="search" size={14} />
+              <FeatherIcon icon="search" size={14} onClick={onHandleSearch}/>
             </span>
-            <input onChange={onHandleSearch} type="text" name="recored-search" placeholder="Search Here" />
+            <input onChange={(e)=>setSearchText(e.target.value)} type="text" name="recored-search" placeholder="Enter Booking ID" />
           </div>,
         ]}
         ghost

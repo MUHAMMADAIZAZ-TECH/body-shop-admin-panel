@@ -21,7 +21,8 @@ import {
   updateavailibityhours,
   updatesalon,
   updatesalonreview,
-  searchsalons
+  searchsalons,
+  getsalonsList
 } from './salonApis';
 
 const initialState = {
@@ -58,6 +59,10 @@ export const getDashboard = createAsyncThunk('get/getDashboard', async () => {
 // salon-crud
 export const getSalons = createAsyncThunk('get/getsalons', async (body) => {
   const response = await getsalons(body);
+  return response;
+});
+export const getSalonsList = createAsyncThunk('get/getsalons', async (body) => {
+  const response = await getsalonsList(body);
   return response;
 });
 export const getSalon = createAsyncThunk('get/getSalon', async (id) => {

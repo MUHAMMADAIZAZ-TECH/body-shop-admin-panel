@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { message } from 'antd';
-import { getservvices, getservice, createservice, deleteservice, updateservice } from './servicesApis';
+import { getservvices, getservice, createservice, deleteservice, updateservice,getservicesofsalon } from './servicesApis';
 
 const initialState = {
   success: false,
@@ -10,12 +10,16 @@ const initialState = {
   services: [],
   service: null,
 };
-export const getServices = createAsyncThunk('get/getServices', async (body) => {
-  const response = await getservvices(body);
+export const getServices = createAsyncThunk('get/getServices', async () => {
+  const response = await getservvices();
   return response;
 });
 export const getService = createAsyncThunk('get/getService', async (id) => {
   const response = await getservice(id);
+  return response;
+});
+export const getServicesofSalon = createAsyncThunk('get/getServicesofSalon', async (salonid) => {
+  const response = await getservicesofsalon(salonid);
   return response;
 });
 export const createService = createAsyncThunk('post/createService', async (body) => {
@@ -49,6 +53,20 @@ const servicesSlice = createSlice({
         state.services = action.payload;
       })
       .addCase(getServices.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error;
+        state.message = action.error.message;
+      });
+      builder
+      .addCase(getServicesofSalon.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getServicesofSalon.fulfilled, (state, action) => {
+        state.loading = false;
+        state.services = action.payload;
+      })
+      .addCase(getServicesofSalon.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error;
         state.message = action.error.message;
