@@ -13,7 +13,6 @@ import { PageHeader } from '../../../components/page-headers/page-headers';
 import {
   deleteAvailibilityHours,
   getAvailibilityHourbysalon,
-  getAvailibilityHours,
   getSalonsList,
 } from '../../../redux/salon/salonSlice';
 import { exportToXLSX, handlePrint, getColumnSearchProps } from '../../../components/utilities/utilities';
@@ -67,12 +66,17 @@ const ViewPage = () => {
   };
   const handleDelete = (id) => {
     const confirm = window.confirm('Are you sure delete this?');
+    const values = form.getFieldsValue();
     if (confirm) {
       dispatch(
         deleteAvailibilityHours({
           id,
           getData: () => {
-            dispatch(getAvailibilityHours());
+            dispatch(
+              getAvailibilityHourbysalon({
+                ...values,
+              }),
+            );
           },
         }),
       );
@@ -151,13 +155,10 @@ const ViewPage = () => {
     },
   ];
 
-  useEffect(() => {
-    dispatch(getSalonsList({
-      currentPage,
-      pageSize,
-      setTotalPages
-    }));
-  }, []);
+  const handleLoadMore = () => {
+    setCurrentPage(currentPage + 1); // Increment the current page number
+  };
+
   const handleSubmit = async (values) => {
     try {
       await form.validateFields(); // Validate all form fields
@@ -180,6 +181,13 @@ const ViewPage = () => {
       });
     }
   };
+  useEffect(() => {
+    dispatch(getSalonsList({
+      currentPage,
+      pageSize:10,
+      setTotalPages
+    }));
+  }, [dispatch,currentPage]);
   return (
     <RecordViewWrapper>
       <PageHeader
@@ -218,9 +226,16 @@ const ViewPage = () => {
                     >
                       <Select size="large" className="sDash_fullwidth-select">
                         <Option value="">Please Select</Option>
-                        {salonState.salons &&
-                          salonState.salons.length > 0 &&
-                          salonState.salons?.map((salon) => <Option value={salon.id}>{salon.name}</Option>)}
+                        {salonState.salonsList &&
+                          salonState.salonsList.length > 0 &&
+                          salonState.salonsList?.map((salon) => <Option value={salon.id}>{salon.name}</Option>)}
+                         {currentPage < totalPages && (
+                        <Option disabled>
+                          <Button size="small" type="primary" onClick={handleLoadMore} block >
+                            Load More
+                          </Button>
+                        </Option>
+                      )}
                       </Select>
                     </Form.Item>
                   </Col>
@@ -267,9 +282,9 @@ const ViewPage = () => {
                       rowSelection={rowSelection}
                       pagination={{ 
                         pageSize,
-                        total: totalPages * pageSize,
-                        showSizeChanger: true ,
-                        pageSizeOptions: ['10', '25', '50', '100'], 
+                        // total: totalPages * pageSize,
+                        // showSizeChanger: true ,
+                        // pageSizeOptions: ['10', '25', '50', '100'], 
                         onShowSizeChange: handlePageSizeChange,
                         current: currentPage,
                         onChange: setCurrentPage,

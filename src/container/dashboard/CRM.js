@@ -10,7 +10,7 @@ import Heading from '../../components/heading/heading';
 import { ChartjsBarChartTransparent } from '../../components/charts/chartjs';
 // import { ExportButtonPageHeader } from '../../components/buttons/export-button/export-button';
 // import { CalendarButtonPageHeader } from '../../components/buttons/calendar-button/calendar-button';
-import { getSalons, getDashboard } from '../../redux/salon/salonSlice';
+import { getDashboard } from '../../redux/salon/salonSlice';
 
 const UserListTable = lazy(() => import('./usertable'));
 const TotalRevenue = lazy(() => import('./TotalRevenue'));
@@ -90,7 +90,6 @@ function CRM() {
   const month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   useEffect(() => {
     dispatch(getDashboard());
-    dispatch(getSalons());
   }, []);
   return (
     <>
@@ -265,7 +264,7 @@ function CRM() {
                 </Cards>
               }
             >
-              <UserListTable data={salonState?.approvedSalons} />
+              <UserListTable />
             </Suspense>
           </Col>
         </Row>

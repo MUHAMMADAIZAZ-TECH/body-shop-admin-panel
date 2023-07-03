@@ -33,6 +33,7 @@ const Edit = ({ match }) => {
   console.log(servicesStates);
   const [form] = Form.useForm();
   const [files, setfiles] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1); // Current page number
   const [totalPages, setTotalPages] = useState(0); 
   console.log(totalPages);
   const handleSubmit = async (values) => {
@@ -98,14 +99,19 @@ const Edit = ({ match }) => {
   }, [form, servicesStates.service]);
   useEffect(() => {
     dispatch(getService(match.params.id));
-    dispatch(getSalonsList({
-      currentPage:1,
-      pageSize:10,
-      setTotalPages
-    }));
     dispatch(getCategories());
   }, [dispatch, match.params.id]);
   console.log(is_available);
+  const handleLoadMore = () => {
+    setCurrentPage(currentPage + 1); // Increment the current page number
+  };
+  useEffect(() => {
+    dispatch(getSalonsList({
+      currentPage,
+      pageSize:10,
+      setTotalPages
+    }));
+  }, [dispatch,currentPage]);
   return (
     <>
       <PageHeader
@@ -154,9 +160,16 @@ const Edit = ({ match }) => {
                       >
                         <Select size="large" className="sDash_fullwidth-select">
                           <Option value="">Please Select</Option>
-                          {salonState.salons &&
-                            salonState.salons.length > 0 &&
-                            salonState.salons?.map((salon) => <Option value={salon.id}>{salon.name}</Option>)}
+                          {salonState.salonsList &&
+                            salonState.salonsList.length > 0 &&
+                            salonState.salonsList?.map((salon) => <Option value={salon.id}>{salon.name}</Option>)}
+                         {currentPage < totalPages && (
+                        <Option disabled>
+                          <Button className='loadmorebutton' size="small" type="primary" onClick={handleLoadMore} block >
+                            Load More
+                          </Button>
+                        </Option>
+                      )}
                         </Select>
                       </Form.Item>
 

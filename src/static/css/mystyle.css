@@ -6,3 +6,11 @@
   text-align: center;
   cursor: pointer;
 }
+.loadmorebutton{
+  margin: 'auto';
+  display: 'block';
+}
+.disable-color {
+  color: inherit; /* Use the parent's color */
+  text-decoration: none; /* Remove underline */
+}

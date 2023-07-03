@@ -125,6 +125,9 @@ const ViewPage = () => {
         setSearchText,
         setSearchedColumn,
       ),
+      render:(name,{category})=> <Link 
+      className="disable-color" to={`/admin/categories/edit/${category.id}`}>{name}
+    </Link>
     },
     {
       title: 'Color',

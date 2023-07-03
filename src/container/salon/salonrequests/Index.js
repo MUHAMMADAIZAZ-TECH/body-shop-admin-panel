@@ -78,7 +78,12 @@ const ViewPage = () => {
         deleteSalon({
           id,
           getData: () => {
-            dispatch(getSalons());
+            dispatch(getSalons({
+              currentPage,
+              pageSize,
+              setTotalPages,
+              approved:0
+            }));
           },
         }),
       );
@@ -159,7 +164,10 @@ const ViewPage = () => {
         setSearchText,
         setSearchedColumn,
       ),
-      // render: text => <div style={{ whiteSpace: 'pre-wrap' }}>{text}</div>,
+      render:(name,{salon})=> <Link 
+      className="disable-color" to={`/admin/salon/edit/${salon.id}`} 
+      onClick={() => handleEdit(salon)}>{name}
+    </Link>,
     },
     {
       title: 'Phone no',

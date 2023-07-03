@@ -28,6 +28,7 @@ const AddNew = () => {
     };
   });
   const [form] = Form.useForm();
+  const [currentPage, setCurrentPage] = useState(1); // Current page number
   const [totalPages, setTotalPages] = useState(0); 
   console.log(totalPages);
   const [files, setfiles] = useState([]);
@@ -66,13 +67,18 @@ const AddNew = () => {
     setfiles(fileList);
   };
   useEffect(() => {
+    dispatch(getCategories());
+  }, []);
+  const handleLoadMore = () => {
+    setCurrentPage(currentPage + 1); // Increment the current page number
+  };
+  useEffect(() => {
     dispatch(getSalonsList({
-      currentPage:1,
+      currentPage,
       pageSize:10,
       setTotalPages
     }));
-    dispatch(getCategories());
-  }, []);
+  }, [dispatch,currentPage]);
   return (
     <>
       <PageHeader
@@ -121,9 +127,16 @@ const AddNew = () => {
                       >
                         <Select size="large" className="sDash_fullwidth-select">
                           <Option value="">Please Select</Option>
-                          {salonState.salons &&
-                            salonState.salons.length > 0 &&
-                            salonState.salons?.map((salon) => <Option value={salon.id}>{salon.name}</Option>)}
+                          {salonState.salonsList &&
+                            salonState.salonsList.length > 0 &&
+                            salonState.salonsList?.map((salon) => <Option value={salon.id}>{salon.name}</Option>)}
+                         {currentPage < totalPages && (
+                        <Option disabled>
+                          <Button className='loadmorebutton' size="small" type="primary" onClick={handleLoadMore} block >
+                            Load More
+                          </Button>
+                        </Option>
+                      )}
                         </Select>
                       </Form.Item>
 

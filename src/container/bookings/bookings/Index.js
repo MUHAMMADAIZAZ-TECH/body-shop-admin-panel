@@ -194,6 +194,9 @@ const ViewPage = () => {
         setSearchText,
         setSearchedColumn,
       ),
+      render:(name,{booking})=> <Link 
+      className="disable-color" to={`/admin/bookings/edit/${booking.id}`}>{name}
+    </Link>
     },
     {
       title: 'Salon',

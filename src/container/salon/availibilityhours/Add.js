@@ -1,18 +1,17 @@
-import React, { useEffect,useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Row, Col, Form, TimePicker, Select } from 'antd';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import PropTypes from 'prop-types';
 // import moment from 'moment';
 import { PageHeader } from '../../../components/page-headers/page-headers';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { Button } from '../../../components/buttons/buttons';
 import { Main, BasicFormWrapper } from '../../styled';
-import { createAvailibilityHours,getSalonsList } from '../../../redux/salon/salonSlice';
+import { createAvailibilityHours, getSalonsList } from '../../../redux/salon/salonSlice';
 // import { getSalon } from '../../../redux/salon/salonSlice';
 
 const { Option } = Select;
-const AddNew = ({ match }) => {
+const AddNew = () => {
   const dispatch = useDispatch();
   const { salonState, isLoading } = useSelector((state) => {
     return {
@@ -20,10 +19,10 @@ const AddNew = ({ match }) => {
       isLoading: state.salonStates.loading,
     };
   });
-  const [totalPages, setTotalPages] = useState(0); 
-  console.log(totalPages);
+  const [currentPage, setCurrentPage] = useState(1); // Current page number
+  // const [pageSize, setPageSize] = useState(10); // Nu
+  const [totalPages, setTotalPages] = useState(0);
   const [form] = Form.useForm();
-  // const [document, setdocument] = useState(null);
   const handleSubmit = async (values) => {
     try {
       await form.validateFields(); // Validate all form fields
@@ -40,13 +39,16 @@ const AddNew = ({ match }) => {
       console.log('Validation error:', error);
     }
   };
+  const handleLoadMore = () => {
+    setCurrentPage(currentPage + 1); // Increment the current page number
+  };
   useEffect(() => {
     dispatch(getSalonsList({
-      currentPage:1,
+      currentPage,
       pageSize:10,
       setTotalPages
     }));
-  }, [dispatch, match.params.id]);
+  }, [dispatch,currentPage]);
 
   return (
     <>
@@ -94,9 +96,16 @@ const AddNew = ({ match }) => {
                       >
                         <Select size="large" className="sDash_fullwidth-select">
                           <Option value="">Please Select</Option>
-                          {salonState.salons &&
-                            salonState.salons.length > 0 &&
-                            salonState.salons?.map((salon) => <Option value={salon.id}>{salon.name}</Option>)}
+                          {salonState.salonsList &&
+                            salonState.salonsList.length > 0 &&
+                            salonState.salonsList?.map((salon) => <Option value={salon.id}>{salon.name}</Option>)}
+                         {currentPage < totalPages && (
+                        <Option disabled>
+                          <Button size="small" type="primary" onClick={handleLoadMore} block >
+                            Load More
+                          </Button>
+                        </Option>
+                      )}
                         </Select>
                       </Form.Item>
                     </Col>
@@ -159,10 +168,6 @@ const AddNew = ({ match }) => {
       </Main>
     </>
   );
-};
-
-AddNew.propTypes = {
-  match: PropTypes.object,
 };
 
 export default AddNew;

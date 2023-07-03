@@ -15,6 +15,7 @@ const { Option } = Select;
 const dateFormat = 'YYYY/MM/DD';
 const Edit = ({ match }) => {
   const dispatch = useDispatch();
+  const [currentPage, setCurrentPage] = useState(1); 
   const [totalPages, setTotalPages] = useState(0); 
   const { isLoading, salonState, couponStates } = useSelector((state) => {
     return {
@@ -55,13 +56,17 @@ const Edit = ({ match }) => {
   console.log(couponStates.coupon);
   useEffect(() => {
     dispatch(getCoupon(parseInt(match.params.id, 10)));
+  }, [dispatch, match.params.id]);
+  const handleLoadMore = () => {
+    setCurrentPage(currentPage + 1); // Increment the current page number
+  };
+  useEffect(() => {
     dispatch(getSalonsList({
-      currentPage:1,
+      currentPage,
       pageSize:10,
       setTotalPages
     }));
-  }, [dispatch, match.params.id]);
-
+  }, [dispatch,currentPage]);
   return (
     <>
       <PageHeader
@@ -117,9 +122,16 @@ const Edit = ({ match }) => {
                       >
                         <Select style={{ width: '100%' }}>
                           <Option value="">Please Select</Option>
-                          {salonState.salons &&
-                            salonState.salons.length > 0 &&
-                            salonState.salons?.map((salon) => <Option value={salon.id}>{salon.name}</Option>)}
+                          {salonState.salonsList &&
+                            salonState.salonsList.length > 0 &&
+                            salonState.salonsList?.map((salon) => <Option value={salon.id}>{salon.name}</Option>)}
+                         {currentPage < totalPages && (
+                        <Option disabled>
+                          <Button className='loadmorebutton' size="small" type="primary" onClick={handleLoadMore} block >
+                            Load More
+                          </Button>
+                        </Option>
+                      )}
                         </Select>
                       </Form.Item>
                       <Form.Item

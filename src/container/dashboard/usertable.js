@@ -1,8 +1,7 @@
-import React from 'react';
-import { useDispatch } from 'react-redux';
+import React,{useEffect,useState} from 'react';
+import { useDispatch,useSelector } from 'react-redux';
 import { Avatar, Table } from 'antd';
 import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import FeatherIcon from 'feather-icons-react';
 import { UserTableStyleWrapper } from './style';
 import { TableWrapper } from '../styled';
@@ -16,9 +15,22 @@ const avatarStyle = {
   lineHeight: '100px', // Vertically center the content
   textAlign: 'center', // Horizontally center the content
 };
-function UserListTable({ data }) {
+function UserListTable() {
   const dispatch = useDispatch();
+  const { salonState } = useSelector((state) => {
+    return {
+      salonState: state.salonStates,
+      isLoading: state.salonStates.loading,
+    };
+  });
   const dataSource = [];
+  const [currentPage, setCurrentPage] = useState(1); // Initial current page
+  const [totalPages, setTotalPages] = useState(0); 
+  const [pageSize, setPageSize] = useState(4);
+  const handlePageSizeChange = (current, size) => {
+    setPageSize(size);
+    setCurrentPage(1);
+  };
   const handleDelete = (id) => {
     const confirm = window.confirm('Are you sure delete this?');
     if (confirm) {
@@ -37,8 +49,8 @@ function UserListTable({ data }) {
     dispatch(selectSalon(salon));
     console.log(salon);
   };
-  if (data.length)
-    data?.map((salon, key) => {
+  if (salonState?.salons?.length)
+  salonState?.salons?.map((salon, key) => {
       const { id, images, name, address } = salon;
       return dataSource.push({
         key: key + 1,
@@ -91,6 +103,14 @@ function UserListTable({ data }) {
       name: record.name,
     }),
   };
+  useEffect(() => {
+    dispatch(getSalons({
+      currentPage,
+      pageSize,
+      setTotalPages,
+      approved:1
+    }));
+  }, [currentPage, pageSize]);
   return (
     <Cards headless>
       <UserTableStyleWrapper>
@@ -100,8 +120,15 @@ function UserListTable({ data }) {
             dataSource={dataSource}
             columns={columns}
             pagination={{
+              // pageSize,
+              total: totalPages * pageSize,
+              // showSizeChanger: true ,
+              // pageSizeOptions: ['10', '25', '50', '100'], 
+              onShowSizeChange: handlePageSizeChange,
+              current: currentPage,
+              onChange: setCurrentPage,
               defaultPageSize: 4,
-              total: dataSource.length,
+              // total: dataSource.length,
               showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
             }}
           />
@@ -110,7 +137,5 @@ function UserListTable({ data }) {
     </Cards>
   );
 }
-UserListTable.propTypes = {
-  data: PropTypes.array.isRequired,
-};
+
 export default UserListTable;

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect,useState } from 'react';
 import { Badge } from 'antd';
 import moment from 'moment';
 import FeatherIcon from 'feather-icons-react';
@@ -12,7 +12,9 @@ import Heading from '../../heading/heading';
 import { getNotifications } from '../../../redux/notification/notificationSlice';
 
 function NotificationBox() {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+  const [currentPage, setCurrentPage] = useState(1); // Initial current page
+  // const [totalPages, setTotalPages] = useState(0); 
   const { rtl, NotificationStates } = useSelector((state) => {
     return {
       rtl: state.ChangeLayoutMode.rtlData,
@@ -57,7 +59,9 @@ function NotificationBox() {
     style: PropTypes.shape(PropTypes.object),
   };
  
-  console.log(NotificationStates.Notifications);
+  const handleLoadMore = () => {
+    setCurrentPage(currentPage + 1); // Increment the current page number
+  };
   const content = (
     <AtbdTopDropdwon className="atbd-top-dropdwon">
       <Heading as="h5" className="atbd-top-dropdwon__title">
@@ -73,7 +77,7 @@ function NotificationBox() {
         renderTrackVertical={renderTrackVertical}
       >
         <ul className="atbd-top-dropdwon__nav notification-list">
-          {NotificationStates?.Notifications?.data?.map((item) => (
+          {NotificationStates?.Notifications?.map((item) => (
             <li>
               <Link to="#">
                 <div className="atbd-top-dropdwon__content notifications">
@@ -96,7 +100,7 @@ function NotificationBox() {
             </li>
           ))}
 
-          <li>
+          {/* <li>
             <Link to="#">
               <div className="atbd-top-dropdwon__content notifications">
                 <div className="notification-icon bg-secondary">
@@ -179,17 +183,21 @@ function NotificationBox() {
                 </div>
               </div>
             </Link>
-          </li>
+          </li> */}
         </ul>
       </Scrollbars>
-      <Link className="btn-seeAll" to="#">
+      <Link className="btn-seeAll" to="#" onClick={handleLoadMore}>
         see more
       </Link>
     </AtbdTopDropdwon>
   );
+
  useEffect(()=>{
-  dispatch(getNotifications())
- },[])
+  dispatch(getNotifications({
+    currentPage,
+    pageSize:5
+  }))
+ },[currentPage])
   return (
     <div className="notification">
       <Popover placement="bottomLeft" content={content} action="click">

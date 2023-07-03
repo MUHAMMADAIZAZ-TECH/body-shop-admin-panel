@@ -67,7 +67,11 @@ const ViewPage = () => {
         deleteFaq({
           id,
           getData: () => {
-            dispatch(getFaqs());
+            dispatch(getFaqs({
+              currentPage,
+              pageSize,
+              setTotalPages
+            }));
           },
         }),
       );
@@ -76,8 +80,8 @@ const ViewPage = () => {
   };
 
   if (faqStates?.faqs.length)
-    faqStates?.faqs?.map((person, key) => {
-      const { id, question, answer, updated_at } = person;
+    faqStates?.faqs?.map((faq, key) => {
+      const { id, question, answer, updated_at } = faq;
       return dataSource.push({
         key: key + 1,
         question,
@@ -94,6 +98,7 @@ const ViewPage = () => {
             </Link>
           </div>
         ),
+        faq
       });
     });
   const csvData = [['id', 'question', 'answer', 'updated_at']];
@@ -117,7 +122,9 @@ const ViewPage = () => {
         setSearchText,
         setSearchedColumn,
       ),
-      fixed: 'left',
+      render:(question,{faq})=> <Link 
+      className="disable-color" to={`/admin/faq-admin/faqs-edit/${faq.id}`}>{question}
+    </Link>
     },
     {
       title: 'Answer',

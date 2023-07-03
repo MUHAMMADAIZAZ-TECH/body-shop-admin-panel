@@ -10,8 +10,8 @@ const initialState = {
   message: '',
   Notifications:[]
 };
-export const getNotifications = createAsyncThunk('get/getNotifications', async () => {
-  const response = await getnotifications();
+export const getNotifications = createAsyncThunk('get/getNotifications', async (body) => {
+  const response = await getnotifications(body);
   return response;
 });
 
@@ -29,7 +29,7 @@ const NotificationsSlice = createSlice({
       .addCase(getNotifications.fulfilled, (state, action) => {
         state.loading = false;
         state.success = true;
-        state.Notifications = action.payload;
+        state.Notifications = [...new Set([...state.Notifications,...action.payload.data])];
       })
       .addCase(getNotifications.rejected, (state, action) => {
         state.loading = false;

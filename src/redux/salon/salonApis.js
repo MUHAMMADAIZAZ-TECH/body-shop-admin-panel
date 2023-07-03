@@ -204,6 +204,20 @@ export const getallreviews = async ({
     return error;
   }
 };
+export const searchallreviews = async ({
+  currentPage,
+  pageSize,
+  setTotalPages,
+  searchText
+}) => {
+  try {
+    const response = await DataService.get(`/api/v1/reviews/?page=${currentPage}&limit=${pageSize}&search=${searchText}`);
+    setTotalPages(response.data.totalPages)
+    return response?.data;
+  } catch (error) {
+    return error;
+  }
+};
 export const getsalonreview = async (id) => {
   try {
     const response = await DataService.get(`/api/v1/reviews/${id}`);

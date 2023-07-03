@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Row, Col, Table, Spin, Tag } from 'antd';
+import { Row, Col, Table, Spin } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
@@ -66,7 +66,11 @@ const ViewPage = () => {
         deleteCoupon({
           id,
           getData: () => {
-            dispatch(getCoupons());
+            dispatch(getCoupons({
+              currentPage,
+              pageSize,
+              setTotalPages
+            }));
           },
         }),
       );
@@ -144,7 +148,10 @@ const ViewPage = () => {
         setSearchedColumn,
       ),
       fixed: 'left',
-      render:(text)=><Tag className='early'>{text}</Tag>
+      // render:(text)=><Tag className='early'>{text}</Tag>
+      render:(name,{coupon})=> <Link 
+      className="disable-color" to={`/admin/coupons/edit/${coupon.id}`}>{name}
+    </Link>
     },
     {
       title: 'Discount',

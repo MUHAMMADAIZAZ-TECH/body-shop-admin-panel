@@ -10,7 +10,7 @@ import { Button } from '../../../components/buttons/buttons';
 import { alertModal } from '../../../components/modals/antd-modals';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { PageHeader } from '../../../components/page-headers/page-headers';
-import { deleteService, getServices, getServicesofSalon } from '../../../redux/services/servicesSlice';
+import { deleteService, getServicesofSalon } from '../../../redux/services/servicesSlice';
 import { getColumnSearchProps, handlePrint, exportToXLSX } from '../../../components/utilities/utilities';
 import MYExportButton from '../../../components/buttons/my-export-button/my-export-button';
 import { getSalonsList } from '../../../redux/salon/salonSlice';
@@ -71,7 +71,7 @@ const ViewPage = () => {
         deleteService({
           id,
           getData: () => {
-            dispatch(getServices());
+            dispatch(getServicesofSalon(searchText))
           },
         }),
       );
@@ -198,13 +198,16 @@ const ViewPage = () => {
       console.log('Validation error:', error);
     }
   };
+  const handleLoadMore = () => {
+    setCurrentPage(currentPage + 1); // Increment the current page number
+  };
   useEffect(() => {
     dispatch(getSalonsList({
       currentPage,
-      pageSize,
+      pageSize:10,
       setTotalPages
     }));
-  }, []);
+  }, [dispatch,currentPage]);
   return (
     <RecordViewWrapper>
       <PageHeader
@@ -246,10 +249,16 @@ const ViewPage = () => {
                         setSearchText(value)
                       }}>
                         <Option value="">Please Select</Option>
-                        {salonState.salons &&
-                          salonState.salons.length > 0 &&
-                          salonState.salons?.map((salon) => <Option value={salon.id}>{salon.name}</Option>)}
-                     
+                        {salonState.salonsList &&
+                          salonState.salonsList.length > 0 &&
+                          salonState.salonsList?.map((salon) => <Option value={salon.id}>{salon.name}</Option>)}
+                         {currentPage < totalPages && (
+                        <Option disabled>
+                          <Button size="small" type="primary" onClick={handleLoadMore} block >
+                            Load More
+                          </Button>
+                        </Option>
+                      )}
                        </Select>
                     </Form.Item>
                   </Col>
@@ -271,9 +280,9 @@ const ViewPage = () => {
                       rowSelection={rowSelection}
                       pagination={{ 
                         pageSize,
-                        total: totalPages * pageSize,
-                        showSizeChanger: true ,
-                        pageSizeOptions: ['10', '25', '50', '100'], 
+                        // total: totalPages * pageSize,
+                        // showSizeChanger: true ,
+                        // pageSizeOptions: ['10', '25', '50', '100'], 
                         onShowSizeChange: handlePageSizeChange,
                         current: currentPage,
                         onChange: setCurrentPage,

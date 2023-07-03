@@ -65,7 +65,7 @@ export const updateservice = async (body) => {
 };
 export const deleteservice = async (body) => {
   try {
-    const { data } = await DataService.delete(`/api/v1/services/${body.id}`);
+    const { data } = await DataService.delete(`/api/v1/services/admin/${body.id}`);
     body.getData();
     return data;
   } catch (error) {

@@ -10,7 +10,7 @@ import { alertModal } from '../../../components/modals/antd-modals';
 import { Button } from '../../../components/buttons/buttons';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { PageHeader } from '../../../components/page-headers/page-headers';
-import { deleteSalonReview, getAllReviews } from '../../../redux/salon/salonSlice';
+import { deleteSalonReview, getAllReviews,getAllReviewsBySearch } from '../../../redux/salon/salonSlice';
 import { exportToXLSX, handlePrint, getColumnSearchProps } from '../../../components/utilities/utilities';
 import MYExportButton from '../../../components/buttons/my-export-button/my-export-button';
 
@@ -68,7 +68,11 @@ const ViewPage = () => {
         deleteSalonReview({
           id,
           getData: () => {
-            dispatch(getAllReviews());
+            dispatch(getAllReviews({
+              currentPage,
+              pageSize,
+              setTotalPages
+            }));
           },
         }),
       );
@@ -76,8 +80,8 @@ const ViewPage = () => {
     }
     return false;
   };
-  const onHandleSearch = () => {
-    console.log('search');
+  const onHandleSearch = (e) => {
+    setSearchText(e.target.value);
   };
   // rows
   if (salonState?.salonreviews?.data?.length)
@@ -128,6 +132,9 @@ const ViewPage = () => {
         setSearchText,
         setSearchedColumn,
       ),
+      render:(name,{review})=> <Link 
+      className="disable-color" to={`/admin/salon/review/edit/${review.id}`}>{name}
+    </Link>,
       fixed: 'left',
     },
     {
@@ -144,7 +151,6 @@ const ViewPage = () => {
       key: 'user_name',
       sorter: (a, b) => a.user_name.length - b.user_name.length,
       sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('user_name'),
     },
     {
       title: 'Salon',
@@ -152,7 +158,6 @@ const ViewPage = () => {
       key: 'salon_name',
       sorter: (a, b) => a.salon_name.length - b.salon_name.length,
       sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('salon_name'),
     },
     {
       title: 'Updated At',
@@ -179,6 +184,15 @@ const ViewPage = () => {
       });
     }
   };
+  const Search = () => {
+    console.log(state);
+    dispatch(getAllReviewsBySearch({
+      currentPage,
+      pageSize,
+      setTotalPages,
+      searchText
+    }));
+  };
   useEffect(() => {
     dispatch(getAllReviews({
       currentPage,
@@ -199,11 +213,16 @@ const ViewPage = () => {
             </Button>
           </div>,
           <div key={1} className="search-box">
-            <span className="search-icon">
-              <FeatherIcon icon="search" size={14} />
-            </span>
-            <input onChange={onHandleSearch} type="text" name="recored-search" placeholder="Search Here" />
-          </div>,
+          <span className="search-icon">
+            <FeatherIcon icon="search" size={14} onClick={Search} />
+          </span>
+          <input 
+          onChange={onHandleSearch} 
+          // onKeyDown={Search}
+          type="text" 
+          name="recored-search" 
+          placeholder="Search Here" />
+        </div>,
         ]}
         ghost
         title="Salon Reviews | Salon Reviews Management"

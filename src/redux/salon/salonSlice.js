@@ -22,7 +22,8 @@ import {
   updatesalon,
   updatesalonreview,
   searchsalons,
-  getsalonsList
+  getsalonsList,
+  searchallreviews
 } from './salonApis';
 
 const initialState = {
@@ -31,6 +32,7 @@ const initialState = {
   error: false,
   message: '',
   salons: [],
+  salonsList:[],
   salon: {
     isActive: 1,
     isApproved: 1,
@@ -61,7 +63,7 @@ export const getSalons = createAsyncThunk('get/getsalons', async (body) => {
   const response = await getsalons(body);
   return response;
 });
-export const getSalonsList = createAsyncThunk('get/getsalons', async (body) => {
+export const getSalonsList = createAsyncThunk('get/getSalonsList', async (body) => {
   const response = await getsalonsList(body);
   return response;
 });
@@ -109,6 +111,10 @@ export const deleteAvailibilityHours = createAsyncThunk('delete/deleteAvailibili
 // reviews
 export const getAllReviews = createAsyncThunk('get/getallreviews', async (body) => {
   const response = await getallreviews(body);
+  return response;
+});
+export const getAllReviewsBySearch = createAsyncThunk('get/getallreviewsbysearch', async (body) => {
+  const response = await searchallreviews(body);
   return response;
 });
 export const getSalonReview = createAsyncThunk('get/getSalonReview', async (id) => {
@@ -206,9 +212,7 @@ const salonSlice = createSlice({
             allMonths[index].monthly_users = user_count;
           });
           state.dashboardDetails = allMonths;
-          console.log(allMonths);
         }
-      
       })
       .addCase(getDashboard.rejected, (state, action) => {
         state.loading = false;
@@ -229,6 +233,24 @@ const salonSlice = createSlice({
         state.salons = action?.payload?.data;
       })
       .addCase(getSalons.rejected, (state, action) => {
+        state.loading = false;
+        state.status = false;
+        state.error = action.error;
+        state.message = 'Something went wrong';
+      });
+      builder
+      .addCase(getSalonsList.pending, (state) => {
+        state.loading = true;
+        state.status = false;
+        state.error = null;
+        state.message = null;
+      })
+      .addCase(getSalonsList.fulfilled, (state, action) => {
+        state.status = true;
+        state.loading = false;
+        state.salonsList = [...new Set([...state.salonsList, ...action.payload.data])];
+      })
+      .addCase(getSalonsList.rejected, (state, action) => {
         state.loading = false;
         state.status = false;
         state.error = action.error;
@@ -451,6 +473,24 @@ const salonSlice = createSlice({
         state.salonreviews = action.payload;
       })
       .addCase(getAllReviews.rejected, (state, action) => {
+        state.status = false;
+        state.loading = false;
+        state.error = action.error;
+        state.message = 'Something went wrong';
+      });
+      builder
+      .addCase(getAllReviewsBySearch.pending, (state) => {
+        state.status = false;
+        state.loading = true;
+        state.error = null;
+        state.message = null;
+      })
+      .addCase(getAllReviewsBySearch.fulfilled, (state, action) => {
+        state.status = true;
+        state.loading = false;
+        state.salonreviews = action.payload;
+      })
+      .addCase(getAllReviewsBySearch.rejected, (state, action) => {
         state.status = false;
         state.loading = false;
         state.error = action.error;

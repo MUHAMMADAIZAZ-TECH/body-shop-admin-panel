@@ -20,6 +20,7 @@ const Edit = ({ match }) => {
     };
   });
   const [form] = Form.useForm();
+  const [currentPage, setCurrentPage] = useState(1); // Current page number
   const [totalPages, setTotalPages] = useState(0); 
   console.log(totalPages);
   const handleSubmit = async (values) => {
@@ -55,14 +56,20 @@ const Edit = ({ match }) => {
       }
     }
   }, [form, salonState.availibilityhour]);
+  const handleLoadMore = () => {
+    setCurrentPage(currentPage + 1); // Increment the current page number
+  };
+  useEffect(() => {
+    dispatch(getAvailibilityHour(parseInt(match.params.id, 10)));
+  }, [dispatch, match.params.id]);
+
   useEffect(() => {
     dispatch(getSalonsList({
-      currentPage:1,
+      currentPage,
       pageSize:10,
       setTotalPages
     }));
-    dispatch(getAvailibilityHour(parseInt(match.params.id, 10)));
-  }, [dispatch, match.params.id]);
+  }, [dispatch,currentPage]);
   return (
     <>
       <PageHeader
@@ -109,9 +116,16 @@ const Edit = ({ match }) => {
                       >
                         <Select size="large" className="sDash_fullwidth-select">
                           <Option value="">Please Select</Option>
-                          {salonState.salons &&
-                            salonState.salons.length > 0 &&
-                            salonState.salons?.map((salon) => <Option value={salon.id}>{salon.name}</Option>)}
+                          {salonState.salonsList &&
+                            salonState.salonsList.length > 0 &&
+                            salonState.salonsList?.map((salon) => <Option value={salon.id}>{salon.name}</Option>)}
+                         {currentPage < totalPages && (
+                        <Option disabled>
+                          <Button className='loadmorebutton' size="small" type="primary" onClick={handleLoadMore} block >
+                            Load More
+                          </Button>
+                        </Option>
+                      )}
                         </Select>
                       </Form.Item>
                     </Col>
