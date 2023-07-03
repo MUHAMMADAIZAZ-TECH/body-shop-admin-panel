@@ -23,7 +23,6 @@ const ViewPage = () => {
     };
   });
   const dataSource = [];
-  console.log(salonState.salonreviews.results);
   // search states
   const [currentPage, setCurrentPage] = useState(1); // Initial current page
   const [totalPages, setTotalPages] = useState(0); 
@@ -61,12 +60,14 @@ const ViewPage = () => {
     clearFilters();
     setSearchText('');
   };
-  const handleDelete = (id) => {
+  const handleDelete = (review) => {
+    console.log(review);
     const confirm = window.confirm('Are you sure delete this?');
     if (confirm) {
       dispatch(
         deleteSalonReview({
-          id,
+          id:review.id,
+          salonid:review.salon_id,
           getData: () => {
             dispatch(getAllReviews({
               currentPage,
@@ -100,7 +101,7 @@ const ViewPage = () => {
               <FeatherIcon icon="edit" size={14} />
             </Link>
             &nbsp;&nbsp;&nbsp;
-            <Link className="delete" onClick={() => handleDelete(id)} to="#">
+            <Link className="delete" onClick={() => handleDelete(review)} to="#">
               <FeatherIcon icon="trash-2" size={14} />
             </Link>
           </div>
@@ -146,14 +147,14 @@ const ViewPage = () => {
       render: (rating) => <Rate disabled defaultValue={rating} />,
     },
     {
-      title: 'User',
+      title: 'User Name',
       dataIndex: 'user_name',
       key: 'user_name',
       sorter: (a, b) => a.user_name.length - b.user_name.length,
       sortDirections: ['descend', 'ascend'],
     },
     {
-      title: 'Salon',
+      title: 'Salon Name',
       dataIndex: 'salon_name',
       key: 'salon_name',
       sorter: (a, b) => a.salon_name.length - b.salon_name.length,
@@ -221,7 +222,7 @@ const ViewPage = () => {
           // onKeyDown={Search}
           type="text" 
           name="recored-search" 
-          placeholder="Search Here" />
+          placeholder="Enter user name or salon name" />
         </div>,
         ]}
         ghost

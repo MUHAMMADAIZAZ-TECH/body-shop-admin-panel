@@ -533,6 +533,25 @@ const salonSlice = createSlice({
         state.message = 'Something went wrong';
         message.error('Something went wrong')
       });
+      builder
+      .addCase(updateSalonReview.pending, (state) => {
+        state.status = false;
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateSalonReview.fulfilled, (state) => {
+        state.status = true;
+        state.loading = false;
+        state.message = 'Successfully Updated';
+        message.success('Successfuly Updated')
+      })
+      .addCase(updateSalonReview.rejected, (state, action) => {
+        state.status = false;
+        state.loading = false;
+        state.error = action.error;
+        state.message = 'Something went wrong';
+        message.error('Something went wrong')
+      });
   },
 });
 

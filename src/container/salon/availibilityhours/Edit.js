@@ -138,6 +138,8 @@ const Edit = ({ match }) => {
                         <TimePicker
                           style={{ marginRight: '10px' }}
                           className="sDash_fullwidth-select"
+                          use12Hours 
+                          format="h:mm A"
                           onChange={(time) => {
                             form.setFieldsValue({ openingTime: time });
                           }}
@@ -151,6 +153,8 @@ const Edit = ({ match }) => {
                         <TimePicker
                           style={{ marginRight: '10px' }}
                           className="sDash_fullwidth-select"
+                          use12Hours 
+                          format="h:mm A"
                           onChange={(time) => {
                             form.setFieldsValue({ closingTime: time });
                           }}

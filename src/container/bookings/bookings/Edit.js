@@ -28,7 +28,7 @@ const Edit = ({ match }) => {
       dispatch(
         updateBooking({
           id: match.params.id,
-          ...values.booking_status,
+          booking_status: values.booking_status,
           // booking_date: values.booking_date.format('YYYY/MM/DD'),
           // appointmentDate: values.appointmentDate.format('YYYY/MM/DD'),
           // startTime: values.startTime.format('HH:mm:ss'),
@@ -135,7 +135,8 @@ const Edit = ({ match }) => {
                         <TimePicker
                           style={{ marginRight: '10px' }}
                           className="sDash_fullwidth-select"
-                          format="HH:mm:ss"
+                          use12Hours 
+                          format="h:mm A"
                           onChange={(time) => {
                             form.setFieldsValue({ startTime: time });
                           }}

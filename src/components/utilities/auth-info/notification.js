@@ -1,4 +1,4 @@
-import React, { useEffect,useState } from 'react';
+import React, { useState } from 'react';
 import { Badge } from 'antd';
 import moment from 'moment';
 import FeatherIcon from 'feather-icons-react';
@@ -61,7 +61,12 @@ function NotificationBox() {
  
   const handleLoadMore = () => {
     setCurrentPage(currentPage + 1); // Increment the current page number
+    dispatch(getNotifications({
+          currentPage:currentPage + 1,
+          pageSize:5
+        }))
   };
+  console.log(NotificationStates.Notifications);
   const content = (
     <AtbdTopDropdwon className="atbd-top-dropdwon">
       <Heading as="h5" className="atbd-top-dropdwon__title">
@@ -78,7 +83,7 @@ function NotificationBox() {
       >
         <ul className="atbd-top-dropdwon__nav notification-list">
           {NotificationStates?.Notifications?.map((item) => (
-            <li>
+            <li key={item.id}>
               <Link to="#">
                 <div className="atbd-top-dropdwon__content notifications">
                   <div className="notification-icon bg-primary">
@@ -192,17 +197,17 @@ function NotificationBox() {
     </AtbdTopDropdwon>
   );
 
- useEffect(()=>{
-  dispatch(getNotifications({
-    currentPage,
-    pageSize:5
-  }))
- },[currentPage])
+//  useEffect(()=>{
+//   dispatch(getNotifications({
+//     currentPage,
+//     pageSize:5
+//   }))
+//  },[currentPage])
   return (
     <div className="notification">
-      <Popover placement="bottomLeft" content={content} action="click">
+      <Popover placement="bottomLeft" content={content} action="click" >
         <Badge dot offset={[-8, -5]}>
-          <Link to="#" className="head-example">
+          <Link to="#" className="head-example" onClick={handleLoadMore}>
             <FeatherIcon icon="bell" size={20} />
           </Link>
         </Badge>

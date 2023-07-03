@@ -29,8 +29,8 @@ const AddNew = () => {
       dispatch(
         createAvailibilityHours({
           salonId: values.salon_id,
-          closingTime: values.closingTime.format('HH:mm:ss'),
-          openingTime: values.openingTime.format('HH:mm:ss'),
+          closingTime: values.closingTime.format('HH:mm A'),
+          openingTime: values.openingTime.format('HH:mm A'),
           weekday: values.weekday,
         }),
       );
@@ -118,6 +118,8 @@ const AddNew = () => {
                         <TimePicker
                           style={{ marginRight: '10px' }}
                           className="sDash_fullwidth-select"
+                          use12Hours 
+                          format="h:mm A"
                           onChange={(time) => {
                             form.setFieldsValue({ openingTime: time });
                           }}
@@ -126,6 +128,8 @@ const AddNew = () => {
                       <Form.Item
                         name="closingTime"
                         label="End At"
+                        use12Hours 
+                        format="h:mm A"
                         rules={[{ required: true, message: 'Please select end at' }]}
                       >
                         <TimePicker

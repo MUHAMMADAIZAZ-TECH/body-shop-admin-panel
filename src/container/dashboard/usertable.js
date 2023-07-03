@@ -38,7 +38,12 @@ function UserListTable() {
         deleteSalon({
           id,
           getData: () => {
-            dispatch(getSalons());
+            dispatch(getSalons({
+              currentPage,
+              pageSize,
+              setTotalPages,
+              approved:1
+            }));
           },
         }),
       );
@@ -49,6 +54,7 @@ function UserListTable() {
     dispatch(selectSalon(salon));
     console.log(salon);
   };
+  console.log(dataSource);
   if (salonState?.salons?.length)
   salonState?.salons?.map((salon, key) => {
       const { id, images, name, address } = salon;

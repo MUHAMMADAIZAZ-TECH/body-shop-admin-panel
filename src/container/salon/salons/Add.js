@@ -36,8 +36,8 @@ const AddNew = () => {
       await form.validateFields(); // Validate all form fields
       dispatch(createSalon({
         ...values,
-        closing_time: values.closing_time.format('HH:mm:ss'),
-        opening_time: values.opening_time.format('HH:mm:ss'),
+        closing_time: values.closing_time.format('HH:mm A'),
+        opening_time: values.opening_time.format('HH:mm A'),
         files
       }));
     } catch (error) {
@@ -186,6 +186,8 @@ const AddNew = () => {
                             <TimePicker
                               style={{ marginRight: '10px' }}
                               className="sDash_fullwidth-select"
+                              use12Hours 
+                              format="h:mm A"
                               onChange={(time) => {
                                 form.setFieldsValue({ opening_time: time });
                               }}
@@ -201,6 +203,8 @@ const AddNew = () => {
                             <TimePicker
                               style={{ marginRight: '10px' }}
                               className="sDash_fullwidth-select"
+                              use12Hours 
+                              format="h:mm A"
                               onChange={(time) => {
                                 form.setFieldsValue({ closing_time: time });
                               }}

@@ -10,6 +10,7 @@ export const getsalons = async ({
   try {
     const response = await DataService.get(`/api/v1/salons/all?isApproved=${approved}&page=${currentPage}&limit=${pageSize}`);
     setTotalPages(response.data.totalPages)
+    console.log(response?.data);
     return response?.data;
   } catch (error) {
     return error;
@@ -81,7 +82,7 @@ export const createsalon = async (body) => {
   });
 
   try {
-    const response = await DataService.postFormData(`/api/v1/salons`, formData);
+    const response = await DataService.postFormData(`/api/v1/salons/admin`, formData);
     return response.data;
   } catch (error) {
     return error;
@@ -124,7 +125,7 @@ export const updatesalon = async (body) => {
 };
 export const deletesalon = async ({ id, getData }) => {
   try {
-    const response = await DataService.delete(`/api/v1/salons/${id}`);
+    const response = await DataService.delete(`/api/v1/salons/admin/${id}`);
     await getData();
     return response.data;
   } catch (error) {
@@ -235,11 +236,10 @@ export const updatesalonreview = async (body) => {
     return error;
   }
 };
-export const deletesalonreview = async ({ id, getData }) => {
+export const deletesalonreview = async ({ id,salonid, getData }) => {
   try {
-    const response = await DataService.delete(`/api/v1/reviews/${id}`);
+    const response = await DataService.delete(`/api/v1/reviews/admin/${id}/${salonid}`);
     await getData();
-    console.log(response);
     return response.data;
   } catch (error) {
     return error;

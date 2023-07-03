@@ -201,7 +201,8 @@ const Edit = ({ match }) => {
                         <TimePicker
                           style={{ marginRight: '10px' }}
                           className="sDash_fullwidth-select"
-                          format="HH:mm:ss"
+                          use12Hours 
+                          format="h:mm A"
                           onChange={(time) => {
                             form.setFieldsValue({ duration: time });
                           }}
