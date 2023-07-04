@@ -194,6 +194,11 @@ const ViewPage = () => {
       searchText
     }));
   };
+  const onEnter = (event) =>{
+    if (event.key === "Enter") {
+      Search()
+    }
+   }
   useEffect(() => {
     dispatch(getAllReviews({
       currentPage,
@@ -219,7 +224,7 @@ const ViewPage = () => {
           </span>
           <input 
           onChange={onHandleSearch} 
-          // onKeyDown={Search}
+          onKeyDown={onEnter}
           type="text" 
           name="recored-search" 
           placeholder="Enter user name or salon name" />

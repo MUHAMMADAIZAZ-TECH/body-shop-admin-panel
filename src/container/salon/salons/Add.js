@@ -12,12 +12,6 @@ import { getBase64, draggerprops, uploadButton } from '../../../components/utili
 const { Option } = Select;
 const { Dragger } = Upload;
 
-const selectAfter = (
-  <Select defaultValue="km" style={{ width: 70 }}>
-    <Option value="km">km</Option>
-  </Select>
-);
-
 const AddNew = () => {
   const dispatch = useDispatch();
   const [previewOpen, setPreviewOpen] = useState(false);
@@ -136,7 +130,7 @@ const AddNew = () => {
                         label="Availability Range"
                         rules={[{ required: true, message: 'Please enter availibilty range' }]}
                       >
-                        <Input addonAfter={selectAfter} defaultValue={0} type="number" />
+                        <Input addonAfter="km" defaultValue={0} type="number" />
                       </Form.Item>
                       <Row gutter={30}>
                         <Col sm={12} xs={24} className="mb-25">

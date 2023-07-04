@@ -18,6 +18,7 @@ export const getbooking = async (id) => {
     const { data } = await DataService.get(`/api/v1/bookings/admin/${id}`);
     return data;
   } catch (error) {
+    console.log(error);
     return error;
   }
 };

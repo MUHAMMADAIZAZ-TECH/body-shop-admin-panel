@@ -192,6 +192,11 @@ const ViewPage = () => {
       searchText
     }));
   };
+  const onEnter = (event) =>{
+    if (event.key === "Enter") {
+      Search()
+    }
+   }
   useEffect(() => {
     dispatch(getTransactions({
       currentPage,
@@ -215,7 +220,10 @@ const ViewPage = () => {
             <span className="search-icon">
               <FeatherIcon icon="search" size={14} onClick={Search}/>
             </span>
-            <input onChange={(e)=>setSearchText(e.target.value)} type="text" name="recored-search" placeholder="Enter Booking ID" />
+            <input onChange={(e)=>setSearchText(e.target.value)} 
+            onKeyDown={onEnter}
+            type="text" name="recored-search" 
+            placeholder="Enter Booking ID" />
           </div>,
         ]}
         ghost

@@ -14,3 +14,6 @@
   color: inherit; /* Use the parent's color */
   text-decoration: none; /* Remove underline */
 }
+.search-icon{
+  cursor: pointer;
+}

@@ -324,10 +324,15 @@ const ViewPage = () => {
       currentPage,
       pageSize,
       setTotalPages,
-      approved:1,
+      approved:0,
       searchText
     }));
   };
+  const onEnter = (event) =>{
+    if (event.key === "Enter") {
+      Search()
+    }
+   }
   useEffect(() => {
     dispatch(getSalons({
       currentPage,
@@ -362,7 +367,7 @@ const ViewPage = () => {
           </span>
           <input 
           onChange={onHandleSearch} 
-          // onKeyDown={Search}
+          onKeyDown={onEnter}
           type="text" 
           name="recored-search" 
           placeholder="Search Here" />

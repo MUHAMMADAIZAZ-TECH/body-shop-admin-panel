@@ -248,7 +248,7 @@ const salonSlice = createSlice({
       .addCase(getSalonsList.fulfilled, (state, action) => {
         state.status = true;
         state.loading = false;
-        state.salonsList = [...new Set([...state.salonsList, ...action.payload.data])];
+        state.salonsList = [...new Map([...state.salonsList, ...action.payload.data].map(salon => [salon.id, salon])).values()];
       })
       .addCase(getSalonsList.rejected, (state, action) => {
         state.loading = false;

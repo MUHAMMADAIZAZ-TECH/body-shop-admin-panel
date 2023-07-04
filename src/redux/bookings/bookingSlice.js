@@ -37,7 +37,6 @@ const bookingSlice = createSlice({
       })
       .addCase(getBookings.fulfilled, (state, action) => {
         state.loading = false;
-        console.log(action.payload);
         state.Bookings = action.payload;
       })
       .addCase(getBookings.rejected, (state, action) => {
@@ -66,8 +65,12 @@ const bookingSlice = createSlice({
       })
       .addCase(searchBooking.fulfilled, (state, action) => {
         state.loading = false;
-        if(action.payload.status==='success' && action.payload.data){
+        console.log(action.payload);
+        if(action.payload!==undefined && action.payload.status==='success' && action.payload.data){
           state.Bookings = {...action.payload,data:[action.payload.data]};
+        }
+        else{
+          state.Bookings = {...action.payload,data:[]};
         }
       })
       .addCase(searchBooking.rejected, (state, action) => {

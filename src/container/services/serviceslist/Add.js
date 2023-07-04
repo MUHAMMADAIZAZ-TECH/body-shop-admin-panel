@@ -123,6 +123,7 @@ const AddNew = () => {
                       <Form.Item
                         name="salon_id"
                         label="Salon"
+                        initialValue=""
                         rules={[{ required: true, message: 'Please select salon' }]}
                       >
                         <Select size="large" className="sDash_fullwidth-select">

@@ -45,11 +45,11 @@ const AddNew = () => {
   useEffect(() => {
     dispatch(getSalonsList({
       currentPage,
-      pageSize:10,
+      pageSize: 10,
       setTotalPages
     }));
-  }, [dispatch,currentPage]);
-
+  },[currentPage]);
+console.log(salonState.salonsList);
   return (
     <>
       <PageHeader
@@ -98,14 +98,14 @@ const AddNew = () => {
                           <Option value="">Please Select</Option>
                           {salonState.salonsList &&
                             salonState.salonsList.length > 0 &&
-                            salonState.salonsList?.map((salon) => <Option value={salon.id}>{salon.name}</Option>)}
-                         {currentPage < totalPages && (
-                        <Option disabled>
-                          <Button size="small" type="primary" onClick={handleLoadMore} block >
-                            Load More
-                          </Button>
-                        </Option>
-                      )}
+                            salonState.salonsList.map((salon) => <Option key={salon.id} value={salon.id}>{salon.name}</Option>)}
+                          {currentPage < totalPages && (
+                            <Option disabled>
+                              <Button className='loadmorebutton' size="small" type="primary" onClick={handleLoadMore} block>
+                                Load More
+                              </Button>
+                            </Option>
+                          )}
                         </Select>
                       </Form.Item>
                     </Col>
@@ -118,7 +118,7 @@ const AddNew = () => {
                         <TimePicker
                           style={{ marginRight: '10px' }}
                           className="sDash_fullwidth-select"
-                          use12Hours 
+                          use12Hours
                           format="h:mm A"
                           onChange={(time) => {
                             form.setFieldsValue({ openingTime: time });
@@ -128,7 +128,7 @@ const AddNew = () => {
                       <Form.Item
                         name="closingTime"
                         label="End At"
-                        use12Hours 
+                        use12Hours
                         format="h:mm A"
                         rules={[{ required: true, message: 'Please select end at' }]}
                       >

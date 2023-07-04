@@ -170,7 +170,7 @@ const Edit = ({ match }) => {
                         label="Availability Range"
                         rules={[{ required: true, message: 'Please enter availibilty range' }]}
                       >
-                        <Input placeholder="Enter Availability Range" />
+                        <Input placeholder="Enter Availability Range" addonAfter='km'/>
                       </Form.Item>
                     </Col>
                   </Row>

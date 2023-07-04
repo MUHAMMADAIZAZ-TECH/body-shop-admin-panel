@@ -324,7 +324,11 @@ const ViewPage = () => {
       searchText
     }));
   };
- 
+ const onEnter = (event) =>{
+  if (event.key === "Enter") {
+    Search()
+  }
+ }
   useEffect(() => {
     dispatch(getSalons({
       currentPage,
@@ -354,14 +358,14 @@ const ViewPage = () => {
           </div>,
           <div key={1} className="search-box">
             <span className="search-icon">
-              <FeatherIcon icon="search" size={14} onClick={Search} />
+              <FeatherIcon icon="search" size={14} onClick={Search}/>
             </span>
             <input 
             onChange={onHandleSearch} 
-            // onKeyDown={Search}
+            onKeyDown={onEnter}
             type="text" 
             name="recored-search" 
-            placeholder="Search Here" />
+            placeholder="Enter Salon Name" />
           </div>,
         ]}
         ghost
