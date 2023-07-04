@@ -61,3 +61,21 @@ export const updateconfigs = async (data) => {
     return error;
   }
 };
+
+export const createreservationfee = async (data) => {
+  try {
+    const response = await DataService.post(`/api/v1/reservationfee/`, data);
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const getcountries = async () => {
+  try {
+    const response = await DataService.get(`https://restcountries.com/v3.1/all?fields=name,currencies`);
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};

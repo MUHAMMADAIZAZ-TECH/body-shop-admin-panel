@@ -8,6 +8,8 @@ import {
   updatecustompage,
   deletecustompage,
   updateconfigs,
+  createreservationfee,
+  getcountries
 } from './settingsApis';
 
 const initialState = {
@@ -18,6 +20,7 @@ const initialState = {
   CustomPages: [],
   CustomPage: null,
   configs: [],
+  countries:[]
 };
 export const getConfigs = createAsyncThunk('get/getConfigs', async () => {
   const response = await getconfigs();
@@ -49,8 +52,16 @@ export const deleteCustomPage = createAsyncThunk('delete/deleteCustomPage', asyn
   return response;
 });
 
-const CustomPageSlice = createSlice({
-  name: 'CustomPageSlice',
+export const createReservationfee = createAsyncThunk('post/createReservationfee', async (body) => {
+  const response = await createreservationfee(body);
+  return response;
+});
+export const getCountries = createAsyncThunk('get/getCountries', async (body) => {
+  const response = await getcountries(body);
+  return response;
+});
+const SettingsSlice = createSlice({
+  name: 'SettingsSlice',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
@@ -65,6 +76,28 @@ const CustomPageSlice = createSlice({
         state.configs = action.payload.data;
       })
       .addCase(getConfigs.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error;
+        state.message = action.error.message;
+      });
+      builder
+      .addCase(getCountries.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getCountries.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = true;
+        if(action.payload){
+        const array = action.payload.map(country => ({
+            value: country.name.official,
+            label: country.name.official,
+            country
+          }))
+          state.countries = array;
+        }
+      })
+      .addCase(getCountries.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error;
         state.message = action.error.message;
@@ -175,4 +208,4 @@ const CustomPageSlice = createSlice({
 
 // export const { } = salonSlice.actions
 
-export default CustomPageSlice.reducer;
+export default SettingsSlice.reducer;

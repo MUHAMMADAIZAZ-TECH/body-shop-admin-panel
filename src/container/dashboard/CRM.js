@@ -89,7 +89,6 @@ function CRM() {
 
   }
   const handleSubmit = (value) => {
-    console.log(value);
     try {
       dispatch(getDashboard(value));
     } catch (error) {
@@ -124,13 +123,12 @@ function CRM() {
                 <div className="card-chunk">
                   <CardBarChart2>
                     <Heading as="h1">
-                      {salonState.dashboard.totalBookings && salonState.dashboard.totalBookings}
+                      {salonState.dashboard?.yearlyBookings?.length>0? salonState.dashboard.yearlyBookings[0].yearly_bookings:"0"}
                     </Heading>
                     <span>Total Bookings</span>
                     <p>
                       <span className="growth-upward">
-                        Since last year
-                        {/* <FeatherIcon icon="arrow-up" />  */}
+                        {salonState?.dashboard?.yearlyBookings?.length>0?salonState.dashboard.yearlyBookings[0].year:"No Bookings this Year"}
                       </span>
                     </p>
                   </CardBarChart2>
@@ -159,13 +157,12 @@ function CRM() {
                 <div className="card-chunk">
                   <CardBarChart2>
                     <Heading as="h1">
-                      ${salonState.dashboard.totalEarnings && salonState.dashboard.totalEarnings}
+                      ${salonState?.dashboard?.yearlyEarnings?.length>0? salonState.dashboard.yearlyEarnings[0].yearly_earnings:"0"}
                     </Heading>
                     <span>Total earnings</span>
                     <p>
                       <span className="growth-upward">
-                        Since last year
-                        {/* <FeatherIcon icon="arrow-up" />  */}
+                      {salonState?.dashboard?.yearlyEarnings?.length>0? salonState.dashboard.yearlyEarnings[0].year:"No Earnings this Year"}
                       </span>
                     </p>
                   </CardBarChart2>
@@ -198,7 +195,6 @@ function CRM() {
                     <p>
                       <span className="growth-upward">
                         Since last year
-                        {/* <FeatherIcon icon="arrow-up" />  */}
                       </span>
                     </p>
                   </CardBarChart2>
@@ -233,7 +229,6 @@ function CRM() {
                     <p>
                       <span className="growth-upward">
                         Since last year
-                        {/* <FeatherIcon icon="arrow-up" />  */}
                       </span>
                     </p>
                   </CardBarChart2>

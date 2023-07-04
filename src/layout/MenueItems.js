@@ -146,11 +146,16 @@ function MenuItems({ darkMode, toggleCollapsed, topMenu, events }) {
             Custom Pages
           </NavLink>
         </Menu.Item>
-        <Menu.Item key="Taxes">
+        <Menu.Item key="config">
           <NavLink onClick={toggleCollapsed} to={`${path}/settings/config/view`}>
             Config Settings
           </NavLink>
         </Menu.Item>
+        {/* <Menu.Item key="reservationfee">
+          <NavLink onClick={toggleCollapsed} to={`${path}/settings/reservationfee/view`}>
+            Reservation Fee
+          </NavLink>
+        </Menu.Item> */}
       </SubMenu>
       <SubMenu key="layout" icon={!topMenu && <FeatherIcon icon="layout" />} title="Layouts">
         <Menu.Item key="light">

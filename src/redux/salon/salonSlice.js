@@ -218,7 +218,6 @@ const salonSlice = createSlice({
             allMonths[index].monthly_users = user_count;
             allMonths[index].year = year;
           });
-         
           state.dashboardDetails = allMonths;
         }
       })
