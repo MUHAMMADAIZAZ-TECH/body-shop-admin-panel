@@ -99,6 +99,7 @@ function CRM() {
   useEffect(() => {
     dispatch(getDashboard(''));
   }, []);
+  console.log(salonState.dashboard);
   return (
     <>
       <PageHeader
@@ -123,12 +124,12 @@ function CRM() {
                 <div className="card-chunk">
                   <CardBarChart2>
                     <Heading as="h1">
-                      {salonState.dashboard?.yearlyBookings?.length>0? salonState.dashboard.yearlyBookings[0].yearly_bookings:"0"}
+                      {salonState.dashboard?.yearlyBookings?.yearly_bookings? salonState.dashboard.yearlyBookings.yearly_bookings:"0"}
                     </Heading>
                     <span>Total Bookings</span>
                     <p>
                       <span className="growth-upward">
-                        {salonState?.dashboard?.yearlyBookings?.length>0?salonState.dashboard.yearlyBookings[0].year:"No Bookings this Year"}
+                        {salonState?.dashboard?.yearlyBookings?.year?salonState.dashboard.yearlyBookings.year:"0 Bookings this Year"}
                       </span>
                     </p>
                   </CardBarChart2>
@@ -157,12 +158,12 @@ function CRM() {
                 <div className="card-chunk">
                   <CardBarChart2>
                     <Heading as="h1">
-                      ${salonState?.dashboard?.yearlyEarnings?.length>0? salonState.dashboard.yearlyEarnings[0].yearly_earnings:"0"}
+                      ${salonState?.dashboard?.yearlyEarnings?.yearly_earnings? salonState.dashboard.yearlyEarnings.yearly_earnings:"0"}
                     </Heading>
                     <span>Total earnings</span>
                     <p>
                       <span className="growth-upward">
-                      {salonState?.dashboard?.yearlyEarnings?.length>0? salonState.dashboard.yearlyEarnings[0].year:"No Earnings this Year"}
+                      {salonState?.dashboard?.yearlyEarnings?.year? salonState.dashboard.yearlyEarnings.year:"0 earnings this Year"}
                       </span>
                     </p>
                   </CardBarChart2>
@@ -190,11 +191,11 @@ function CRM() {
               <EChartCard>
                 <div className="card-chunk">
                   <CardBarChart2>
-                    <Heading as="h1">{salonState.dashboard.totalSalons && salonState.dashboard.totalSalons}</Heading>
+                    <Heading as="h1">{salonState?.dashboard?.totalSalonYearly?.yearly_salons?salonState.dashboard.totalSalonYearly.yearly_salons:'0'}</Heading>
                     <span>Salons</span>
                     <p>
                       <span className="growth-upward">
-                        Since last year
+                      {salonState?.dashboard?.totalSalonYearly?.year?salonState.dashboard.totalSalonYearly.year:'0 salons this year'}
                       </span>
                     </p>
                   </CardBarChart2>
@@ -223,12 +224,13 @@ function CRM() {
                 <div className="card-chunk">
                   <CardBarChart2>
                     <Heading as="h1">
-                      {salonState.dashboard.totalCustomers && salonState.dashboard.totalCustomers}
+                      
+                      {salonState?.dashboard?.usersCountYearly?.yearly_users?salonState?.dashboard?.usersCountYearly?.yearly_users:"0"}
                     </Heading>
                     <span>Total Customers</span>
                     <p>
                       <span className="growth-upward">
-                        Since last year
+                      {salonState?.dashboard?.usersCountYearly?.year?salonState.dashboard.usersCountYearly.year:'0 user this year'}
                       </span>
                     </p>
                   </CardBarChart2>
