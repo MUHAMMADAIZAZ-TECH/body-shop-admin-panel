@@ -287,6 +287,7 @@ const ViewPage = () => {
                         showSizeChanger: true ,
                         pageSizeOptions: ['10', '25', '50', '100'], 
                         onShowSizeChange: handlePageSizeChange,
+                        showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
                         current: currentPage,
                         onChange: setCurrentPage,
                       }}

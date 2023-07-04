@@ -54,7 +54,6 @@ function UserListTable() {
     dispatch(selectSalon(salon));
     console.log(salon);
   };
-  console.log(dataSource);
   if (salonState?.salons?.length)
   salonState?.salons?.map((salon, key) => {
       const { id, images, name, address } = salon;

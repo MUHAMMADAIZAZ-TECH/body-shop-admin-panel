@@ -174,7 +174,9 @@ const ViewPage = () => {
         setSearchText,
         setSearchedColumn,
       ),
-      render: (text) => <div>#{text}</div>,
+      render:(name,{booking})=> <Link 
+      className="disable-color" to={`/admin/bookings/view/${booking.id}`}>#{name}
+    </Link>,
       fixed: 'left',
     },
     {
@@ -394,6 +396,11 @@ const ViewPage = () => {
       });
     }
   };
+  const onEnter = (event) =>{
+    if (event.key === "Enter") {
+      onHandleSearch()
+    }
+   }
   useEffect(() => {
     dispatch(getBookings({
       currentPage,
@@ -417,7 +424,12 @@ const ViewPage = () => {
             <span className="search-icon">
               <FeatherIcon icon="search" size={14} onClick={onHandleSearch}/>
             </span>
-            <input onChange={(e)=>setSearchText(e.target.value)} type="text" name="recored-search" placeholder="Enter Booking ID" />
+            <input 
+            onKeyDown={onEnter}
+            onChange={(e)=>setSearchText(e.target.value)} 
+            type="text" 
+            name="recored-search" 
+            placeholder="Enter Booking ID" />
           </div>,
         ]}
         ghost
@@ -444,6 +456,8 @@ const ViewPage = () => {
                         onShowSizeChange: handlePageSizeChange,
                         current: currentPage,
                         onChange: setCurrentPage,
+                        showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
+
                       }}
                       dataSource={dataSource}
                       columns={columns}

@@ -23,7 +23,7 @@ import {
   updatesalonreview,
   searchsalons,
   getsalonsList,
-  searchallreviews
+  searchallreviews,
 } from './salonApis';
 
 const initialState = {
@@ -54,10 +54,11 @@ const initialState = {
   dashboardDetails:null
 };
 // Dashboard
-export const getDashboard = createAsyncThunk('get/getDashboard', async () => {
-  const response = await getdashboard();
+export const getDashboard = createAsyncThunk('get/getDashboard', async (year) => {
+  const response = await getdashboard(year);
   return response;
 });
+
 // salon-crud
 export const getSalons = createAsyncThunk('get/getsalons', async (body) => {
   const response = await getsalons(body);
@@ -190,27 +191,34 @@ const salonSlice = createSlice({
           
           // Populate monthly bookings
           bookings.forEach((booking) => {
-            const { month, monthly_bookings } = booking;
+            const { month, monthly_bookings,year } = booking;
             const index = month - 1;
             allMonths[index].monthly_bookings = monthly_bookings;
+            allMonths[index].year = year;
           });
           
           // Populate monthly earnings
           earnings.forEach((earning) => {
-            const { month, monthly_earnings } = earning;
+            const { month, monthly_earnings,year } = earning;
             const index = month - 1;
             allMonths[index].monthly_earnings = monthly_earnings;
+            allMonths[index].year = year;
           });
+          // Populate salons
           salondatasets.forEach((earning) => {
-            const { month, salon_count } = earning;
+            const { month, salon_count,year } = earning;
             const index = month - 1;
             allMonths[index].monthly_salons = salon_count;
+            allMonths[index].year = year;
           });
+          // Populate users
           usersdatasets.forEach((earning) => {
-            const { month, user_count } = earning;
+            const { month, user_count ,year} = earning;
             const index = month - 1;
             allMonths[index].monthly_users = user_count;
+            allMonths[index].year = year;
           });
+         
           state.dashboardDetails = allMonths;
         }
       })

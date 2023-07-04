@@ -1,5 +1,5 @@
 import React, { Suspense, useEffect, lazy } from 'react';
-import { Row, Col, Skeleton } from 'antd';
+import { Row, Col, Skeleton, Select } from 'antd';
 // import FeatherIcon from 'feather-icons-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CardBarChart2, EChartCard } from './style';
@@ -10,10 +10,11 @@ import Heading from '../../components/heading/heading';
 import { ChartjsBarChartTransparent } from '../../components/charts/chartjs';
 // import { ExportButtonPageHeader } from '../../components/buttons/export-button/export-button';
 // import { CalendarButtonPageHeader } from '../../components/buttons/calendar-button/calendar-button';
-import { getDashboard } from '../../redux/salon/salonSlice';
+import { getDashboard} from '../../redux/salon/salonSlice';
 
 const UserListTable = lazy(() => import('./usertable'));
 const TotalRevenue = lazy(() => import('./TotalRevenue'));
+const { Option } = Select;
 const chartOptions = {
   legend: {
     display: false,
@@ -87,21 +88,33 @@ function CRM() {
     return []
 
   }
+  const handleSubmit = (value) => {
+    console.log(value);
+    try {
+      dispatch(getDashboard(value));
+    } catch (error) {
+      console.log('Validation error:', error);
+    }
+  };
   const month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   useEffect(() => {
-    dispatch(getDashboard());
+    dispatch(getDashboard(''));
   }, []);
   return (
     <>
       <PageHeader
         ghost
         title="Dashboard | System overview"
-        // buttons={[
-        //   <div key="1" className="page-header-actions">
-        //     <CalendarButtonPageHeader />
-        //     <ExportButtonPageHeader />
-        //   </div>,
-        // ]}
+        buttons={[
+          <div key="1" className="page-header-actions">
+            <Select defaultValue="" size="small" className="sDash_fullwidth-select" onSelect={handleSubmit}>
+              <Option value="">Year</Option>
+              {salonState.dashboard.totalYears &&(
+                salonState.dashboard.totalYears.map((item)=><Option value={item}>{item}</Option>)
+              )}
+            </Select>
+          </div>,
+        ]}
       />
       <Main>
         <Row gutter={25}>
@@ -116,7 +129,7 @@ function CRM() {
                     <span>Total Bookings</span>
                     <p>
                       <span className="growth-upward">
-                      Since last year
+                        Since last year
                         {/* <FeatherIcon icon="arrow-up" />  */}
                       </span>
                     </p>
@@ -151,7 +164,7 @@ function CRM() {
                     <span>Total earnings</span>
                     <p>
                       <span className="growth-upward">
-                      Since last year
+                        Since last year
                         {/* <FeatherIcon icon="arrow-up" />  */}
                       </span>
                     </p>
@@ -165,7 +178,7 @@ function CRM() {
                         data: earningdatasets(salonState?.dashboardDetails),
                         backgroundColor: '#FFF0F6',
                         hoverBackgroundColor: '#FF69A5',
-                        label: 'Revenue',
+                        label: 'Earnings',
                         barPercentage: 1,
                       },
                     ]}
@@ -184,7 +197,7 @@ function CRM() {
                     <span>Salons</span>
                     <p>
                       <span className="growth-upward">
-                      Since last year
+                        Since last year
                         {/* <FeatherIcon icon="arrow-up" />  */}
                       </span>
                     </p>
@@ -219,7 +232,7 @@ function CRM() {
                     <span>Total Customers</span>
                     <p>
                       <span className="growth-upward">
-                      Since last year
+                        Since last year
                         {/* <FeatherIcon icon="arrow-up" />  */}
                       </span>
                     </p>

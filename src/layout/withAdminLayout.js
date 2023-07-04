@@ -4,7 +4,7 @@
 import React, { Component } from 'react';
 import { Layout, Button, Row, Col } from 'antd';
 import FeatherIcon from 'feather-icons-react';
-import { NavLink, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { ThemeProvider } from 'styled-components';
 import { connect } from 'react-redux';
@@ -340,11 +340,11 @@ const ThemeLayout = (WrappedComponent) => {
                         <span className="admin-footer__copyright">2023 © BodyShop</span>
                       </Col>
                       <Col md={12} xs={24}>
-                        <div className="admin-footer__links">
+                        {/* <div className="admin-footer__links">
                           <NavLink to="#">About</NavLink>
                           <NavLink to="#">Team</NavLink>
                           <NavLink to="#">Contact</NavLink>
-                        </div>
+                        </div> */}
                       </Col>
                     </Row>
                   </Footer>

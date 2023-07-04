@@ -66,7 +66,6 @@ function NotificationBox() {
           pageSize:5
         }))
   };
-  console.log(NotificationStates.Notifications);
   const content = (
     <AtbdTopDropdwon className="atbd-top-dropdwon">
       <Heading as="h5" className="atbd-top-dropdwon__title">

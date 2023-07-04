@@ -10,7 +10,6 @@ export const getsalons = async ({
   try {
     const response = await DataService.get(`/api/v1/salons/all?isApproved=${approved}&page=${currentPage}&limit=${pageSize}`);
     setTotalPages(response.data.totalPages)
-    console.log(response?.data);
     return response?.data;
   } catch (error) {
     return error;
@@ -286,9 +285,9 @@ export const deleteaddress = async (id) => {
     return error;
   }
 };
-export const getdashboard = async () => {
+export const getdashboard = async (year) => {
   try {
-    const response = await DataService.get(`/api/v1/salons/admin/stats`);
+    const response = await DataService.get(`/api/v1/salons/admin/stats?year=${year}`);
     return response.data;
   } catch (error) {
     return error;

@@ -243,7 +243,9 @@ const ViewPage = () => {
                         pageSize,
                         showSizeChanger: true ,
                         pageSizeOptions: ['5', '10', '20', '50'], 
-                        onShowSizeChange: handlePageSizeChange
+                        onShowSizeChange: handlePageSizeChange,
+                        showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
+
                       }}
                       dataSource={dataSource}
                       columns={columns}

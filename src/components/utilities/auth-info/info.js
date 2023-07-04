@@ -21,12 +21,14 @@ function AuthInfo() {
     e.preventDefault();
     dispatch(UserLogout());
   };
-
   const userContent = (
     <UserDropDwon>
       <div className="user-dropdwon">
         <figure className="user-dropdwon__info">
-          <img src={require('../../../static/img/avatar/chat-auth.png')} alt="" />
+          {user.photo && <Avatar src={user.photo} size={50} 
+          alt={require('../../../static/img/avatar/chat-auth.png')}
+          className='profile-image' />}
+          {/* <img src={user.photo} alt="" className='profile-image' /> */}
           <figcaption>
             <Heading as="h5">{user.fullName && user.fullName}</Heading>
             <p>{user.email}</p>
@@ -97,7 +99,7 @@ function AuthInfo() {
       <div className="nav-author">
         <Popover placement="bottomRight" content={userContent} action="click">
           <Link to="#" className="head-example">
-            <Avatar src="https://cdn0.iconfinder.com/data/icons/user-pictures/100/matureman1-512.png" />
+          {user.photo && <Avatar src={user.photo} alt='https://cdn0.iconfinder.com/data/icons/user-pictures/100/matureman1-512.png'/>}
           </Link>
         </Popover>
       </div>
