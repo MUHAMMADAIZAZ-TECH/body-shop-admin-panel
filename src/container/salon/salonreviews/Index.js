@@ -10,7 +10,7 @@ import { alertModal } from '../../../components/modals/antd-modals';
 import { Button } from '../../../components/buttons/buttons';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { PageHeader } from '../../../components/page-headers/page-headers';
-import { deleteSalonReview, getAllReviews,getAllReviewsBySearch } from '../../../redux/salon/salonSlice';
+import { deleteSalonReview, getAllReviews,getAllReviewsBySearch } from '../../../redux/salon/salonApis';
 import { exportToXLSX, handlePrint, getColumnSearchProps } from '../../../components/utilities/utilities';
 import MYExportButton from '../../../components/buttons/my-export-button/my-export-button';
 

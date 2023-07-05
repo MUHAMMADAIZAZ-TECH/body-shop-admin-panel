@@ -1,5 +1,7 @@
 import axios from 'axios';
+import { message } from 'antd';
 import { getItem } from '../../utility/localStorageControl';
+
 
 // const API_ENDPOINT = process.env.REACT_APP_API_ENDPOINT;
 const API_ENDPOINT = process.env.REACT_APP_MY_API_END_POINT;
@@ -100,11 +102,13 @@ client.interceptors.response.use(
     console.log(error.message);
     if(error.message ==='Network Error' || error.code ==='ERR_NETWORK'){
       console.log('Please Check Your Internet Connection')
+      message.error('Please Check Your Internet Connection')
       return Promise.reject(error);
     }
     if (response) {
       if (response.status === 500) {
         console.log("Server Error:", response.data);
+        message.error('Something Went Wrong On Server! Please Try Again Later')
       } else {
         return Promise.reject(response);
       }

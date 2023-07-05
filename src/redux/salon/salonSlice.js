@@ -1,29 +1,29 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { message } from 'antd';
 import {
-  getdashboard,
-  createaddress,
-  createavailibityhours,
-  createsalon,
-  deleteaddress,
-  deleteavailibityhours,
-  deletesalon,
-  deletesalonreview,
-  getaddress,
-  getallreviews,
-  getavailibilityhour,
-  getavailibilityhours,
-  gethourbysalon,
-  getsalon,
-  getsalonreview,
-  getsalons,
-  updateaddress,
-  updateavailibityhours,
-  updatesalon,
-  updatesalonreview,
-  searchsalons,
-  getsalonsList,
-  searchallreviews,
+  getDashboard,
+  // createAddress,
+  createAvailibilityHours,
+  createSalon,
+  // deleteAddress,
+  deleteAvailibilityHours ,
+  deleteSalon,
+  deleteSalonReview,
+  // getAddress,
+  getAllReviews,
+  getAvailibilityHour,
+  getAvailibilityHours,
+  getAvailibilityHourbysalon,
+  getSalon,
+  getSalonReview,
+  getSalons,
+  // updateAddress,
+  updateAvailibilityHours,
+  updateSalon,
+  updateSalonReview,
+  getSalonsBySearch,
+  getSalonsList,
+  getAllReviewsBySearch,
 } from './salonApis';
 
 const initialState = {
@@ -53,109 +53,9 @@ const initialState = {
   },
   dashboardDetails:null
 };
-// Dashboard
-export const getDashboard = createAsyncThunk('get/getDashboard', async (year) => {
-  const response = await getdashboard(year);
-  return response;
-});
 
-// salon-crud
-export const getSalons = createAsyncThunk('get/getsalons', async (body) => {
-  const response = await getsalons(body);
-  return response;
-});
-export const getSalonsList = createAsyncThunk('get/getSalonsList', async (body) => {
-  const response = await getsalonsList(body);
-  return response;
-});
-export const getSalon = createAsyncThunk('get/getSalon', async (id) => {
-  const response = await getsalon(id);
-  return response;
-});
-export const createSalon = createAsyncThunk('post/createSalon', async (body) => {
-  const response = await createsalon(body);
-  return response;
-});
-export const updateSalon = createAsyncThunk('update/updateSalon', async (body) => {
-  const response = await updatesalon(body);
-  return response;
-});
-export const deleteSalon = createAsyncThunk('delete/deleteSalon', async (id,{rejectWithValue}) => {
-  try {
-    const response = await deletesalon(id);
-    console.log(response);
-    return response;
-  } catch (error) {
-    return rejectWithValue(error);
-  }
-});
-// availibilityhours-crud
-export const getAvailibilityHours = createAsyncThunk('get/getavailibilityhours', async () => {
-  const response = await getavailibilityhours();
-  return response;
-});
-export const getAvailibilityHour = createAsyncThunk('get/getAvailibilityHour', async (id) => {
-  const response = await getavailibilityhour(id);
-  return response;
-});
-export const getAvailibilityHourbysalon = createAsyncThunk('get/getAvailibilityHourbysalon', async (body) => {
-  const response = await gethourbysalon(body);
-  return response.data;
-});
-export const createAvailibilityHours = createAsyncThunk('post/createAvailibilityHours', async (body) => {
-  const response = await createavailibityhours(body);
-  return response;
-});
-export const updateAvailibilityHours = createAsyncThunk('update/updateAvailibilityHours', async (body) => {
-  const response = await updateavailibityhours(body);
-  return response;
-});
-export const deleteAvailibilityHours = createAsyncThunk('delete/deleteAvailibilityHours', async (body) => {
-  const response = await deleteavailibityhours(body);
-  return response;
-});
-// reviews
-export const getAllReviews = createAsyncThunk('get/getallreviews', async (body) => {
-  const response = await getallreviews(body);
-  return response;
-});
-export const getAllReviewsBySearch = createAsyncThunk('get/getallreviewsbysearch', async (body) => {
-  const response = await searchallreviews(body);
-  return response;
-});
-export const getSalonReview = createAsyncThunk('get/getSalonReview', async (id) => {
-  const response = await getsalonreview(id);
-  return response;
-});
-export const updateSalonReview = createAsyncThunk('update/updateSalonReview', async (body) => {
-  const response = await updatesalonreview(body);
-  return response;
-});
-export const deleteSalonReview = createAsyncThunk('delete/deleteSalonReview', async (id) => {
-  const response = await deletesalonreview(id);
-  return response;
-});
-// addresses
-export const getAddress = createAsyncThunk('get/getAddress', async () => {
-  const response = await getaddress();
-  return response;
-});
-export const createAddress = createAsyncThunk('post/createAddress', async (body) => {
-  const response = await createaddress(body);
-  return response;
-});
-export const updateAddress = createAsyncThunk('update/updateAddress', async (body) => {
-  const response = await updateaddress(body);
-  return response;
-});
-export const deleteAddress = createAsyncThunk('delete/deleteAddress', async (id) => {
-  const response = await deleteaddress(id);
-  return response;
-});
-export const getSalonsBySearch = createAsyncThunk('search/searchsalons', async (body) => {
-  const response = await searchsalons(body);
-  return response;
-});
+
+
 const salonSlice = createSlice({
   name: 'salonslice',
   initialState,
@@ -176,7 +76,6 @@ const salonSlice = createSlice({
         state.status = true;
         state.loading = false;
         state.dashboard = action?.payload?.data;
-        console.log(action.payload.data);
         if(action.payload.data){
           const bookings = action?.payload?.data?.monthlyBookings;
           const earnings = action?.payload?.data?.monthlyEarnings;

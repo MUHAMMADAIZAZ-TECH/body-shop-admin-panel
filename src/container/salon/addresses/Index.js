@@ -12,7 +12,8 @@ import { Main, TableWrapper } from '../../styled';
 import { Button } from '../../../components/buttons/buttons';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { PageHeader } from '../../../components/page-headers/page-headers';
-import { getSalons, deleteSalon, selectSalon } from '../../../redux/salon/salonSlice';
+import { selectSalon } from '../../../redux/salon/salonSlice';
+import { getSalons, deleteSalon, } from '../../../redux/salon/salonApis';
 
 const ViewPage = () => {
   const dispatch = useDispatch();

@@ -8,7 +8,7 @@ import { PageHeader } from '../../../components/page-headers/page-headers';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { Button } from '../../../components/buttons/buttons';
 import { Main, BasicFormWrapper } from '../../styled';
-import { getSalon, updateSalon } from '../../../redux/salon/salonSlice';
+import { getSalon, updateSalon } from '../../../redux/salon/salonApis';
 import { getBase64 } from '../../../components/utilities/utilities';
 
 const { Option } = Select;

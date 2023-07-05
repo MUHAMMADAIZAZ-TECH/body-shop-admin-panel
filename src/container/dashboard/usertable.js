@@ -6,7 +6,8 @@ import FeatherIcon from 'feather-icons-react';
 import { UserTableStyleWrapper } from './style';
 import { TableWrapper } from '../styled';
 import { Cards } from '../../components/cards/frame/cards-frame';
-import { deleteSalon, getSalons, selectSalon } from '../../redux/salon/salonSlice';
+import { selectSalon } from '../../redux/salon/salonSlice';
+import { deleteSalon, getSalons } from '../../redux/salon/salonApis';
 
 const avatarStyle = {
   borderRadius: '4px', // Adjust the border radius as per your preference

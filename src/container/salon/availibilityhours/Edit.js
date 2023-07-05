@@ -8,7 +8,7 @@ import { PageHeader } from '../../../components/page-headers/page-headers';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { Button } from '../../../components/buttons/buttons';
 import { Main, BasicFormWrapper } from '../../styled';
-import { getAvailibilityHour, getSalonsList, updateAvailibilityHours } from '../../../redux/salon/salonSlice';
+import { getSalonsList,getAvailibilityHour, updateAvailibilityHours } from '../../../redux/salon/salonApis';
 
 const { Option } = Select;
 const Edit = ({ match }) => {

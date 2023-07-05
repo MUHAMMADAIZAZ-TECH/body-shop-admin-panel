@@ -10,7 +10,7 @@ import Heading from '../../components/heading/heading';
 import { ChartjsBarChartTransparent } from '../../components/charts/chartjs';
 // import { ExportButtonPageHeader } from '../../components/buttons/export-button/export-button';
 // import { CalendarButtonPageHeader } from '../../components/buttons/calendar-button/calendar-button';
-import { getDashboard} from '../../redux/salon/salonSlice';
+import { getDashboard} from '../../redux/salon/salonApis';
 
 const UserListTable = lazy(() => import('./usertable'));
 const TotalRevenue = lazy(() => import('./TotalRevenue'));

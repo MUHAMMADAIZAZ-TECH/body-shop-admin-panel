@@ -9,7 +9,7 @@ import { Cards } from '../../components/cards/frame/cards-frame';
 import { Button } from '../../components/buttons/buttons';
 import { Main, BasicFormWrapper } from '../styled';
 import { getCoupon, updateCoupon } from '../../redux/coupons/couponSlice';
-import { getSalonsList } from '../../redux/salon/salonSlice';
+import { getSalonsList } from '../../redux/salon/salonApis';
 
 const { Option } = Select;
 const dateFormat = 'YYYY/MM/DD';

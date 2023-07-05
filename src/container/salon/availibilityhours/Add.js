@@ -7,7 +7,7 @@ import { PageHeader } from '../../../components/page-headers/page-headers';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { Button } from '../../../components/buttons/buttons';
 import { Main, BasicFormWrapper } from '../../styled';
-import { createAvailibilityHours, getSalonsList } from '../../../redux/salon/salonSlice';
+import { createAvailibilityHours, getSalonsList } from '../../../redux/salon/salonApis';
 // import { getSalon } from '../../../redux/salon/salonSlice';
 
 const { Option } = Select;

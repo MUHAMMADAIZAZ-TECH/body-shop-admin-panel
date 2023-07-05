@@ -6,7 +6,7 @@ import { PageHeader } from '../../../components/page-headers/page-headers';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { Button } from '../../../components/buttons/buttons';
 import { Main, BasicFormWrapper } from '../../styled';
-import { getSalonsList } from '../../../redux/salon/salonSlice';
+import { getSalonsList } from '../../../redux/salon/salonApis';
 import { getCategories } from '../../../redux/categories/categoriesSlice';
 import { createService } from '../../../redux/services/servicesSlice';
 import { getBase64, uploadButton } from '../../../components/utilities/utilities';

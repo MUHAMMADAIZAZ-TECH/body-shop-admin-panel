@@ -12,7 +12,8 @@ import ImagePreviewModal from '../../../components/modals/my-modal';
 import { Button } from '../../../components/buttons/buttons';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { PageHeader } from '../../../components/page-headers/page-headers';
-import { getSalons, deleteSalon, selectSalon,getSalonsBySearch } from '../../../redux/salon/salonSlice';
+import { selectSalon } from '../../../redux/salon/salonSlice';
+import { getSalons, deleteSalon,getSalonsBySearch } from '../../../redux/salon/salonApis';
 import { exportToXLSX, handlePrint, getColumnSearchProps } from '../../../components/utilities/utilities';
 import MYExportButton from '../../../components/buttons/my-export-button/my-export-button';
 

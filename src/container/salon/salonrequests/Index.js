@@ -12,7 +12,8 @@ import { Button } from '../../../components/buttons/buttons';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { PageHeader } from '../../../components/page-headers/page-headers';
 import { alertModal } from '../../../components/modals/antd-modals';
-import { getSalons, deleteSalon, selectSalon,getSalonsBySearch } from '../../../redux/salon/salonSlice';
+import { deleteSalon,getSalons,getSalonsBySearch } from '../../../redux/salon/salonApis';
+import { selectSalon } from '../../../redux/salon/salonSlice';
 import { exportToXLSX, handlePrint, getColumnSearchProps } from '../../../components/utilities/utilities';
 import MYExportButton from '../../../components/buttons/my-export-button/my-export-button';
 

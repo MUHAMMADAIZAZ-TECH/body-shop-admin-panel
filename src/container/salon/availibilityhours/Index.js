@@ -10,11 +10,8 @@ import { Button } from '../../../components/buttons/buttons';
 import { alertModal } from '../../../components/modals/antd-modals';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { PageHeader } from '../../../components/page-headers/page-headers';
-import {
-  deleteAvailibilityHours,
-  getAvailibilityHourbysalon,
-  getSalonsList,
-} from '../../../redux/salon/salonSlice';
+import { getSalonsList , deleteAvailibilityHours,
+  getAvailibilityHourbysalon,} from '../../../redux/salon/salonApis';
 import { exportToXLSX, handlePrint, getColumnSearchProps } from '../../../components/utilities/utilities';
 import MYExportButton from '../../../components/buttons/my-export-button/my-export-button';
 

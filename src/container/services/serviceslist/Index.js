@@ -13,7 +13,7 @@ import { PageHeader } from '../../../components/page-headers/page-headers';
 import { deleteService, getServicesofSalon } from '../../../redux/services/servicesSlice';
 import { getColumnSearchProps, handlePrint, exportToXLSX } from '../../../components/utilities/utilities';
 import MYExportButton from '../../../components/buttons/my-export-button/my-export-button';
-import { getSalonsList } from '../../../redux/salon/salonSlice';
+import { getSalonsList } from '../../../redux/salon/salonApis';
 
 
 const { Option } = Select;
