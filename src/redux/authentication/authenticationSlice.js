@@ -10,13 +10,25 @@ const initialState = {
   user: {},
   success:false,
 };
-export const UserLogin = createAsyncThunk('web/login', async (state) => {
-  const response = await userLogin(state);
-  return response;
+export const UserLogin = createAsyncThunk('web/login', async (state,{rejectWithValue}) => {
+  try {
+    const response = await userLogin(state);
+    if(response.data.data){
+      localStorage.setItem('access_token', response.data.token);
+      localStorage.setItem('user',JSON.stringify(response.data.data.user))
+    }
+    return response;
+  } catch (error) {
+    throw rejectWithValue(error);
+  }
 });
-export const ForgotPassword = createAsyncThunk('forgot/password', async (state) => {
-  const response = await forgotpassword(state);
-  return response;
+export const ForgotPassword = createAsyncThunk('forgot/password', async (state,{rejectWithValue}) => {
+  try {
+    const response = await forgotpassword(state);
+    return response;
+  } catch (error) {
+    throw rejectWithValue(error);
+  }
 });
 const authenticationSlice = createSlice({
   name: 'authentication',
@@ -42,12 +54,16 @@ const authenticationSlice = createSlice({
         state.isLogin = true;
         state.user = action?.payload?.data?.user;
         state.message = action.payload.message;
+        console.log(action.payload);
         message.success('Successfuly Login')
       })
       .addCase(UserLogin.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error;
-        state.message = action.error.message;
+        state.error = action.payload;
+        if(action.payload){
+          state.message = action.payload.data.message;
+          message.error(action.payload.data.message)
+        }
       });
       builder
       .addCase(ForgotPassword.pending, (state) => {
@@ -56,7 +72,6 @@ const authenticationSlice = createSlice({
         state.error = null;
       })
       .addCase(ForgotPassword.fulfilled, (state,action) => {
-        console.log(action.payload);
         state.loading = false;
         state.isLogin = true;
         if(action.payload.status && action.payload.status==="success"){
@@ -70,8 +85,10 @@ const authenticationSlice = createSlice({
       })
       .addCase(ForgotPassword.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error;
-        state.message = action.error.message;
+        if(action.payload){
+          state.message = action.payload.data.message;
+          message.error(action.payload.data.message)
+        }
       });
   },
 });

@@ -96,19 +96,20 @@ client.interceptors.request.use((config) => {
 client.interceptors.response.use(
   (response) => response,
   (error) => {
-    /**
-     * Do something in case the response returns an error code [3**, 4**, 5**] etc
-     * For example, on token expiration retrieve a new access token, retry a failed request etc
-     */
     const { response } = error;
-    const originalRequest = error.config;
+    console.log(error.message);
+    if(error.message ==='Network Error' || error.code ==='ERR_NETWORK'){
+      console.log('Please Check Your Internet Connection')
+      return Promise.reject(error);
+    }
     if (response) {
       if (response.status === 500) {
-        // do something here
+        console.log("Server Error:", response.data);
       } else {
-        return originalRequest;
+        return Promise.reject(response);
       }
     }
+    console.log(error);
     return Promise.reject(error);
   },
 );

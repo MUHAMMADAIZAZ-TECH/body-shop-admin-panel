@@ -1,60 +1,59 @@
 import React, { useState, useCallback } from 'react';
-import { NavLink, useHistory } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { Form, Input, Button } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 // eslint-disable-next-line import/no-extraneous-dependencies
 // import { FacebookOutlined, TwitterOutlined } from '@ant-design/icons';
-import { Auth0Lock } from 'auth0-lock';
+// import { Auth0Lock } from 'auth0-lock';
 import { AuthWrapper } from './style';
-import { login } from '../../../../redux/authentication/actionCreator';
-import { Checkbox } from '../../../../components/checkbox/checkbox';
+// import { login } from '../../../../redux/authentication/actionCreator';
+// import { Checkbox } from '../../../../components/checkbox/checkbox';
 import Heading from '../../../../components/heading/heading';
-import { auth0options } from '../../../../config/auth0';
+// import { auth0options } from '../../../../config/auth0';
 import { UserLogin } from '../../../../redux/authentication/authenticationSlice';
 
-const domain = process.env.REACT_APP_AUTH0_DOMAIN;
-const clientId = process.env.REACT_APP_AUTH0_CLIENT_ID;
+// const domain = process.env.REACT_APP_AUTH0_DOMAIN;
+// const clientId = process.env.REACT_APP_AUTH0_CLIENT_ID;
 
 function SignIn() {
-  const history = useHistory();
+  // const history = useHistory();
   const dispatch = useDispatch();
   const [username, setUsername] = useState('testadmin@example.com'); // State variable for username
   const [password, setPassword] = useState('12345678');
   const isLoading = useSelector((state) => state.authenticationStates.loading);
-  const authStates = useSelector((state) => state.authenticationStates);
+  // const authStates = useSelector((state) => state.authenticationStates);
   const [form] = Form.useForm();
-  const [state, setState] = useState({
-    checked: null,
-  });
-  console.log(authStates);
-  const lock = new Auth0Lock(clientId, domain, auth0options);
+  // const [state, setState] = useState({
+  //   checked: null,
+  // });
+  // const lock = new Auth0Lock(clientId, domain, auth0options);
 
-  const handleSubmit = useCallback(() => {
-    dispatch(login());
-    history.push('/admin');
-  }, [history, dispatch]);
-  const handleSubmit2 = useCallback(() => {
+  // const handleSubmit = useCallback(() => {
+  //   dispatch(login());
+  //   history.push('/admin');
+  // }, [history, dispatch]);
+  const handleSubmit2 = () => {
     dispatch(
       UserLogin({
         username,
         password,
       }),
     );
-  }, [dispatch]);
-  const onChange = (checked) => {
-    setState({ ...state, checked });
   };
+  // const onChange = (checked) => {
+  //   setState({ ...state, checked });
+  // };
+  // console.log(username,password);
+  // lock.on('authenticated', (authResult) => {
+  //   lock.getUserInfo(authResult.accessToken, (error) => {
+  //     if (error) {
+  //       return;
+  //     }
 
-  lock.on('authenticated', (authResult) => {
-    lock.getUserInfo(authResult.accessToken, (error) => {
-      if (error) {
-        return;
-      }
-
-      handleSubmit();
-      lock.hide();
-    });
-  });
+  //     handleSubmit();
+  //     lock.hide();
+  //   });
+  // });
   const handleUsernameChange = useCallback((e) => {
     setUsername(e.target.value); // Update the username state variable
   }, []);
@@ -85,9 +84,9 @@ function SignIn() {
             <Input.Password value={password} onChange={handlePasswordChange} placeholder="Password" />
           </Form.Item>
           <div className="auth-form-action">
-            <Checkbox onChange={onChange} checked={state.checked}>
+            {/* <Checkbox onChange={onChange} checked={state.checked}>
               Keep me logged in
-            </Checkbox>
+            </Checkbox> */}
             <NavLink className="forgot-pass-link" to="/forgotPassword">
               Forgot password?
             </NavLink>

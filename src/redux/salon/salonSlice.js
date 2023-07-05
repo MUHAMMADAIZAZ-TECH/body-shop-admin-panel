@@ -80,9 +80,14 @@ export const updateSalon = createAsyncThunk('update/updateSalon', async (body) =
   const response = await updatesalon(body);
   return response;
 });
-export const deleteSalon = createAsyncThunk('delete/deleteSalon', async (id) => {
-  const response = await deletesalon(id);
-  return response;
+export const deleteSalon = createAsyncThunk('delete/deleteSalon', async (id,{rejectWithValue}) => {
+  try {
+    const response = await deletesalon(id);
+    console.log(response);
+    return response;
+  } catch (error) {
+    return rejectWithValue(error);
+  }
 });
 // availibilityhours-crud
 export const getAvailibilityHours = createAsyncThunk('get/getavailibilityhours', async () => {
@@ -171,6 +176,7 @@ const salonSlice = createSlice({
         state.status = true;
         state.loading = false;
         state.dashboard = action?.payload?.data;
+        console.log(action.payload.data);
         if(action.payload.data){
           const bookings = action?.payload?.data?.monthlyBookings;
           const earnings = action?.payload?.data?.monthlyEarnings;
@@ -343,9 +349,10 @@ const salonSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(deleteSalon.fulfilled, (state) => {
+      .addCase(deleteSalon.fulfilled, (state,action) => {
         state.status = true;
         state.loading = false;
+        console.log(action.payload);
         state.message = 'Successfuly deleted';
         message.success('Successfuly deleted')
       })
@@ -354,7 +361,8 @@ const salonSlice = createSlice({
         state.loading = false;
         state.error = action.error;
         state.message = 'Something went wrong';
-        message.error('Something went wrong')
+        console.log(action.payload);
+        message.error(action.payload.data.message)
       });
     builder
       .addCase(getAvailibilityHours.pending, (state) => {

@@ -123,14 +123,9 @@ export const updatesalon = async (body) => {
   }
 };
 export const deletesalon = async ({ id, getData }) => {
-  try {
-    const response = await DataService.delete(`/api/v1/salons/admin/${id}`);
-    await getData();
-    return response.data;
-  } catch (error) {
-    console.log(error);
-    return error;
-  }
+  const response = await DataService.delete(`/api/v1/salons/admin/${id}`);
+  await getData();
+  return response.data;
 };
 // availibility hours
 export const getavailibilityhours = async () => {
