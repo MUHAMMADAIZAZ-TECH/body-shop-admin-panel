@@ -1,6 +1,6 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import {
-    getnotifications,
+  getNotifications,
 } from './notificationApis';
 
 const initialState = {
@@ -10,11 +10,6 @@ const initialState = {
   message: '',
   Notifications:[]
 };
-export const getNotifications = createAsyncThunk('get/getNotifications', async (body) => {
-  const response = await getnotifications(body);
-  return response;
-});
-
 
 const NotificationsSlice = createSlice({
   name: 'NotificationsSlice',
@@ -33,8 +28,7 @@ const NotificationsSlice = createSlice({
       })
       .addCase(getNotifications.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error;
-        state.message = action.error.message;
+        state.error = action.payload;
       });
 
   },

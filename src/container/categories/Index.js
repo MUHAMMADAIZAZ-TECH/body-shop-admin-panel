@@ -10,7 +10,7 @@ import { Button } from '../../components/buttons/buttons';
 import { alertModal } from '../../components/modals/antd-modals';
 import { Cards } from '../../components/cards/frame/cards-frame';
 import { PageHeader } from '../../components/page-headers/page-headers';
-import { deleteCategory, getCategories } from '../../redux/categories/categoriesSlice';
+import { deleteCategory, getCategories } from '../../redux/categories/categoriesApis';
 import { getColumnSearchProps, handlePrint, exportToXLSX } from '../../components/utilities/utilities';
 import MYExportButton from '../../components/buttons/my-export-button/my-export-button';
 
@@ -69,7 +69,6 @@ const ViewPage = () => {
     }
     return false;
   };
-  console.log(categoryStates);
   if (categoryStates?.categories?.length)
     categoryStates?.categories?.map((category, key) => {
       const { id, image, name, color, description, created_at, updated_at } = category;

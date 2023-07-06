@@ -1,6 +1,6 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { message } from 'antd';
-import { forgotpassword, userLogin } from './authApis';
+import { ForgotPassword, UserLogin } from './authApis';
 
 const initialState = {
   loading: false,
@@ -10,26 +10,7 @@ const initialState = {
   user: {},
   success:false,
 };
-export const UserLogin = createAsyncThunk('web/login', async (state,{rejectWithValue}) => {
-  try {
-    const response = await userLogin(state);
-    if(response.data.data){
-      localStorage.setItem('access_token', response.data.token);
-      localStorage.setItem('user',JSON.stringify(response.data.data.user))
-    }
-    return response;
-  } catch (error) {
-    throw rejectWithValue(error);
-  }
-});
-export const ForgotPassword = createAsyncThunk('forgot/password', async (state,{rejectWithValue}) => {
-  try {
-    const response = await forgotpassword(state);
-    return response;
-  } catch (error) {
-    throw rejectWithValue(error);
-  }
-});
+
 const authenticationSlice = createSlice({
   name: 'authentication',
   initialState,
@@ -60,10 +41,6 @@ const authenticationSlice = createSlice({
       .addCase(UserLogin.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        if(action.payload){
-          state.message = action.payload.data.message;
-          message.error(action.payload.data.message)
-        }
       });
       builder
       .addCase(ForgotPassword.pending, (state) => {
@@ -85,10 +62,7 @@ const authenticationSlice = createSlice({
       })
       .addCase(ForgotPassword.rejected, (state, action) => {
         state.loading = false;
-        if(action.payload){
-          state.message = action.payload.data.message;
-          message.error(action.payload.data.message)
-        }
+        state.error = action.payload
       });
   },
 });

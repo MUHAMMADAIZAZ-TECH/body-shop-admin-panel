@@ -1,6 +1,6 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { message } from 'antd';
-import { getmyprofile,updatemyprofile,changepassword } from './profileApis';
+import { getMyprofile,updateMyProfile,ChangePassword } from './profileApis';
 
 const initialState = {
   loading: false,
@@ -9,21 +9,6 @@ const initialState = {
   message: '',
   MyProfile: null,
 };
-
-export const getMyprofile = createAsyncThunk('get/getMyprofile', async () => {
-  const response = await getmyprofile();
-  return response;
-});
-
-export const updateMyProfile = createAsyncThunk('patch/updateMyProfile', async (body) => {
-  const response = await updatemyprofile(body);
-  return response;
-});
-
-export const ChangePassword = createAsyncThunk('patch/ChangePassword', async (body) => {
-  const response = await changepassword(body);
-  return response;
-});
 
 
 const MyProfileSlice = createSlice({
@@ -42,8 +27,7 @@ const MyProfileSlice = createSlice({
       })
       .addCase(getMyprofile.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error;
-        state.message = action.error.message;
+        state.error = action.payload;
       });
       builder
       .addCase(ChangePassword.pending, (state) => {
@@ -59,8 +43,7 @@ const MyProfileSlice = createSlice({
       })
       .addCase(ChangePassword.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error;
-        state.message = action.error.message;
+        state.error = action.payload;
       });
     builder
       .addCase(updateMyProfile.pending, (state) => {
@@ -77,9 +60,7 @@ const MyProfileSlice = createSlice({
       })
       .addCase(updateMyProfile.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error;
-        state.message = 'Something Went Wrong';
-        message.error('Something Went Wrong')
+        state.error = action.payload;
         state.success = false;
       });
   },

@@ -10,7 +10,7 @@ import { Button } from '../../../components/buttons/buttons';
 import { alertModal } from '../../../components/modals/antd-modals';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { PageHeader } from '../../../components/page-headers/page-headers';
-import { deleteService, getServicesofSalon } from '../../../redux/services/servicesSlice';
+import { deleteService, getServicesofSalon } from '../../../redux/services/servicesApis';
 import { getColumnSearchProps, handlePrint, exportToXLSX } from '../../../components/utilities/utilities';
 import MYExportButton from '../../../components/buttons/my-export-button/my-export-button';
 import { getSalonsList } from '../../../redux/salon/salonApis';

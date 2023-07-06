@@ -6,7 +6,7 @@ import { PageHeader } from '../../components/page-headers/page-headers';
 import { Cards } from '../../components/cards/frame/cards-frame';
 import { Button } from '../../components/buttons/buttons';
 import { Main, BasicFormWrapper } from '../styled';
-import { createCategory } from '../../redux/categories/categoriesSlice';
+import { createCategory } from '../../redux/categories/categoriesApis';
 import { getBase64, uploadButton } from '../../components/utilities/utilities';
 
 const AddNew = () => {
@@ -32,7 +32,6 @@ const AddNew = () => {
         }),
       );
       console.log(values, files[0].originFileObj);
-      form.resetFields();
     } catch (error) {
       console.log('Validation error:', error);
     }

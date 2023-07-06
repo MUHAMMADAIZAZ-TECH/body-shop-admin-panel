@@ -1,19 +1,12 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { gettransactions,searchtransactions } from './transactionApis';
+import { createSlice } from '@reduxjs/toolkit';
+import { getTransactions,SearchTransactions } from './transactionApis';
 
 const initialState = {
   loading: false,
   error: false,
   transactions: [],
 };
-export const getTransactions = createAsyncThunk('get/getTransactions', async (Body) => {
-  const response = await gettransactions(Body);
-  return response;
-});
-export const SearchTransactions = createAsyncThunk('get/SearchTransactions', async (Body) => {
-  const response = await searchtransactions(Body);
-  return response;
-});
+
 const TransactionSlice = createSlice({
   name: 'TransactionSlice',
   initialState,
@@ -30,8 +23,7 @@ const TransactionSlice = createSlice({
       })
       .addCase(getTransactions.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error;
-        state.message = action.error.message;
+        state.error = action.payload;
       });
       builder
       .addCase(SearchTransactions.pending, (state) => {
@@ -44,8 +36,7 @@ const TransactionSlice = createSlice({
       })
       .addCase(SearchTransactions.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error;
-        state.message = action.error.message;
+        state.error = action.payload;
       });
   },
 });

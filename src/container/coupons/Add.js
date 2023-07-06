@@ -7,7 +7,7 @@ import { Cards } from '../../components/cards/frame/cards-frame';
 import { Button } from '../../components/buttons/buttons';
 import { Main, BasicFormWrapper } from '../styled';
 import { getSalonsList } from '../../redux/salon/salonApis';
-import { createCoupon } from '../../redux/coupons/couponSlice';
+import { createCoupon } from '../../redux/coupons/couponApis';
 
 const { Option } = Select;
 const dateFormat = 'YYYY/MM/DD';
@@ -35,7 +35,7 @@ const AddNew = () => {
           end_date: values.end_date.format('YYYY/MM/DD'),
         }),
       );
-      form.resetFields();
+      // form.resetFields();
     } catch (error) {
       console.log('Validation error:', error);
     }

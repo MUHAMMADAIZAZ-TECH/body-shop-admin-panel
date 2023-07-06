@@ -2,14 +2,11 @@ import { createSlice } from '@reduxjs/toolkit';
 import { message } from 'antd';
 import {
   getDashboard,
-  // createAddress,
   createAvailibilityHours,
   createSalon,
-  // deleteAddress,
   deleteAvailibilityHours ,
   deleteSalon,
   deleteSalonReview,
-  // getAddress,
   getAllReviews,
   getAvailibilityHour,
   getAvailibilityHours,
@@ -17,7 +14,6 @@ import {
   getSalon,
   getSalonReview,
   getSalons,
-  // updateAddress,
   updateAvailibilityHours,
   updateSalon,
   updateSalonReview,
@@ -129,8 +125,7 @@ const salonSlice = createSlice({
       .addCase(getDashboard.rejected, (state, action) => {
         state.loading = false;
         state.status = false;
-        state.error = action.error;
-        state.message = 'Something went wrong';
+        state.error = action.payload;
       });
     builder
       .addCase(getSalons.pending, (state) => {
@@ -147,8 +142,7 @@ const salonSlice = createSlice({
       .addCase(getSalons.rejected, (state, action) => {
         state.loading = false;
         state.status = false;
-        state.error = action.error;
-        state.message = 'Something went wrong';
+        state.error = action.payload;
       });
       builder
       .addCase(getSalonsList.pending, (state) => {
@@ -165,8 +159,7 @@ const salonSlice = createSlice({
       .addCase(getSalonsList.rejected, (state, action) => {
         state.loading = false;
         state.status = false;
-        state.error = action.error;
-        state.message = 'Something went wrong';
+        state.error = action.payload;
       });
       builder
       .addCase(getSalonsBySearch.pending, (state) => {
@@ -183,8 +176,7 @@ const salonSlice = createSlice({
       .addCase(getSalonsBySearch.rejected, (state, action) => {
         state.loading = false;
         state.status = false;
-        state.error = action.error;
-        state.message = 'Something went wrong';
+        state.error = action.payload;
       });
     builder
       .addCase(getSalon.pending, (state) => {
@@ -201,8 +193,7 @@ const salonSlice = createSlice({
       .addCase(getSalon.rejected, (state, action) => {
         state.status = false;
         state.loading = false;
-        state.error = action.error;
-        state.message = 'Something went wrong';
+        state.error = action.payload;
       });
     builder
       .addCase(createSalon.pending, (state) => {
@@ -219,9 +210,7 @@ const salonSlice = createSlice({
       .addCase(createSalon.rejected, (state, action) => {
         state.status = false;
         state.loading = false;
-        state.error = action.error;
-        state.message = 'Something went wrong';
-        message.error('Something went wrong')
+        state.error = action.payload;
       });
     builder
       .addCase(updateSalon.pending, (state) => {
@@ -238,9 +227,7 @@ const salonSlice = createSlice({
       .addCase(updateSalon.rejected, (state, action) => {
         state.loading = false;
         state.status = false;
-        state.error = action.error;
-        state.message = 'Something went wrong';
-        message.error('Something went wrong')
+        state.error = action.payload;
       });
     builder
       .addCase(deleteSalon.pending, (state) => {
@@ -248,20 +235,16 @@ const salonSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(deleteSalon.fulfilled, (state,action) => {
+      .addCase(deleteSalon.fulfilled, (state) => {
         state.status = true;
         state.loading = false;
-        console.log(action.payload);
         state.message = 'Successfuly deleted';
         message.success('Successfuly deleted')
       })
       .addCase(deleteSalon.rejected, (state, action) => {
         state.status = false;
         state.loading = false;
-        state.error = action.error;
-        state.message = 'Something went wrong';
-        console.log(action.payload);
-        message.error(action.payload.data.message)
+        state.error = action.payload;
       });
     builder
       .addCase(getAvailibilityHours.pending, (state) => {
@@ -278,8 +261,7 @@ const salonSlice = createSlice({
       .addCase(getAvailibilityHours.rejected, (state, action) => {
         state.status = false;
         state.loading = false;
-        state.error = action.error;
-        state.message = 'Something went wrong';
+        state.error = action.payload;
       });
     builder
       .addCase(getAvailibilityHourbysalon.pending, (state) => {
@@ -296,8 +278,7 @@ const salonSlice = createSlice({
       .addCase(getAvailibilityHourbysalon.rejected, (state, action) => {
         state.status = false;
         state.loading = false;
-        state.error = action.error;
-        state.message = 'Something went wrong';
+        state.error = action.payload;
       });
     builder
       .addCase(getAvailibilityHour.pending, (state) => {
@@ -314,8 +295,7 @@ const salonSlice = createSlice({
       .addCase(getAvailibilityHour.rejected, (state, action) => {
         state.status = false;
         state.loading = false;
-        state.error = action.error;
-        state.message = 'Something went wrong';
+        state.error = action.payload;
       });
     builder
       .addCase(createAvailibilityHours.pending, (state) => {
@@ -332,9 +312,7 @@ const salonSlice = createSlice({
       .addCase(createAvailibilityHours.rejected, (state, action) => {
         state.loading = false;
         state.status = false;
-        state.error = action.error;
-        state.message = 'Something went wrong';
-        message.error('Something went wrong')
+        state.error = action.payload;
       });
     builder
       .addCase(updateAvailibilityHours.pending, (state) => {
@@ -351,9 +329,7 @@ const salonSlice = createSlice({
       .addCase(updateAvailibilityHours.rejected, (state, action) => {
         state.status = false;
         state.loading = false;
-        state.error = action.error;
-        state.message = 'Something went wrong';
-        message.error('Something went wrong')
+        state.error = action.payload;
       });
     builder
       .addCase(deleteAvailibilityHours.pending, (state) => {
@@ -370,9 +346,7 @@ const salonSlice = createSlice({
       .addCase(deleteAvailibilityHours.rejected, (state, action) => {
         state.status = false;
         state.loading = false;
-        state.error = action.error;
-        state.message = 'Something went wrong';
-        message.error('Something went wrong')
+        state.error = action.payload;
       });
     builder
       .addCase(getAllReviews.pending, (state) => {
@@ -389,8 +363,7 @@ const salonSlice = createSlice({
       .addCase(getAllReviews.rejected, (state, action) => {
         state.status = false;
         state.loading = false;
-        state.error = action.error;
-        state.message = 'Something went wrong';
+        state.error = action.payload;
       });
       builder
       .addCase(getAllReviewsBySearch.pending, (state) => {
@@ -407,8 +380,7 @@ const salonSlice = createSlice({
       .addCase(getAllReviewsBySearch.rejected, (state, action) => {
         state.status = false;
         state.loading = false;
-        state.error = action.error;
-        state.message = 'Something went wrong';
+        state.error = action.payload;
       });
     builder
       .addCase(getSalonReview.pending, (state) => {
@@ -424,8 +396,7 @@ const salonSlice = createSlice({
       })
       .addCase(getSalonReview.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error;
-        state.message = 'Something went wrong';
+        state.error = action.payload;
         state.status = false;
       });
     builder
@@ -443,9 +414,7 @@ const salonSlice = createSlice({
       .addCase(deleteSalonReview.rejected, (state, action) => {
         state.status = false;
         state.loading = false;
-        state.error = action.error;
-        state.message = 'Something went wrong';
-        message.error('Something went wrong')
+        state.error = action.payload;
       });
       builder
       .addCase(updateSalonReview.pending, (state) => {
@@ -462,9 +431,7 @@ const salonSlice = createSlice({
       .addCase(updateSalonReview.rejected, (state, action) => {
         state.status = false;
         state.loading = false;
-        state.error = action.error;
-        state.message = 'Something went wrong';
-        message.error('Something went wrong')
+        state.error = action.payload;
       });
   },
 });

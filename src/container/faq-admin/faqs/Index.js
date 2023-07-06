@@ -10,7 +10,7 @@ import { Button } from '../../../components/buttons/buttons';
 import { alertModal } from '../../../components/modals/antd-modals';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { PageHeader } from '../../../components/page-headers/page-headers';
-import { deleteFaq, getFaqs } from '../../../redux/faq/faqSlice';
+import { deleteFaq, getFaqs } from '../../../redux/faq/faqApis';
 import MYExportButton from '../../../components/buttons/my-export-button/my-export-button';
 import { exportToXLSX, handlePrint, getColumnSearchProps } from '../../../components/utilities/utilities';
 
@@ -79,11 +79,12 @@ const ViewPage = () => {
     return false;
   };
 
-  if (faqStates?.faqs.length)
+  if (faqStates?.faqs?.length)
     faqStates?.faqs?.map((faq, key) => {
-      const { id, question, answer, updated_at } = faq;
+      const { id, question, answer, updated_at,app_type } = faq;
       return dataSource.push({
         key: key + 1,
+        app_type,
         question,
         answer,
         updated_at,
@@ -133,6 +134,22 @@ const ViewPage = () => {
       ...getColumnSearchProps(
         'Answer',
         'answer',
+        handleSearch,
+        handleReset,
+        searchInput,
+        searchedColumn,
+        searchText,
+        setSearchText,
+        setSearchedColumn,
+      ),
+    },
+    {
+      title: 'App Type',
+      dataIndex: 'app_type',
+      key: 'app_type',
+      ...getColumnSearchProps(
+        'App Type',
+        'app_type',
         handleSearch,
         handleReset,
         searchInput,

@@ -7,7 +7,7 @@ import { PageHeader } from '../../components/page-headers/page-headers';
 import { Cards } from '../../components/cards/frame/cards-frame';
 import { Button } from '../../components/buttons/buttons';
 import { Main, BasicFormWrapper } from '../styled';
-import { getCategory, updateCategory } from '../../redux/categories/categoriesSlice';
+import { getCategory, updateCategory } from '../../redux/categories/categoriesApis';
 import { getBase64, uploadButton } from '../../components/utilities/utilities';
 
 const Edit = ({ match }) => {

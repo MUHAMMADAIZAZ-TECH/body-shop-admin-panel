@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Row, Col, Form, Input } from 'antd';
 import { useDispatch,useSelector } from 'react-redux';
 import { AddUser } from './style';
@@ -6,7 +6,7 @@ import { PageHeader } from '../../components/page-headers/page-headers';
 import { Cards } from '../../components/cards/frame/cards-frame';
 import { Button } from '../../components/buttons/buttons';
 import { Main, BasicFormWrapper } from '../styled';
-import { ChangePassword, getMyprofile } from '../../redux/profile/profileSlice';
+import { ChangePassword } from '../../redux/profile/profileApis';
 
 
 const AddNew = () => {
@@ -26,10 +26,7 @@ const AddNew = () => {
       console.log('Validation error:', error);
     }
   };
- 
-  useEffect(()=>{
-    dispatch(getMyprofile())
-  },[dispatch])
+
   return (
     <>
       <PageHeader

@@ -6,7 +6,7 @@ import { PageHeader } from '../../../components/page-headers/page-headers';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { Button } from '../../../components/buttons/buttons';
 import { Main, BasicFormWrapper } from '../../styled';
-import { createFaq } from '../../../redux/faq/faqSlice';
+import { createFaq } from '../../../redux/faq/faqApis';
 
 const { Option } = Select;
 const AddNew = () => {

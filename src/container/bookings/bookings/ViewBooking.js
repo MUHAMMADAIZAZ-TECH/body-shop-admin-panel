@@ -9,7 +9,7 @@ import { PageHeader } from '../../../components/page-headers/page-headers';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { Button } from '../../../components/buttons/buttons';
 import { Main, BasicFormWrapper, UserCard } from '../../styled';
-import { getBooking } from '../../../redux/bookings/bookingSlice';
+import { getBooking } from '../../../redux/bookings/bookingApis';
 import Heading from '../../../components/heading/heading';
 
 const ViewBooking = ({ match }) => {

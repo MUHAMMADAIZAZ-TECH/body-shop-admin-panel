@@ -1,6 +1,6 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { message } from 'antd';
-import { getbookings, getbooking, updatebooking } from './bookingApis';
+import { getBookings, getBooking, updateBooking,searchBooking } from './bookingApis';
 
 const initialState = {
   loading: false,
@@ -9,22 +9,7 @@ const initialState = {
   Bookings: [],
   Booking: null,
 };
-export const getBookings = createAsyncThunk('get/getBookings', async (body) => {
-  const response = await getbookings(body);
-  return response;
-});
-export const getBooking = createAsyncThunk('get/getBooking', async (id) => {
-  const response = await getbooking(id);
-  return response;
-});
-export const searchBooking = createAsyncThunk('get/searchBooking', async (id) => {
-  const response = await getbooking(id);
-  return response;
-});
-export const updateBooking = createAsyncThunk('patch/updateBooking', async (body) => {
-  const response = await updatebooking(body);
-  return response;
-});
+
 const bookingSlice = createSlice({
   name: 'bookingSlice',
   initialState,
@@ -41,8 +26,7 @@ const bookingSlice = createSlice({
       })
       .addCase(getBookings.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error;
-        state.message = action.error.message;
+        state.error = action.payload;
       });
     builder
       .addCase(getBooking.pending, (state) => {
@@ -55,8 +39,7 @@ const bookingSlice = createSlice({
       })
       .addCase(getBooking.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error;
-        state.message = action.error.message;
+        state.error = action.payload;
       });
       builder
       .addCase(searchBooking.pending, (state) => {
@@ -75,8 +58,7 @@ const bookingSlice = createSlice({
       })
       .addCase(searchBooking.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error;
-        state.message = action.error.message;
+        state.error = action.payload;
       });
     builder
       .addCase(updateBooking.pending, (state) => {
@@ -90,8 +72,7 @@ const bookingSlice = createSlice({
       })
       .addCase(updateBooking.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error;
-        state.message = action.error.message;
+        state.error = action.payload;
       });
   },
 });

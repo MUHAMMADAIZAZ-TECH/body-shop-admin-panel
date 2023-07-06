@@ -7,7 +7,7 @@ import { PageHeader } from '../../../components/page-headers/page-headers';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { Button } from '../../../components/buttons/buttons';
 import { Main, BasicFormWrapper } from '../../styled';
-import { getCustomPage, updateCustomPage } from '../../../redux/settings/settingsSlice';
+import { getCustomPage, updateCustomPage } from '../../../redux/settings/settingsApis';
 
 const Edit = ({ match }) => {
   const dispatch = useDispatch();

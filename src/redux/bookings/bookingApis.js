@@ -1,32 +1,40 @@
+import { createAsyncThunk } from '@reduxjs/toolkit';
 import { DataService } from '../../config/dataService/mydataService';
 
-export const getbookings = async ({
+export const getBookings = createAsyncThunk('get/getBookings', async ({
   currentPage,
   pageSize,
   setTotalPages
-}) => {
+},{rejectWithValue}) => {
   try {
     const { data } = await DataService.get(`/api/v1/bookings/admin?page=${currentPage}&limit=${pageSize}`);
     setTotalPages(data.totalPages)
     return data;
   } catch (error) {
-    return error;
+    throw rejectWithValue(error);
   }
-};
-export const getbooking = async (id) => {
+});
+export const getBooking = createAsyncThunk('get/getBooking', async (id,{rejectWithValue}) => {
   try {
     const { data } = await DataService.get(`/api/v1/bookings/admin/${id}`);
     return data;
   } catch (error) {
-    console.log(error);
-    return error;
+    throw rejectWithValue(error);
   }
-};
-export const updatebooking = async (Body) => {
+});
+export const searchBooking = createAsyncThunk('get/searchBooking', async (id,{rejectWithValue}) => {
   try {
-    const response = await DataService.patch(`/api/v1/bookings/admin/update/${Body.id}`, Body);
+    const { data } = await DataService.get(`/api/v1/bookings/admin/${id}`);
+    return data;
+  } catch (error) {
+    throw rejectWithValue(error);
+  }
+});
+export const updateBooking = createAsyncThunk('get/updateBooking', async (body,{rejectWithValue}) => {
+  try {
+    const response = await DataService.patch(`/api/v1/bookings/admin/update/${body.id}`, body);
     return response.data;
   } catch (error) {
-    return error;
+    throw rejectWithValue(error);
   }
-};
+});

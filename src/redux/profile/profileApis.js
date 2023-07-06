@@ -1,33 +1,33 @@
+import { createAsyncThunk } from '@reduxjs/toolkit';
 import { DataService } from '../../config/dataService/mydataService';
 
-export const getmyprofile = async () => {
+export const getMyprofile = createAsyncThunk('get/getMyprofile', async (body,{rejectWithValue}) => {
+  console.log('profile');
   try {
     const { data } = await DataService.get(`/api/v1/users/admin`);
+    console.log(data);
     return data;
   } catch (error) {
-    return error;
+    throw rejectWithValue(error);
   }
-};
-
-export const updatemyprofile = async (data) => {
- 
-  const formData = new FormData();
-  formData.append('email', data?.email);
-  formData.append('address', data?.address);
-  formData.append('fullName', data?.fullName);
-  formData.append('mobile_number', data?.mobile_number);
-  if(data.files!==null){
-    formData.append(`files`, data.files);
-  }
+});
+export const updateMyProfile = createAsyncThunk('patch/updateMyProfile', async (data,{rejectWithValue}) => {
   try {
+    const formData = new FormData();
+    formData.append('email', data?.email);
+    formData.append('address', data?.address);
+    formData.append('fullName', data?.fullName);
+    formData.append('mobile_number', data?.mobile_number);
+    if(data.files!==null){
+      formData.append(`files`, data.files);
+    }
     const response = await DataService.patchFormData(`/api/v1/users/admin`, formData);
     return response.data;
   } catch (error) {
-    return error;
+    throw rejectWithValue(error);
   }
-};
-
-export const changepassword = async (data) => {
+});
+export const ChangePassword = createAsyncThunk('patch/ChangePassword', async (data,{rejectWithValue}) => {
   try {
     const response = await DataService.patch(`/api/v1/users/updatePasswordAdmin`,data);
     if(response.data!==undefined || response.data!==null){
@@ -35,6 +35,6 @@ export const changepassword = async (data) => {
       return response.data;
     }
   } catch (error) {
-    return error;
+    throw rejectWithValue(error);
   }
-};
+});

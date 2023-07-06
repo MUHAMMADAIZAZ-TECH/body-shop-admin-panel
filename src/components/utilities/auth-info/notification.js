@@ -9,7 +9,7 @@ import { useSelector,useDispatch } from 'react-redux';
 import { AtbdTopDropdwon } from './auth-info-style';
 import { Popover } from '../../popup/popup';
 import Heading from '../../heading/heading';
-import { getNotifications } from '../../../redux/notification/notificationSlice';
+import { getNotifications } from '../../../redux/notification/notificationApis';
 
 function NotificationBox() {
   const dispatch = useDispatch();

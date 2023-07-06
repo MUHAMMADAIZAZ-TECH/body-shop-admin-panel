@@ -6,7 +6,7 @@ import JwtConfig from './JwtConfig';
 import DigitalOceanConfig from './DigitalOceanConfig';
 import { PageHeader } from '../../../components/page-headers/page-headers';
 import { Main } from '../../styled';
-import { getConfigs, updateConfigs } from '../../../redux/settings/settingsSlice';
+import { getConfigs, updateConfigs } from '../../../redux/settings/settingsApis';
 
 const AddNew = () => {
   const dispatch = useDispatch();

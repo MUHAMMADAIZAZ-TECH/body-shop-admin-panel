@@ -1,22 +1,23 @@
+import { createAsyncThunk } from '@reduxjs/toolkit';
 import { DataService } from '../../config/dataService/mydataService';
 
-export const getcategories = async () => {
+export const getCategories = createAsyncThunk('get/getcategories', async (body,{rejectWithValue}) => {
   try {
     const { data } = await DataService.get(`/api/v1/categories`);
     return data;
   } catch (error) {
-    return error;
+    throw rejectWithValue(error);
   }
-};
-export const getcategory = async (id) => {
+});
+export const getCategory = createAsyncThunk('get/getCategory', async (id,{rejectWithValue}) => {
   try {
     const { data } = await DataService.get(`/api/v1/categories/${id}`);
     return data;
   } catch (error) {
-    return error;
+    throw rejectWithValue(error);
   }
-};
-export const createcategory = async (body) => {
+});
+export const createCategory = createAsyncThunk('get/createCategory', async (body,{rejectWithValue}) => {
   try {
     const formData = new FormData();
     formData.append('name', body?.name);
@@ -27,10 +28,10 @@ export const createcategory = async (body) => {
     const { data } = await DataService.postFormData(`/api/v1/categories`, formData);
     return data;
   } catch (error) {
-    return error;
+    throw rejectWithValue(error);
   }
-};
-export const updatecategory = async (body) => {
+});
+export const updateCategory = createAsyncThunk('get/updateCategory', async (body,{rejectWithValue}) => {
   try {
     const formData = new FormData();
     formData.append('name', body?.name);
@@ -43,15 +44,17 @@ export const updatecategory = async (body) => {
     console.log(data);
     return data;
   } catch (error) {
-    return error;
+    throw rejectWithValue(error);
   }
-};
-export const deletecategory = async (body) => {
+});
+export const deleteCategory = createAsyncThunk('get/deleteCategory', async (body,{rejectWithValue}) => {
   try {
     const { data } = await DataService.delete(`/api/v1/categories/${body.id}`);
     body.getData();
     return data;
   } catch (error) {
-    return error;
+    throw rejectWithValue(error);
   }
-};
+});
+
+

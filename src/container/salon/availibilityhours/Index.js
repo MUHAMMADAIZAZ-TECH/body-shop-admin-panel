@@ -81,8 +81,8 @@ const ViewPage = () => {
     return false;
   };
   console.log(salonState?.availibilityhoursBysalon);
-  if (salonState?.availibilityhoursBysalon?.length)
-    salonState?.availibilityhoursBysalon?.map((availhour, key) => {
+  if (salonState?.availibilityhoursBysalon?.data?.length)
+    salonState?.availibilityhoursBysalon?.data?.map((availhour, key) => {
       const { id, weekday, opening_time, closing_time, updated_at } = availhour;
       return dataSource.push({
         key: key + 1,
@@ -250,13 +250,8 @@ const ViewPage = () => {
                       </Select>
                     </Form.Item>
                   </Col>
-                  <Col sm={2} xs={24} className="mb-25 mt-25">
-                    <Button size="default" htmlType="Save" type="primary">
-                      {isLoading ? 'Loading...' : 'Submit'}
-                    </Button>
-                  </Col>
-                  <Col sm={2} xs={24} className="mb-25 mt-25">
-                    <Button
+                  <Col sm={4} xs={24} className="mb-25 mt-25">
+                  <Button
                       className="btn-cancel"
                       size="large"
                       onClick={() => {
@@ -264,6 +259,9 @@ const ViewPage = () => {
                       }}
                     >
                       Reset
+                    </Button>
+                    <Button size="default" htmlType="Save" type="primary">
+                      {isLoading ? 'Loading...' : 'Submit'}
                     </Button>
                   </Col>
                 </Row>

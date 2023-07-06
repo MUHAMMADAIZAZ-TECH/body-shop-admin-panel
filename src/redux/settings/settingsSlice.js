@@ -1,15 +1,15 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { message } from 'antd';
 import {
-  getconfigs,
-  getcustompages,
-  getcustompage,
-  createcustompage,
-  updatecustompage,
-  deletecustompage,
-  updateconfigs,
-  createreservationfee,
-  getcountries
+  getConfigs,
+  getCustomPages,
+  getCustomPage,
+  createCustomPage,
+  updateCustomPage,
+  deleteCustomPage,
+  updateConfigs,
+  // createReservationfee,
+  getCountries
 } from './settingsApis';
 
 const initialState = {
@@ -22,44 +22,7 @@ const initialState = {
   configs: [],
   countries:[]
 };
-export const getConfigs = createAsyncThunk('get/getConfigs', async () => {
-  const response = await getconfigs();
-  return response;
-});
-export const updateConfigs = createAsyncThunk('patch/updateConfigs', async (body) => {
-  const response = await updateconfigs(body);
-  return response;
-});
-export const getCustomPages = createAsyncThunk('get/getCustomPages', async () => {
-  const response = await getcustompages();
-  return response;
-});
-export const getCustomPage = createAsyncThunk('get/getCustomPage', async (id) => {
-  console.log(id);
-  const response = await getcustompage(id);
-  return response;
-});
-export const createCustomPage = createAsyncThunk('post/createCustomPage', async (body) => {
-  const response = await createcustompage(body);
-  return response;
-});
-export const updateCustomPage = createAsyncThunk('patch/updateCustomPage', async (body) => {
-  const response = await updatecustompage(body);
-  return response;
-});
-export const deleteCustomPage = createAsyncThunk('delete/deleteCustomPage', async (body) => {
-  const response = await deletecustompage(body);
-  return response;
-});
 
-export const createReservationfee = createAsyncThunk('post/createReservationfee', async (body) => {
-  const response = await createreservationfee(body);
-  return response;
-});
-export const getCountries = createAsyncThunk('get/getCountries', async (body) => {
-  const response = await getcountries(body);
-  return response;
-});
 const SettingsSlice = createSlice({
   name: 'SettingsSlice',
   initialState,
@@ -77,8 +40,7 @@ const SettingsSlice = createSlice({
       })
       .addCase(getConfigs.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error;
-        state.message = action.error.message;
+        state.error = action.payload;
       });
       builder
       .addCase(getCountries.pending, (state) => {
@@ -99,8 +61,7 @@ const SettingsSlice = createSlice({
       })
       .addCase(getCountries.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error;
-        state.message = action.error.message;
+        state.error = action.payload;
       });
     builder
       .addCase(updateConfigs.pending, (state) => {
@@ -110,11 +71,12 @@ const SettingsSlice = createSlice({
       .addCase(updateConfigs.fulfilled, (state) => {
         state.loading = false;
         state.success = true;
+        state.message = 'Successfully Updated';
+        message.success('Successfully Updated')
       })
       .addCase(updateConfigs.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error;
-        state.message = action.error.message;
+        state.error = action.payload;
       });
     builder
       .addCase(getCustomPages.pending, (state) => {
@@ -127,10 +89,8 @@ const SettingsSlice = createSlice({
       })
       .addCase(getCustomPages.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error;
-        state.message = action.error.message;
+        state.error = action.payload;
       });
-
     builder
       .addCase(getCustomPage.pending, (state) => {
         state.loading = true;
@@ -142,8 +102,7 @@ const SettingsSlice = createSlice({
       })
       .addCase(getCustomPage.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error;
-        state.message = 'Something Went Wrong';
+        state.error = action.payload;
       });
     builder
       .addCase(createCustomPage.pending, (state) => {
@@ -159,9 +118,7 @@ const SettingsSlice = createSlice({
       })
       .addCase(createCustomPage.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error;
-        state.message = 'Something Went Wrong';
-        message.error('Something Went Wrong');
+        state.error = action.payload;
         state.success = false;
       });
     builder
@@ -179,9 +136,7 @@ const SettingsSlice = createSlice({
       })
       .addCase(updateCustomPage.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error;
-        state.message = 'Something Went Wrong';
-        message.error('Something Went Wrong');
+        state.error = action.payload;
         state.success = false;
       });
     builder
@@ -198,9 +153,7 @@ const SettingsSlice = createSlice({
       })
       .addCase(deleteCustomPage.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error;
-        message.error('Something Went Wrong');
-        state.message = 'Something Went Wrong';
+        state.error = action.payload;
         state.success = false;
       });
   },

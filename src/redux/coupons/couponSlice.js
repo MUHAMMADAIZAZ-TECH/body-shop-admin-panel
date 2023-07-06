@@ -1,6 +1,6 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { message } from 'antd';
-import { getcoupons, getcoupon, createcoupon, updatecoupon, deletecoupon } from './couponApis';
+import { getCoupons, getCoupon, createCoupon, updateCoupon, deleteCoupon } from './couponApis';
 
 const initialState = {
   loading: false,
@@ -9,26 +9,7 @@ const initialState = {
   coupons: [],
   coupon: null,
 };
-export const getCoupons = createAsyncThunk('get/getCoupons', async (body) => {
-  const response = await getcoupons(body);
-  return response;
-});
-export const getCoupon = createAsyncThunk('get/getCoupon', async (id) => {
-  const response = await getcoupon(id);
-  return response;
-});
-export const createCoupon = createAsyncThunk('post/createCoupon', async (body) => {
-  const response = await createcoupon(body);
-  return response;
-});
-export const updateCoupon = createAsyncThunk('patch/updateCoupon', async (body) => {
-  const response = await updatecoupon(body);
-  return response;
-});
-export const deleteCoupon = createAsyncThunk('delete/deleteCoupon', async (body) => {
-  const response = await deletecoupon(body);
-  return response;
-});
+
 
 const CouponSlice = createSlice({
   name: 'CouponSlice',
@@ -46,8 +27,7 @@ const CouponSlice = createSlice({
       })
       .addCase(getCoupons.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error;
-        state.message = action.error.message;
+        state.error = action.payload;
       });
     builder
       .addCase(getCoupon.pending, (state) => {
@@ -60,8 +40,7 @@ const CouponSlice = createSlice({
       })
       .addCase(getCoupon.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error;
-        state.message = 'Something Went Wrong';
+        state.error = action.payload;
       });
     builder
       .addCase(createCoupon.pending, (state) => {
@@ -77,9 +56,7 @@ const CouponSlice = createSlice({
       })
       .addCase(createCoupon.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error;
-        state.message = 'Something Went Wrong';
-        message.error('Something Went Wrong')
+        state.error = action.payload;
         state.success = false;
       });
     builder
@@ -97,9 +74,7 @@ const CouponSlice = createSlice({
       })
       .addCase(updateCoupon.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error;
-        state.message = 'Something Went Wrong';
-        message.error('Something Went Wrong')
+        state.error = action.payload;
         state.success = false;
       });
     builder
@@ -116,9 +91,7 @@ const CouponSlice = createSlice({
       })
       .addCase(deleteCoupon.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error;
-        state.message = 'Something Went Wrong';
-        message.error('Something Went Wrong')
+        state.error = action.payload;
         state.success = false;
       });
   },

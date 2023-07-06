@@ -1,30 +1,31 @@
+import { createAsyncThunk } from '@reduxjs/toolkit';
 import { DataService } from '../../config/dataService/mydataService';
 
-export const getservvices = async () => {
+export const getServices = createAsyncThunk('get/getServices', async (data,{rejectWithValue}) => {
   try {
     const { data } = await DataService.get(`/api/v1/services`);
     return data;
   } catch (error) {
-    return error;
+    throw rejectWithValue(error);
   }
-};
-export const getservice = async (id) => {
+});
+export const getService = createAsyncThunk('get/getService', async (id,{rejectWithValue}) => {
   try {
     const { data } = await DataService.get(`/api/v1/services/getone/${id}`);
     return data;
   } catch (error) {
-    return error;
+    throw rejectWithValue(error);
   }
-};
-export const getservicesofsalon = async (salonid) => {
+});
+export const getServicesofSalon = createAsyncThunk('get/getServicesofSalon', async (salonid,{rejectWithValue}) => {
   try {
     const { data } = await DataService.get(`/api/v1/services/${salonid}`);
     return data;
   } catch (error) {
-    return error;
+    throw rejectWithValue(error);
   }
-};
-export const createservice = async (body) => {
+});
+export const createService = createAsyncThunk('get/createService', async (body,{rejectWithValue}) => {
   try {
     const formData = new FormData();
     formData.append('salon_id', body?.salon_id);
@@ -40,10 +41,10 @@ export const createservice = async (body) => {
     const { data } = await DataService.postFormData(`/api/v1/services`, formData);
     return data;
   } catch (error) {
-    return error;
+    throw rejectWithValue(error);
   }
-};
-export const updateservice = async (body) => {
+});
+export const updateService = createAsyncThunk('get/updateService', async (body,{rejectWithValue}) => {
   try {
     const formData = new FormData();
     formData.append('salon_id', body?.salon_id);
@@ -60,15 +61,17 @@ export const updateservice = async (body) => {
     const { data } = await DataService.patchFormData(`/api/v1/services/${body.id}`, formData);
     return data;
   } catch (error) {
-    return error;
+    throw rejectWithValue(error);
   }
-};
-export const deleteservice = async (body) => {
+});
+export const deleteService = createAsyncThunk('get/deleteService', async (body,{rejectWithValue}) => {
   try {
     const { data } = await DataService.delete(`/api/v1/services/admin/${body.id}`);
     body.getData();
     return data;
   } catch (error) {
-    return error;
+    throw rejectWithValue(error);
   }
-};
+});
+
+

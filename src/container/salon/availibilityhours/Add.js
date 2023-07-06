@@ -34,7 +34,7 @@ const AddNew = () => {
           weekday: values.weekday,
         }),
       );
-      form.resetFields();
+      // form.resetFields();
     } catch (error) {
       console.log('Validation error:', error);
     }
@@ -128,12 +128,12 @@ console.log(salonState.salonsList);
                       <Form.Item
                         name="closingTime"
                         label="End At"
-                        use12Hours
-                        format="h:mm A"
                         rules={[{ required: true, message: 'Please select end at' }]}
                       >
                         <TimePicker
                           style={{ marginRight: '10px' }}
+                          use12Hours
+                          format="h:mm A"
                           className="sDash_fullwidth-select"
                           onChange={(time) => {
                             form.setFieldsValue({ closingTime: time });

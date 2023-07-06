@@ -3,7 +3,7 @@ import { Form, Input, Button } from 'antd';
 import { useHistory } from 'react-router-dom';
 import { useDispatch,useSelector } from 'react-redux';
 import { AuthWrapper } from './style';
-import { ForgotPassword } from '../../../../redux/authentication/authenticationSlice';
+import { ForgotPassword } from '../../../../redux/authentication/authApis';
 import Heading from '../../../../components/heading/heading';
 
 function NewPassword() {

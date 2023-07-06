@@ -99,22 +99,20 @@ client.interceptors.response.use(
   (response) => response,
   (error) => {
     const { response } = error;
-    console.log(error.message);
+    const { status } = response;
     if(error.message ==='Network Error' || error.code ==='ERR_NETWORK'){
       console.log('Please Check Your Internet Connection')
       message.error('Please Check Your Internet Connection')
       return Promise.reject(error);
     }
     if (response) {
-      if (response.status === 500) {
-        console.log("Server Error:", response.data);
-        message.error('Something Went Wrong On Server! Please Try Again Later')
-      } else {
+      if(status === 400 || status === 401 || status === 404 ||status === 500){
+        console.log("Error", response.data.message);
+        message.error(response.data.message)
         return Promise.reject(response);
-      }
+      } 
     }
-    console.log(error);
-    return Promise.reject(error);
+    return Promise.reject(response);
   },
 );
 export { DataService };

@@ -1,81 +1,78 @@
+import { createAsyncThunk } from '@reduxjs/toolkit';
 import { DataService } from '../../config/dataService/mydataService';
 
-export const getcustompages = async () => {
+export const getConfigs = createAsyncThunk('get/getConfigs', async (body,{rejectWithValue}) => {
+  try {
+    const { data } = await DataService.get(`/api/v1/configs`);
+    return data;
+  } catch (error) {
+    throw rejectWithValue(error);
+  }
+});
+export const updateConfigs = createAsyncThunk('get/updateConfigs', async (body,{rejectWithValue}) => {
+  try {
+    const response = await DataService.patch(`/api/v1/configs/`, body);
+    return response.data;
+  } catch (error) {
+    throw rejectWithValue(error);
+  }
+});
+export const getCustomPages = createAsyncThunk('get/getCustomPages', async (body,{rejectWithValue}) => {
   try {
     const { data } = await DataService.get(`/api/v1/custom`);
     return data;
   } catch (error) {
-    return error;
+    throw rejectWithValue(error);
   }
-};
-
-export const getcustompage = async (id) => {
+});
+export const getCustomPage = createAsyncThunk('get/getCustomPage', async (id,{rejectWithValue}) => {
   try {
     const { data } = await DataService.get(`/api/v1/custom/${id}`);
     return data;
   } catch (error) {
-    return error;
+    throw rejectWithValue(error);
   }
-};
-export const createcustompage = async (data) => {
+});
+export const createCustomPage = createAsyncThunk('get/createCustomPage', async (data,{rejectWithValue}) => {
   try {
     const response = await DataService.post(`/api/v1/custom`, data);
     return response.data;
   } catch (error) {
-    return error;
+    throw rejectWithValue(error);
   }
-};
-export const updatecustompage = async (data) => {
+});
+export const updateCustomPage = createAsyncThunk('get/updateCustomPage', async (data,{rejectWithValue}) => {
   try {
     const response = await DataService.patch(`/api/v1/custom/${data.id}`, data);
     return response.data;
   } catch (error) {
-    return error;
+    throw rejectWithValue(error);
   }
-};
-export const deletecustompage = async (body) => {
+});
+export const deleteCustomPage = createAsyncThunk('get/deleteCustomPage', async (body,{rejectWithValue}) => {
   try {
     const { data } = await DataService.delete(`/api/v1/custom/${body.id}`);
     body.getData();
     return data;
   } catch (error) {
-    return error;
+    throw rejectWithValue(error);
   }
-};
-
-export const getconfigs = async () => {
-  try {
-    const { data } = await DataService.get(`/api/v1/configs`);
-    return data;
-  } catch (error) {
-    return error;
-  }
-};
-
-export const updateconfigs = async (data) => {
-  console.log(data);
-  try {
-    const response = await DataService.patch(`/api/v1/configs/`, data);
-    return response.data;
-  } catch (error) {
-    return error;
-  }
-};
-
-export const createreservationfee = async (data) => {
+});
+export const createReservationfee = createAsyncThunk('get/createReservationfee', async (data,{rejectWithValue}) => {
   try {
     const response = await DataService.post(`/api/v1/reservationfee/`, data);
     return response.data;
   } catch (error) {
-    return error;
+    throw rejectWithValue(error);
   }
-};
-
-export const getcountries = async () => {
+});
+export const getCountries = createAsyncThunk('get/getCountries', async (data,{rejectWithValue}) => {
   try {
     const response = await DataService.get(`https://restcountries.com/v3.1/all?fields=name,currencies`);
     return response.data;
   } catch (error) {
-    return error;
+    throw rejectWithValue(error);
   }
-};
+});
+
+

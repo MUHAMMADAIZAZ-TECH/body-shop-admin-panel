@@ -1,6 +1,9 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { message } from 'antd';
-import { getservvices, getservice, createservice, deleteservice, updateservice,getservicesofsalon } from './servicesApis';
+import { getServices, 
+  getService, createService, 
+  deleteService, updateService,
+  getServicesofSalon } from './servicesApis';
 
 const initialState = {
   success: false,
@@ -10,33 +13,6 @@ const initialState = {
   services: [],
   service: null,
 };
-export const getServices = createAsyncThunk('get/getServices', async () => {
-  const response = await getservvices();
-  return response;
-});
-export const getService = createAsyncThunk('get/getService', async (id) => {
-  const response = await getservice(id);
-  return response;
-});
-export const getServicesofSalon = createAsyncThunk('get/getServicesofSalon', async (salonid) => {
-  const response = await getservicesofsalon(salonid);
-  return response;
-});
-export const createService = createAsyncThunk('post/createService', async (body) => {
-  const response = await createservice(body);
-  console.log(response);
-  return response;
-});
-export const updateService = createAsyncThunk('patch/updateService', async (body) => {
-  const response = await updateservice(body);
-  console.log(response);
-  return response;
-});
-export const deleteService = createAsyncThunk('delete/deleteService', async (body) => {
-  const response = await deleteservice(body);
-  console.log(response);
-  return response;
-});
 
 const servicesSlice = createSlice({
   name: 'servicesSlice',
@@ -54,8 +30,7 @@ const servicesSlice = createSlice({
       })
       .addCase(getServices.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error;
-        state.message = action.error.message;
+        state.error = action.payload;
       });
       builder
       .addCase(getServicesofSalon.pending, (state) => {
@@ -68,8 +43,7 @@ const servicesSlice = createSlice({
       })
       .addCase(getServicesofSalon.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error;
-        state.message = action.error.message;
+        state.error = action.payload;
       });
     builder
       .addCase(getService.pending, (state) => {
@@ -82,8 +56,7 @@ const servicesSlice = createSlice({
       })
       .addCase(getService.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error;
-        state.message = 'Something Went Wrong';
+        state.error = action.payload;
       });
     builder
       .addCase(createService.pending, (state) => {
@@ -99,9 +72,7 @@ const servicesSlice = createSlice({
       })
       .addCase(createService.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error;
-        state.message = 'Something Went Wrong';
-        message.error('Something Went Wrong')
+        state.error = action.payload;
         state.success = false;
       });
     builder
@@ -119,9 +90,7 @@ const servicesSlice = createSlice({
       })
       .addCase(updateService.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error;
-        state.message = 'Something Went Wrong';
-        message.error('Something Went Wrong')
+        state.error = action.payload;
         state.success = false;
       });
     builder
@@ -138,9 +107,7 @@ const servicesSlice = createSlice({
       })
       .addCase(deleteService.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error;
-        state.message = 'Something Went Wrong';
-        message.error('Something Went Wrong')
+        state.error = action.payload;
         state.success = false;
       });
   },

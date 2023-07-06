@@ -7,8 +7,8 @@ import { Cards } from '../../../components/cards/frame/cards-frame';
 import { Button } from '../../../components/buttons/buttons';
 import { Main, BasicFormWrapper } from '../../styled';
 import { getSalonsList } from '../../../redux/salon/salonApis';
-import { getCategories } from '../../../redux/categories/categoriesSlice';
-import { createService } from '../../../redux/services/servicesSlice';
+import { getCategories } from '../../../redux/categories/categoriesApis';
+import { createService } from '../../../redux/services/servicesApis';
 import { getBase64, uploadButton } from '../../../components/utilities/utilities';
 
 const { Option } = Select;

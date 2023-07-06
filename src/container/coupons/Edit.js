@@ -8,7 +8,7 @@ import { PageHeader } from '../../components/page-headers/page-headers';
 import { Cards } from '../../components/cards/frame/cards-frame';
 import { Button } from '../../components/buttons/buttons';
 import { Main, BasicFormWrapper } from '../styled';
-import { getCoupon, updateCoupon } from '../../redux/coupons/couponSlice';
+import { getCoupon, updateCoupon } from '../../redux/coupons/couponApis';
 import { getSalonsList } from '../../redux/salon/salonApis';
 
 const { Option } = Select;

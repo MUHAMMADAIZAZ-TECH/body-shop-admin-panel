@@ -9,7 +9,7 @@ import { Cards } from '../../../components/cards/frame/cards-frame';
 import { Button } from '../../../components/buttons/buttons';
 import { alertModal } from '../../../components/modals/antd-modals';
 import { PageHeader } from '../../../components/page-headers/page-headers';
-import { getTransactions,SearchTransactions } from '../../../redux/transactions/transactionSlice';
+import { getTransactions,SearchTransactions } from '../../../redux/transactions/transactionApis';
 import { exportToXLSX, handlePrint, getColumnSearchProps } from '../../../components/utilities/utilities';
 import MYExportButton from '../../../components/buttons/my-export-button/my-export-button';
 

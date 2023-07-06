@@ -6,9 +6,8 @@ import { PageHeader } from '../../components/page-headers/page-headers';
 import { Cards } from '../../components/cards/frame/cards-frame';
 import { Button } from '../../components/buttons/buttons';
 import { Main, BasicFormWrapper } from '../styled';
-import { getMyprofile, updateMyProfile } from '../../redux/profile/profileSlice';
+import { getMyprofile,updateMyProfile } from '../../redux/profile/profileApis';
 import { uploadButton ,getBase64} from '../../components/utilities/utilities';
-
 
 const beforeUpload = (file) => {
     const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
@@ -59,7 +58,6 @@ const AddNew = () => {
     console.log(fileList);
     setfiles(fileList);
   };
-  console.log(files);
   useEffect(() => {
     if (MyProfileStates.MyProfile !== null) {
       form.setFieldsValue(MyProfileStates.MyProfile);
@@ -75,7 +73,7 @@ const AddNew = () => {
   }, [form, MyProfileStates?.MyProfile]);
   useEffect(()=>{
     dispatch(getMyprofile())
-  },[dispatch])
+  },[])
   return (
     <>
       <PageHeader

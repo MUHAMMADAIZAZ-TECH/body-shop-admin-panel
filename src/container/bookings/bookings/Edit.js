@@ -8,7 +8,7 @@ import { PageHeader } from '../../../components/page-headers/page-headers';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { Button } from '../../../components/buttons/buttons';
 import { Main, BasicFormWrapper } from '../../styled';
-import { getBooking, updateBooking } from '../../../redux/bookings/bookingSlice';
+import { getBooking, updateBooking } from '../../../redux/bookings/bookingApis';
 
 const { Option } = Select;
 const dateFormat = 'YYYY/MM/DD';

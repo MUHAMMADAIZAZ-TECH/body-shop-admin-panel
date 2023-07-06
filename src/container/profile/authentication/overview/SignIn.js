@@ -10,7 +10,7 @@ import { AuthWrapper } from './style';
 // import { Checkbox } from '../../../../components/checkbox/checkbox';
 import Heading from '../../../../components/heading/heading';
 // import { auth0options } from '../../../../config/auth0';
-import { UserLogin } from '../../../../redux/authentication/authenticationSlice';
+import { UserLogin } from '../../../../redux/authentication/authApis';
 
 // const domain = process.env.REACT_APP_AUTH0_DOMAIN;
 // const clientId = process.env.REACT_APP_AUTH0_CLIENT_ID;

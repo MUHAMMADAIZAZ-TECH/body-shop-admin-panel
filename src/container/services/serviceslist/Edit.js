@@ -8,9 +8,9 @@ import { PageHeader } from '../../../components/page-headers/page-headers';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { Button } from '../../../components/buttons/buttons';
 import { Main, BasicFormWrapper } from '../../styled';
-import { getService, updateService } from '../../../redux/services/servicesSlice';
+import { getService, updateService } from '../../../redux/services/servicesApis';
 import { getSalonsList } from '../../../redux/salon/salonApis';
-import { getCategories } from '../../../redux/categories/categoriesSlice';
+import { getCategories } from '../../../redux/categories/categoriesApis';
 import { getBase64, uploadButton } from '../../../components/utilities/utilities';
 
 const { Option } = Select;

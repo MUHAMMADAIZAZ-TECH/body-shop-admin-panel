@@ -10,7 +10,7 @@ import { Cards } from '../../../components/cards/frame/cards-frame';
 import { alertModal } from '../../../components/modals/antd-modals';
 import { Button } from '../../../components/buttons/buttons';
 import { PageHeader } from '../../../components/page-headers/page-headers';
-import { getBookings,searchBooking } from '../../../redux/bookings/bookingSlice';
+import { getBookings,searchBooking } from '../../../redux/bookings/bookingApis';
 import { getColumnSearchProps, handlePrint, exportToXLSX } from '../../../components/utilities/utilities';
 import MYExportButton from '../../../components/buttons/my-export-button/my-export-button';
 

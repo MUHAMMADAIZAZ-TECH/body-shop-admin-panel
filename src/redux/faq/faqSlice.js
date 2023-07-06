@@ -1,6 +1,6 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { message } from 'antd';
-import { getfaqs, getfaq, createfaq, updatefaq, deletefaq } from './faqApis';
+import { getFaqs, getFaq, createFaq, updateFaq, deleteFaq } from './faqApis';
 
 const initialState = {
   loading: false,
@@ -10,26 +10,7 @@ const initialState = {
   faqs: [],
   faq: null,
 };
-export const getFaqs = createAsyncThunk('get/getFaqs', async (body) => {
-  const response = await getfaqs(body);
-  return response;
-});
-export const getFaq = createAsyncThunk('get/getFaq', async (id) => {
-  const response = await getfaq(id);
-  return response;
-});
-export const createFaq = createAsyncThunk('post/createFaq', async (body) => {
-  const response = await createfaq(body);
-  return response;
-});
-export const updateFaq = createAsyncThunk('patch/updateFaq', async (body) => {
-  const response = await updatefaq(body);
-  return response;
-});
-export const deleteFaq = createAsyncThunk('delete/deleteFaq', async (body) => {
-  const response = await deletefaq(body);
-  return response;
-});
+
 
 const FaqSlice = createSlice({
   name: 'FaqSlice',
@@ -48,8 +29,7 @@ const FaqSlice = createSlice({
       })
       .addCase(getFaqs.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error;
-        state.message = action.error.message;
+        state.error = action.payload;
       });
     builder
       .addCase(getFaq.pending, (state) => {
@@ -62,8 +42,7 @@ const FaqSlice = createSlice({
       })
       .addCase(getFaq.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error;
-        state.message = 'Something Went Wrong';
+        state.error = action.payload;
       });
     builder
       .addCase(createFaq.pending, (state) => {
@@ -79,9 +58,7 @@ const FaqSlice = createSlice({
       })
       .addCase(createFaq.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error;
-        state.message = 'Something Went Wrong';
-        message.error('Something Went Wrong')
+        state.error = action.payload;
         state.success = false;
       });
     builder
@@ -99,9 +76,7 @@ const FaqSlice = createSlice({
       })
       .addCase(updateFaq.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error;
-        state.message = 'Something Went Wrong';
-        message.error('Something Went Wrong')
+        state.error = action.payload;
         state.success = false;
       });
     builder
@@ -118,9 +93,7 @@ const FaqSlice = createSlice({
       })
       .addCase(deleteFaq.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error;
-        message.error('Something Went Wrong')
-        state.message = 'Something Went Wrong';
+        state.error = action.payload;
         state.success = false;
       });
   },
