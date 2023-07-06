@@ -74,5 +74,28 @@ export const getCountries = createAsyncThunk('get/getCountries', async (data,{re
     throw rejectWithValue(error);
   }
 });
-
+export const getReservationFees = createAsyncThunk('get/getReservationFees', async (data,{rejectWithValue}) => {
+  try {
+    const {data} = await DataService.get(`/api/v1/reservation`);
+    return data.data;
+  } catch (error) {
+    throw rejectWithValue(error);
+  }
+});
+export const getReservationFeesById = createAsyncThunk('get/getReservationFeesById', async (id,{rejectWithValue}) => {
+  try {
+    const {data} = await DataService.get(`/api/v1/reservation/${id}`);
+    return data.data;
+  } catch (error) {
+    throw rejectWithValue(error);
+  }
+});
+export const updateReservationFee = createAsyncThunk('get/updateReservationFee', async (data,{rejectWithValue}) => {
+  try {
+    const response = await DataService.patch(`/api/v1/reservation/${data.id}`,data);
+    return response;
+  } catch (error) {
+    throw rejectWithValue(error);
+  }
+});
 

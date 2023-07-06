@@ -112,23 +112,17 @@ const ViewPage = () => {
         setSearchText,
         setSearchedColumn,
       ),
+      width:200,
       fixed: 'left',
     },
     {
       title: 'Content',
       dataIndex: 'content',
       key: 'content',
-      ...getColumnSearchProps(
-        'Content',
-        'content',
-        handleSearch,
-        handleReset,
-        searchInput,
-        searchedColumn,
-        searchText,
-        setSearchText,
-        setSearchedColumn,
-      ),
+      ellipsis: true, // Enable ellipsis for long content
+      render: (text) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>{text}</div>
+      ), 
     },
     {
       title: 'Actions',

@@ -24,7 +24,7 @@ export const getCoupon = createAsyncThunk('get/getCoupon', async (id,{rejectWith
 });
 export const createCoupon = createAsyncThunk('get/createCoupon', async (data,{rejectWithValue}) => {
   try {
-    const response = await DataService.post(`/api/v1/coupons`, data);
+    const response = await DataService.post(`/api/v1/coupons/admin`, data);
     return response.data;
   } catch (error) {
     throw rejectWithValue(error);

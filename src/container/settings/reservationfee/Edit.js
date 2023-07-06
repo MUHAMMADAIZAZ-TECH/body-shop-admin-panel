@@ -7,7 +7,7 @@ import { PageHeader } from '../../../components/page-headers/page-headers';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { Button } from '../../../components/buttons/buttons';
 import { Main, BasicFormWrapper } from '../../styled';
-import { getCustomPage, updateCustomPage } from '../../../redux/settings/settingsApis';
+import { getReservationFeesById, updateReservationFee } from '../../../redux/settings/settingsApis';
 
 const Edit = ({ match }) => {
   const dispatch = useDispatch();
@@ -21,16 +21,16 @@ const Edit = ({ match }) => {
   const [form] = Form.useForm();
 
   useEffect(() => {
-    if (settingStates.CustomPage !== null) {
-      form.setFieldsValue(settingStates.CustomPage);
+    if (settingStates.reservationfee !== null) {
+      form.setFieldsValue(settingStates.reservationfee);
     }
-  }, [form, settingStates?.CustomPage]);
-  console.log(settingStates.CustomPage);
+  }, [form, settingStates?.reservationfee]);
+  console.log(settingStates.reservationfee);
   useEffect(() => {
-    dispatch(getCustomPage(parseInt(match.params.id, 10)));
+    dispatch(getReservationFeesById(parseInt(match.params.id, 10)));
   }, [dispatch, match.params.id]);
 
-  const handleSubmit = (values) => dispatch(updateCustomPage({ id: match.params.id, ...values }));
+  const handleSubmit = (values) => dispatch(updateReservationFee({ id: match.params.id, ...values }));
 
   return (
     <>
@@ -43,32 +43,47 @@ const Edit = ({ match }) => {
           </Button>,
         ]}
         ghost
-        title="Custom Pages | Custom Pages Management"
+        title="Reservation Fees | Reservation Fees Management"
       />
       <Main>
         <Row gutter={15}>
           <Col xs={24}>
             <BasicFormWrapper>
-              <Cards title="Update Custom Pages">
+              <Cards title="Update Reservation Fee">
               <Form name="multi-form" layout="vertical" style={{ width: '100%' }} form={form} onFinish={handleSubmit}>
                   <Row gutter={30}>
                     <Col sm={12} xs={24} className="mb-25">
                       <Form.Item
-                        name="title"
-                        label="Title"
+                        name="country"
+                        label="Country"
                         initialValue=""
-                        rules={[{ required: true, message: 'Please enter title' }]}
+                        // rules={[{ required: true, message: 'Please enter country' }]}
                       >
-                        <Input placeholder="Enter title" />
+                        <Input placeholder="Enter country" disabled/>
+                      </Form.Item>
+                      <Form.Item
+                        name="symbol"
+                        label="Symbol"
+                        initialValue=""
+                        // rules={[{ required: true, message: 'Please enter country' }]}
+                      >
+                        <Input placeholder="Enter symbol" disabled/>
                       </Form.Item>
                     </Col>
                     <Col sm={12} xs={24} className="mb-25">
                       <Form.Item
-                        name="content"
-                        label="Content"
-                        rules={[{ required: true, message: 'Please select content' }]}
+                        name="currency"
+                        label="Currency"
+                        // rules={[{ required: true, message: 'Please select content' }]}
                       >
-                        <Input.TextArea rows={5} placeholder="Enter content" />
+                        <Input placeholder="Enter currency" disabled/>
+                      </Form.Item>
+                      <Form.Item
+                        name="amount"
+                        label="Amount"
+                        // rules={[{ required: true, message: 'Please select content' }]}
+                      >
+                        <Input placeholder="Enter amount" type='number'/>
                       </Form.Item>
                     </Col>
                   </Row>

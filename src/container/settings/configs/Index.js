@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import DatabaseConfig from './DatabaseConfig';
 import JwtConfig from './JwtConfig';
 import DigitalOceanConfig from './DigitalOceanConfig';
+import AdminEnvConfig from './AdminEnvConfig';
 import { PageHeader } from '../../../components/page-headers/page-headers';
 import { Main } from '../../styled';
 import { getConfigs, updateConfigs } from '../../../redux/settings/settingsApis';
@@ -34,6 +35,14 @@ const AddNew = () => {
       console.log('Validation error:', error);
     }
   };
+  const handleFB = async (formValues) => {
+    try {
+      const valuesArray = Object.entries(formValues).map(([title, value]) => ({ title, value }));
+      dispatch(updateConfigs(valuesArray));
+    } catch (error) {
+      console.log('Validation error:', error);
+    }
+  };
   useEffect(() => {
     dispatch(getConfigs());
   }, []);
@@ -53,6 +62,9 @@ const AddNew = () => {
           </Col>
           <Col xs={12}>
             <DigitalOceanConfig handleDO={handleDO} />
+          </Col>
+          <Col xs={12}>
+            <AdminEnvConfig handleFB={handleFB} />
           </Col>
         </Row>
       </Main>

@@ -151,11 +151,11 @@ function MenuItems({ darkMode, toggleCollapsed, topMenu, events }) {
             Config Settings
           </NavLink>
         </Menu.Item>
-        {/* <Menu.Item key="reservationfee">
+        <Menu.Item key="reservationfee">
           <NavLink onClick={toggleCollapsed} to={`${path}/settings/reservationfee/view`}>
             Reservation Fee
           </NavLink>
-        </Menu.Item> */}
+        </Menu.Item>
       </SubMenu>
       <SubMenu key="layout" icon={!topMenu && <FeatherIcon icon="layout" />} title="Layouts">
         <Menu.Item key="light">

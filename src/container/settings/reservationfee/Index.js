@@ -9,7 +9,7 @@ import { Button } from '../../../components/buttons/buttons';
 import { alertModal } from '../../../components/modals/antd-modals';
 import { Cards } from '../../../components/cards/frame/cards-frame';
 import { PageHeader } from '../../../components/page-headers/page-headers';
-import { deleteCustomPage, getCustomPages } from '../../../redux/settings/settingsApis';
+import { deleteCustomPage, getReservationFees } from '../../../redux/settings/settingsApis';
 import MYExportButton from '../../../components/buttons/my-export-button/my-export-button';
 import { exportToXLSX, handlePrint, getColumnSearchProps } from '../../../components/utilities/utilities';
 
@@ -63,21 +63,23 @@ const ViewPage = () => {
         deleteCustomPage({
           id,
           getData: () => {
-            dispatch(getCustomPages());
+            dispatch(getReservationFees());
           },
         }),
       );
     }
     return false;
   };
-
-  if (settingStates?.CustomPages.length)
-  settingStates?.CustomPages?.map((CustomPage, key) => {
-      const { id, title, content } = CustomPage;
+console.log(settingStates?.listofreservationfees);
+  if (settingStates?.listofreservationfees?.length)
+  settingStates?.listofreservationfees?.map((CustomPage, key) => {
+      const { id, country, amount,currency,symbol } = CustomPage;
       return dataSource.push({
         key: key + 1,
-        title,
-        content,
+        country,
+        currency,
+        symbol,
+        amount,
         action: (
           <div className="table-actions">
             <Link className="edit" to={`/admin/settings/reservationfee/edit/${id}`}>
@@ -91,19 +93,19 @@ const ViewPage = () => {
         ),
       });
     });
-  const csvData = [['id', 'question', 'answer', 'updated_at']];
+  const csvData = [['id', 'country', 'currency', 'symbol']];
   state.selectedRows.map((rows) => {
-    const { key, question, answer, updated_at } = rows;
-    return csvData.push([key, question, answer, updated_at]);
+    const { key, country, currency, symbol,amount } = rows;
+    return csvData.push([key, country, currency, symbol,amount]);
   });
   const columns = [
     {
-      title: 'Title',
-      dataIndex: 'title',
-      key: 'title',
+      title: 'Country',
+      dataIndex: 'country',
+      key: 'country',
       ...getColumnSearchProps(
-        'Title',
-        'title',
+        'Country',
+        'country',
         handleSearch,
         handleReset,
         searchInput,
@@ -115,12 +117,12 @@ const ViewPage = () => {
       fixed: 'left',
     },
     {
-      title: 'Content',
-      dataIndex: 'content',
-      key: 'content',
+      title: 'Currency',
+      dataIndex: 'currency',
+      key: 'currency',
       ...getColumnSearchProps(
-        'Content',
-        'content',
+        'Currency',
+        'currency',
         handleSearch,
         handleReset,
         searchInput,
@@ -129,6 +131,16 @@ const ViewPage = () => {
         setSearchText,
         setSearchedColumn,
       ),
+    },
+    {
+      title: 'Currency Symbol',
+      dataIndex: 'symbol',
+      key: 'symbol',
+    },
+    {
+      title: 'Amount',
+      dataIndex: 'amount',
+      key: 'amount',
     },
     {
       title: 'Actions',
@@ -148,7 +160,7 @@ const ViewPage = () => {
     }
   };
   useEffect(() => {
-    dispatch(getCustomPages());
+    dispatch(getReservationFees());
   }, [dispatch]);
   return (
     <RecordViewWrapper>
@@ -162,16 +174,16 @@ const ViewPage = () => {
               <FeatherIcon icon="printer" size={14} /> <span>Print</span>
             </Button>
           </div>,
-          <div>
-            <Button className="btn-add_new" size="small" key="1" type="primary">
-              <Link to="/admin/settings/reservationfee/add">
-                <FeatherIcon icon="plus" size={14} /> <span>Add New</span>
-              </Link>
-            </Button>
-          </div>,
+          // <div>
+          //   <Button className="btn-add_new" size="small" key="1" type="primary">
+          //     <Link to="/admin/settings/reservationfee/add">
+          //       <FeatherIcon icon="plus" size={14} /> <span>Add New</span>
+          //     </Link>
+          //   </Button>
+          // </div>,
         ]}
         ghost
-        title="Custom Pages | Custom Pages Management"
+        title="Reservation Fees | Reservation Fees Management"
       />
       <Main>
         <Row gutter={15}>

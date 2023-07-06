@@ -9,7 +9,10 @@ import {
   deleteCustomPage,
   updateConfigs,
   // createReservationfee,
-  getCountries
+  getReservationFees,
+  getReservationFeesById,
+  getCountries,
+  updateReservationFee
 } from './settingsApis';
 
 const initialState = {
@@ -20,7 +23,9 @@ const initialState = {
   CustomPages: [],
   CustomPage: null,
   configs: [],
-  countries:[]
+  countries:[],
+  listofreservationfees:[],
+  reservationfee:null
 };
 
 const SettingsSlice = createSlice({
@@ -155,6 +160,54 @@ const SettingsSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
         state.success = false;
+      });
+      builder
+      .addCase(getReservationFees.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.success = false;
+      })
+      .addCase(getReservationFees.fulfilled, (state,action) => {
+        state.loading = false;
+        state.success = true;
+        state.listofreservationfees = action.payload;
+      })
+      .addCase(getReservationFees.rejected, (state, action) => {
+        state.loading = false;
+        state.success = false;
+        state.error = action.payload;
+      });
+      builder
+      .addCase(getReservationFeesById.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.success = false;
+      })
+      .addCase(getReservationFeesById.fulfilled, (state,action) => {
+        state.loading = false;
+        state.success = true;
+        state.reservationfee = action.payload;
+      })
+      .addCase(getReservationFeesById.rejected, (state, action) => {
+        state.loading = false;
+        state.success = false;
+        state.error = action.payload;
+      });
+      builder
+      .addCase(updateReservationFee.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.success = false;
+      })
+      .addCase(updateReservationFee.fulfilled, (state) => {
+        state.loading = false;
+        state.success = true;
+        message.success('Successfully Updated')
+      })
+      .addCase(updateReservationFee.rejected, (state, action) => {
+        state.loading = false;
+        state.success = false;
+        state.error = action.payload;
       });
   },
 });

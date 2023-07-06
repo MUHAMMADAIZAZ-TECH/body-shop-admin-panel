@@ -1,12 +1,13 @@
-import React from 'react';
+import React,{ useEffect } from 'react';
 import { Avatar } from 'antd';
 import { Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch,useSelector } from 'react-redux';
 import FeatherIcon from 'feather-icons-react';
 import { InfoWraper, UserDropDwon } from './auth-info-style';
 import Notification from './notification';
 import { Popover } from '../../popup/popup';
 // import { Dropdown } from '../../dropdown/dropdown';
+import { getMyprofile } from '../../../redux/profile/profileApis';
 import { UserLogout } from '../../../redux/authentication/authenticationSlice';
 import Heading from '../../heading/heading';
 
@@ -16,7 +17,13 @@ function AuthInfo() {
   //   flag: 'english',
   // });
   // const { flag } = state;
-  const user = JSON.parse(localStorage.getItem('user'))
+  const { MyProfileStates} = useSelector((state) => {
+    return {
+      MyProfileStates: state.MyProfileStates.MyProfile
+    };
+  });
+  console.log(MyProfileStates);
+  // const user = JSON.parse(localStorage.getItem('user'))
   const SignOut = (e) => {
     e.preventDefault();
     dispatch(UserLogout());
@@ -25,13 +32,13 @@ function AuthInfo() {
     <UserDropDwon>
       <div className="user-dropdwon">
         <figure className="user-dropdwon__info">
-          {user.photo && <Avatar src={user.photo} size={50} 
+          {MyProfileStates?.photo && <Avatar src={MyProfileStates?.photo} size={50} 
           alt={require('../../../static/img/avatar/chat-auth.png')}
           className='profile-image' />}
           {/* <img src={user.photo} alt="" className='profile-image' /> */}
           <figcaption>
-            <Heading as="h5">{user.fullName && user.fullName}</Heading>
-            <p>{user.email}</p>
+            <Heading as="h5">{MyProfileStates?.fullName && MyProfileStates?.fullName}</Heading>
+            <p>{MyProfileStates?.email}</p>
           </figcaption>
         </figure>
         <ul className="user-dropdwon__links">
@@ -80,7 +87,9 @@ function AuthInfo() {
   //     </Link>
   //   </NavAuth>
   // );
-
+    useEffect(()=>{
+      dispatch(getMyprofile())
+    },[])
   return (
     <InfoWraper>
       {/* <Message /> */}
@@ -99,7 +108,7 @@ function AuthInfo() {
       <div className="nav-author">
         <Popover placement="bottomRight" content={userContent} action="click">
           <Link to="#" className="head-example">
-          {user.photo && <Avatar src={user.photo} alt='https://cdn0.iconfinder.com/data/icons/user-pictures/100/matureman1-512.png'/>}
+          {MyProfileStates?.photo && <Avatar src={MyProfileStates?.photo} alt='https://cdn0.iconfinder.com/data/icons/user-pictures/100/matureman1-512.png'/>}
           </Link>
         </Popover>
       </div>
