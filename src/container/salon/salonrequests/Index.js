@@ -355,13 +355,13 @@ const ViewPage = () => {
               <FeatherIcon icon="printer" size={14} /> <span>Print</span>
             </Button>
           </div>,
-          <div>
-            <Button className="btn-add_new" size="small" key="1" type="primary">
-              <Link to="/admin/salon/salon-add">
-                <FeatherIcon icon="plus" size={14} /> <span>Add New</span>
-              </Link>
-            </Button>
-          </div>,
+          // <div>
+          //   <Button className="btn-add_new" size="small" key="1" type="primary">
+          //     <Link to="/admin/salon/salon-add">
+          //       <FeatherIcon icon="plus" size={14} /> <span>Add New</span>
+          //     </Link>
+          //   </Button>
+          // </div>,
           <div key={1} className="search-box">
           <span className="search-icon">
             <FeatherIcon icon="search" size={14} onClick={Search} />

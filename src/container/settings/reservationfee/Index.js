@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Row, Col, Table, Spin } from 'antd';
+import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import FeatherIcon from 'feather-icons-react';
@@ -73,13 +74,15 @@ const ViewPage = () => {
 console.log(settingStates?.listofreservationfees);
   if (settingStates?.listofreservationfees?.length)
   settingStates?.listofreservationfees?.map((CustomPage, key) => {
-      const { id, country, amount,currency,symbol } = CustomPage;
+      const { id, country, amount,currency,symbol,created_at,updated_at } = CustomPage;
       return dataSource.push({
         key: key + 1,
         country,
         currency,
         symbol,
         amount,
+        created_at,
+        updated_at,
         action: (
           <div className="table-actions">
             <Link className="edit" to={`/admin/settings/reservationfee/edit/${id}`}>
@@ -93,10 +96,10 @@ console.log(settingStates?.listofreservationfees);
         ),
       });
     });
-  const csvData = [['id', 'country', 'currency', 'symbol']];
+  const csvData = [['id', 'country', 'currency', 'symbol','created_at','updated_at']];
   state.selectedRows.map((rows) => {
-    const { key, country, currency, symbol,amount } = rows;
-    return csvData.push([key, country, currency, symbol,amount]);
+    const { key, country, currency, symbol,amount,created_at,updated_at } = rows;
+    return csvData.push([key, country, currency, symbol,amount,created_at,updated_at]);
   });
   const columns = [
     {
@@ -141,6 +144,18 @@ console.log(settingStates?.listofreservationfees);
       title: 'Amount',
       dataIndex: 'amount',
       key: 'amount',
+    },
+    {
+      title: 'Created At',
+      dataIndex: 'created_at',
+      key: 'created_at',
+      render: (text) => moment(text).format('YYYY/MM/DD'),
+    },
+    {
+      title: 'Updated At',
+      dataIndex: 'updated_at',
+      key: 'updated_at',
+      render: (text) => moment(text).fromNow(),
     },
     {
       title: 'Actions',
