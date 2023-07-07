@@ -11,7 +11,7 @@ import { connect } from 'react-redux';
 import propTypes from 'prop-types';
 import FontAwesome from 'react-fontawesome';
 import MenueItems from './MenueItems';
-import TopMenu from './TopMenu';
+// import TopMenu from './TopMenu';
 import { Div, SmallScreenAuthInfo, SmallScreenSearch, TopMenuSearch } from './style';
 import HeaderSearch from '../components/header-search/header-search';
 import AuthInfo from '../components/utilities/auth-info/info';
@@ -90,13 +90,13 @@ const ThemeLayout = (WrappedComponent) => {
         });
       };
 
-      const handleSearchHide = (e) => {
-        e.preventDefault();
-        this.setState({
-          searchHide: !searchHide,
-          hide: true,
-        });
-      };
+      // const handleSearchHide = (e) => {
+      //   e.preventDefault();
+      //   this.setState({
+      //     searchHide: !searchHide,
+      //     hide: true,
+      //   });
+      // };
 
       const footerStyle = {
         padding: '20px 30px 18px',
@@ -246,7 +246,7 @@ const ThemeLayout = (WrappedComponent) => {
                 </Col>
 
                 <Col lg={!topMenu ? 14 : 15} md={8} sm={0} xs={0}>
-                  {topMenu && window.innerWidth > 991 ? <TopMenu /> : <HeaderSearch rtl={rtl} darkMode={darkMode} />}
+                  {/* {topMenu && window.innerWidth > 991 ? <TopMenu /> : <HeaderSearch rtl={rtl} darkMode={darkMode} />} */}
                 </Col>
 
                 <Col lg={6} md={10} sm={0} xs={0}>
@@ -281,9 +281,9 @@ const ThemeLayout = (WrappedComponent) => {
 
                 <Col md={0} sm={18} xs={12}>
                   <div className="mobile-action">
-                    <Link className="btn-search" onClick={handleSearchHide} to="#">
+                    {/* <Link className="btn-search" onClick={handleSearchHide} to="#">
                       {searchHide ? <FeatherIcon icon="search" /> : <FeatherIcon icon="x" />}
-                    </Link>
+                    </Link> */}
                     <Link className="btn-auth" onClick={onShowHide} to="#">
                       <FeatherIcon icon="more-vertical" />
                     </Link>

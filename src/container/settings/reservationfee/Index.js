@@ -33,7 +33,7 @@ const ViewPage = () => {
     selectedRowKeys: 0,
     selectedRows: [],
   });
-  const [pageSize, setPageSize] = useState(12);
+  const [pageSize, setPageSize] = useState(10);
   const handlePageSizeChange = (current, size) => {
     setPageSize(size);
   };

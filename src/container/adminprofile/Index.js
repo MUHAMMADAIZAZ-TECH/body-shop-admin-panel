@@ -36,7 +36,7 @@ const AddNew = () => {
   const handleSubmit = async (values) => {
     try {
       await form.validateFields(); // Validate all form fields
-      dispatch(updateMyProfile({...values,files:files[0].originFileObj}));
+      dispatch(updateMyProfile({...values,files:files[0]?.originFileObj}));
     } catch (error) {
       console.log('Validation error:', error);
     }
