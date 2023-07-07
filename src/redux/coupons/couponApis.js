@@ -7,7 +7,7 @@ export const getCoupons = createAsyncThunk('get/getCoupons', async ({
   setTotalPages
 },{rejectWithValue}) => {
   try {
-    const { data } = await DataService.get(`/api/v1/coupons?page=${currentPage}&limit=${pageSize}`);
+    const { data } = await DataService.get(`/api/v1/coupons/admin?page=${currentPage}&limit=${pageSize}`);
     setTotalPages(data.totalPages)
     return data;
   } catch (error) {
@@ -16,7 +16,7 @@ export const getCoupons = createAsyncThunk('get/getCoupons', async ({
 });
 export const getCoupon = createAsyncThunk('get/getCoupon', async (id,{rejectWithValue}) => {
   try {
-    const { data } = await DataService.get(`/api/v1/coupons/${id}`);
+    const { data } = await DataService.get(`/api/v1/coupons/admin/${id}`);
     return data;
   } catch (error) {
     throw rejectWithValue(error);
@@ -32,7 +32,7 @@ export const createCoupon = createAsyncThunk('get/createCoupon', async (data,{re
 });
 export const updateCoupon = createAsyncThunk('get/updateCoupon', async (data,{rejectWithValue}) => {
   try {
-    const response = await DataService.patch(`/api/v1/coupons/${data.id}`, data);
+    const response = await DataService.patch(`/api/v1/coupons/admin/${data.id}`, data);
     return response.data;
   } catch (error) {
     throw rejectWithValue(error);
