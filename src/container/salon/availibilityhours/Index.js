@@ -132,11 +132,27 @@ const ViewPage = () => {
       title: 'Start At',
       dataIndex: 'opening_time',
       key: 'opening_time',
+      render: (text) => {
+        const time = new Date(`${new Date().getFullYear()}/01/01 ${text}`);
+        return time.toLocaleString('en-US', {
+          hour: 'numeric',
+          minute: 'numeric',
+          hour12: true,
+        });
+      },
     },
     {
       title: 'End At',
       dataIndex: 'closing_time',
       key: 'closing_time',
+      render: (text) => {
+        const time = new Date(`${new Date().getFullYear()}/01/01 ${text}`);
+        return time.toLocaleString('en-US', {
+          hour: 'numeric',
+          minute: 'numeric',
+          hour12: true,
+        });
+      },
     },
     {
       title: 'Updated At',

@@ -29,8 +29,8 @@ const AddNew = () => {
       dispatch(
         createAvailibilityHours({
           salonId: values.salon_id,
-          closingTime: values.closingTime.format('HH:mm A'),
-          openingTime: values.openingTime.format('HH:mm A'),
+          closingTime: values.closingTime.format('HH:mm:ss'),
+          openingTime: values.openingTime.format('HH:mm:ss'),
           weekday: values.weekday,
         }),
       );
