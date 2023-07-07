@@ -12,15 +12,20 @@ export const getMyprofile = createAsyncThunk('get/getMyprofile', async (body,{re
   }
 });
 export const updateMyProfile = createAsyncThunk('patch/updateMyProfile', async (data,{rejectWithValue}) => {
+  console.log(data);
   try {
     const formData = new FormData();
     formData.append('email', data?.email);
     formData.append('address', data?.address);
     formData.append('fullName', data?.fullName);
     formData.append('mobile_number', data?.mobile_number);
-    if(data.files!==null){
+    formData.append('remove', data?.remove?1:0);
+    if(data.files!==null && data.files!==undefined){
       formData.append(`files`, data.files);
     }
+    // else{
+    //   formData.append('photo', data?.profile?.photo);
+    // }
     const response = await DataService.patchFormData(`/api/v1/users/admin`, formData);
     return response.data;
   } catch (error) {

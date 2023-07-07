@@ -71,7 +71,7 @@
     "web-vitals": "^2.1.4",
     "xlsx": "^0.17.4"
   },
-  "homepage": "/",
+  "homepage": "/body-shop",
   "scripts": {
     "start": "craco start",
     "build": "set \"GENERATE_SOURCEMAP=false\" && craco --max-old-space-size=4096 build",

@@ -157,9 +157,7 @@ const ViewBooking = ({ match }) => {
                                       <List.Item
                                         actions={[
                                           <div key="list-1">
-                                            {item?.tax_percentage}
-                                            {item?.tax_amount}
-                                            {item?.type === 'percentage' ? '%' : ''}{' '}
+                                            {item?.type === 'percentage' ? `${item?.tax_percentage}%` : `${item?.tax_amount}`}
                                           </div>,
                                         ]}
                                       >

@@ -36,7 +36,12 @@ const AddNew = () => {
   const handleSubmit = async (values) => {
     try {
       await form.validateFields(); // Validate all form fields
-      dispatch(updateMyProfile({...values,files:files[0]?.originFileObj}));
+      dispatch(updateMyProfile({
+        ...values,
+        files:files[0]?.originFileObj,
+        profile:MyProfileStates.MyProfile,
+        remove: files.length === 0 
+      }));
     } catch (error) {
       console.log('Validation error:', error);
     }
@@ -71,6 +76,13 @@ const AddNew = () => {
       }
     }
   }, [form, MyProfileStates?.MyProfile]);
+  const validateMobileNumber = (_, value) => {
+    if (value && !value.startsWith('+')) {
+      return Promise.reject(new Error('Mobile number must start with a plus sign (+)'));
+    }
+    return Promise.resolve();
+  };
+
   useEffect(()=>{
     dispatch(getMyprofile())
   },[])
@@ -123,8 +135,12 @@ const AddNew = () => {
                 <Input placeholder="name@example.com" />
               </Form.Item>
 
-              <Form.Item name="mobile_number" label="Mobile Number">
-                <Input placeholder="+440 2546 5236" />
+              <Form.Item name="mobile_number" label="Mobile Number"
+                rules={[
+                  { required: true, message: 'Mobile number is required!' },
+                  { validator: validateMobileNumber }
+                ]}>
+                <Input placeholder="+440 2546 5236"/>
               </Form.Item>
 
               <Form.Item name="address" label="Address"  rules={[{ message: 'Please enter your address!' }]}>
