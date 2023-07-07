@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { NavLink } from 'react-router-dom';
+// import { NavLink } from 'react-router-dom';
 import { Form, Input, Button } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -87,9 +87,9 @@ function SignIn() {
             {/* <Checkbox onChange={onChange} checked={state.checked}>
               Keep me logged in
             </Checkbox> */}
-            <NavLink className="forgot-pass-link" to="/forgotPassword">
+            {/* <NavLink className="forgot-pass-link" to="/forgotPassword">
               Forgot password?
-            </NavLink>
+            </NavLink> */}
           </div>
           <Form.Item>
             <Button className="btn-signin" htmlType="submit" type="primary" size="large">
