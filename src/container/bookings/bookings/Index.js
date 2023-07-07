@@ -339,7 +339,7 @@ const ViewPage = () => {
         setSearchText,
         setSearchedColumn,
       ),
-      render: (text) => <div>{text} $</div>,
+      render: (text) => <div>{text} €</div>,
     },
     {
       title: 'Booking At',

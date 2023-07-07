@@ -83,7 +83,7 @@ const earningdatasets = (array) =>{
       pointBorderColor: '#fff',
       pointBackgroundColor: '#5F63F2',
       hoverBorderWidth: 5,
-      amount: `$${DashboardData?.totalEarnings}`,
+      amount: `€${DashboardData?.totalEarnings}`,
       amountClass: 'current-amount',
     },
     // {
@@ -198,7 +198,7 @@ const earningdatasets = (array) =>{
                       },
                       label(t, d) {
                         const { yLabel, datasetIndex } = t;
-                        return `<span class="chart-data">$${yLabel}</span> <span class="data-label">${d.datasets[datasetIndex].label}</span>`;
+                        return `<span class="chart-data">€${yLabel}</span> <span class="data-label">${d.datasets[datasetIndex].label}</span>`;
                       },
                     },
                   },
@@ -220,7 +220,7 @@ const earningdatasets = (array) =>{
                           suggestedMax: DashboardData?.totalEarnings,
                           stepSize: 50,
                           callback(label) {
-                            return `${label}$`;
+                            return `${label}€`;
                           },
                         },
                       },

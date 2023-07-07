@@ -89,7 +89,7 @@ const ViewBooking = ({ match }) => {
                         renderItem={() => (
                           <NavLink to={`/admin/services/edit/${bookingStates?.Booking?.serviceId}`}>
                             <List.Item
-                              actions={[<div key="list-loadmore-edit">{bookingStates?.Booking?.servicePrice}$</div>]}
+                              actions={[<div key="list-loadmore-edit">{bookingStates?.Booking?.servicePrice}€</div>]}
                             >
                               <List.Item.Meta
                                 avatar={
@@ -187,7 +187,7 @@ const ViewBooking = ({ match }) => {
                                   <List.Item>Subtotal</List.Item>
                                   <List.Item
                                     actions={[
-                                      <div key="list-loadmore-edit">{bookingStates.Booking?.total_amount}</div>,
+                                      <div key="list-loadmore-edit">{bookingStates.Booking?.total_amount}€</div>,
                                     ]}
                                   >
                                     Total
@@ -299,7 +299,7 @@ const ViewBooking = ({ match }) => {
                   <List
                     size="small"
                     dataSource={[1]}
-                    renderItem={() => <List.Item>Dummy Address {bookingStates?.Booking?.salon_address}</List.Item>}
+                    renderItem={() => <List.Item>{bookingStates?.Booking?.salon_address}</List.Item>}
                   />
                 </Cards>
               </Suspense>

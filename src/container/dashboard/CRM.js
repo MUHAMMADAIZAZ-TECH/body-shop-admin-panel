@@ -158,7 +158,7 @@ function CRM() {
                 <div className="card-chunk">
                   <CardBarChart2>
                     <Heading as="h1">
-                      ${salonState?.dashboard?.yearlyEarnings?.yearly_earnings? salonState.dashboard.yearlyEarnings.yearly_earnings:"0"}
+                    €{salonState?.dashboard?.yearlyEarnings?.yearly_earnings? salonState.dashboard.yearlyEarnings.yearly_earnings:"0"}
                     </Heading>
                     <span>Total earnings</span>
                     <p>

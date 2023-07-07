@@ -158,7 +158,7 @@ const Edit = ({ match }) => {
                         initialValue=""
                         rules={[{ required: true, message: 'Please enter address' }]}
                       >
-                        <Select size="large" className="sDash_fullwidth-select">
+                        <Select size="large" className="sDash_fullwidth-select" disabled>
                           <Option value="">Please Select</Option>
                           <Option value="1">1</Option>
                           <Option value="2">2</Option>
