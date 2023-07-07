@@ -120,7 +120,7 @@ const Edit = ({ match }) => {
                         initialValue=""
                         rules={[{ required: true, message: 'Please select salon' }]}
                       >
-                        <Select style={{ width: '100%' }}>
+                        <Select style={{ width: '100%' }} onClick={handleLoadMore}>
                           <Option value="">Please Select</Option>
                           {salonState.salonsList &&
                             salonState.salonsList.length > 0 &&

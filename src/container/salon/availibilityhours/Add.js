@@ -94,7 +94,7 @@ console.log(salonState.salonsList);
                         initialValue=""
                         rules={[{ required: true, message: 'Please select salon' }]}
                       >
-                        <Select size="large" className="sDash_fullwidth-select">
+                        <Select size="large" className="sDash_fullwidth-select" onClick={handleLoadMore}>
                           <Option value="">Please Select</Option>
                           {salonState.salonsList &&
                             salonState.salonsList.length > 0 &&

@@ -247,7 +247,9 @@ const ViewPage = () => {
                       <Select size="large" className="sDash_fullwidth-select" onChange={(e,select)=>{
                         const { value } = select;
                         setSearchText(value)
-                      }}>
+                      }}
+                      onClick={handleLoadMore}
+                      >
                         <Option value="">Please Select</Option>
                         {salonState.salonsList &&
                           salonState.salonsList.length > 0 &&
