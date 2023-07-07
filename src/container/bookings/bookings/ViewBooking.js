@@ -213,12 +213,12 @@ const ViewBooking = ({ match }) => {
                   <div className="card user-card">
                     <Cards headless>
                       <figure>
-                        <img src={bookingStates.Booking?.user_photo} alt={require(`../../../static/img/users/1.png`)} />
+                        <Avatar src={bookingStates?.Booking?.user_photo} alt={require(`../../../static/img/users/1.png`)} size={120} />
                       </figure>
                       <figcaption>
                         <div className="card__content">
                           <Heading className="card__name" as="h6">
-                            <Link to="#">{bookingStates.Booking?.user_name}</Link>
+                            <Link to="#">{bookingStates?.Booking?.user_name}</Link>
                           </Heading>
                           <p className="card__designation">{bookingStates.Booking?.user_email}</p>
                         </div>
@@ -229,12 +229,12 @@ const ViewBooking = ({ match }) => {
                                 {/* <Heading className="info-single__title" as="h2">
                                                                 Address
                                                                 </Heading> */}
-                                <p className="card__designation">Address: {bookingStates.Booking?.user_address}</p>
+                                <p className="card__designation">Address: {bookingStates?.Booking?.user_address}</p>
                               </div>
                             </Col>
                             <Col xs={24}>
                               <div className="info-single">
-                                <p className="card__designation">Contact: {bookingStates.Booking?.user_contact}</p>
+                                <p className="card__designation">Contact: {bookingStates?.Booking?.user_contact}</p>
                               </div>
                             </Col>
                           </Row>
