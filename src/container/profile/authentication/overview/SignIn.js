@@ -9,8 +9,8 @@ import { UserLogin } from '../../../../redux/authentication/authApis';
 function SignIn() {
   // const history = useHistory();
   const dispatch = useDispatch();
-  const [username, setUsername] = useState('testadmin@example.com'); // State variable for username
-  const [password, setPassword] = useState('12345678');
+  const [username, setUsername] = useState(''); // State variable for username
+  const [password, setPassword] = useState('');
   const isLoading = useSelector((state) => state.authenticationStates.loading);
   // const authStates = useSelector((state) => state.authenticationStates);
   const [form] = Form.useForm();
@@ -43,9 +43,9 @@ function SignIn() {
             name="username"
             rules={[{ message: 'Please input your username or Email!', required: true }]}
             initialValue={username}
-            label="Username or Email Address"
+            label="Email Address"
           >
-            <Input value={username} onChange={handleUsernameChange} />
+            <Input value={username} onChange={handleUsernameChange} placeholder='Email Address' type='email'/>
           </Form.Item>
           <Form.Item name="password" initialValue={password} label="Password">
             <Input.Password value={password} onChange={handlePasswordChange} placeholder="Password" />

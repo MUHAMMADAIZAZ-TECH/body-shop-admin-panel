@@ -110,7 +110,7 @@ function CRM() {
             <Select defaultValue="" size="small" className="sDash_fullwidth-select" onSelect={handleSubmit}>
               <Option value="">Year</Option>
               {salonState.dashboard.totalYears &&(
-                salonState.dashboard.totalYears.map((item)=><Option value={item}>{item}</Option>)
+                salonState.dashboard.totalYears.map((item)=><Option value={item} key={item}>{item}</Option>)
               )}
             </Select>
           </div>,
