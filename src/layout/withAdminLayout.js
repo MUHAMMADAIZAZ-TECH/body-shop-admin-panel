@@ -197,7 +197,7 @@ const ThemeLayout = (WrappedComponent) => {
                   ) : null}
                   <Link
                     className={topMenu && window.innerWidth > 991 ? 'striking-logo top-menu' : 'striking-logo'}
-                    to="/"
+                    to="/admin"
                   >
                     <img
                       src={
@@ -380,6 +380,7 @@ const ThemeLayout = (WrappedComponent) => {
                     </li>
                   </ul>
                 </div>
+              
               </div>
             </div>
           </div>
