@@ -81,6 +81,8 @@ const ViewPage = () => {
         salon_address,
         booking_status,
         coupon,
+        servicePrice,
+        reservationFee,
         is_paid,
         total_amount,
         appointmentDate,
@@ -96,6 +98,8 @@ const ViewPage = () => {
         booking_status,
         is_paid: is_paid === 1 ? 'Paid' : 'UnPaid',
         code: coupon.code,
+        servicePrice,
+        reservationFee,
         total_amount,
         booking_date,
         appointmentDate,
@@ -124,6 +128,8 @@ const ViewPage = () => {
       'is_paid',
       'coupon',
       'total_amount',
+      'servicePrice',
+      'reservationFee',
       'appointmentDate',
       'booking_date',
     ],
@@ -139,6 +145,8 @@ const ViewPage = () => {
       coupon,
       is_paid,
       total_amount,
+      servicePrice,
+      reservationFee,
       appointmentDate,
       booking_date,
     } = rows.booking;
@@ -152,6 +160,8 @@ const ViewPage = () => {
       is_paid,
       coupon.code,
       total_amount,
+      servicePrice,
+      reservationFee,
       appointmentDate,
       booking_date,
     ]);
@@ -197,7 +207,7 @@ const ViewPage = () => {
         setSearchedColumn,
       ),
       render:(name,{booking})=> <Link 
-      className="disable-color" to={`/admin/bookings/edit/${booking.id}`}>{name}
+      className="disable-color" to={`/admin/services/edit/${booking.serviceId}`}>{name}
     </Link>
     },
     {
@@ -217,6 +227,9 @@ const ViewPage = () => {
         setSearchText,
         setSearchedColumn,
       ),
+      render:(name,{booking})=> <Link 
+      className="disable-color" to={`/admin/salon/edit/${booking.salon_id}`}>{name}
+    </Link>
     },
     {
       title: 'Customer',
@@ -313,6 +326,42 @@ const ViewPage = () => {
       ...getColumnSearchProps(
         'Coupon',
         'code',
+        handleSearch,
+        handleReset,
+        searchInput,
+        searchedColumn,
+        searchText,
+        setSearchText,
+        setSearchedColumn,
+      ),
+    },
+    {
+      title: 'Service Price',
+      dataIndex: 'servicePrice',
+      key: 'servicePrice',
+      sorter: (a, b) => a.code.length - b.code.length,
+      sortDirections: ['descend', 'ascend'],
+      ...getColumnSearchProps(
+        'Service Price',
+        'servicePrice',
+        handleSearch,
+        handleReset,
+        searchInput,
+        searchedColumn,
+        searchText,
+        setSearchText,
+        setSearchedColumn,
+      ),
+    },
+    {
+      title: 'Reservation Fee',
+      dataIndex: 'reservationFee',
+      key: 'reservationFee',
+      sorter: (a, b) => a.code.length - b.code.length,
+      sortDirections: ['descend', 'ascend'],
+      ...getColumnSearchProps(
+        'Reservation Fee',
+        'reservationFee',
         handleSearch,
         handleReset,
         searchInput,

@@ -1,6 +1,4 @@
 import { combineReducers } from 'redux';
-import { firebaseReducer } from 'react-redux-firebase';
-import { firestoreReducer } from 'redux-firestore';
 import themeUsersReducer from './themeUsers/reducers';
 import ChangeLayoutMode from './themeLayout/reducers';
 import authenticationSlice from './authentication/authenticationSlice';
@@ -17,8 +15,6 @@ import MyProfileSlice from './profile/profileSlice'
 import notificationSlice from './notification/notificationSlice';
 
 const rootReducers = combineReducers({
-  fb: firebaseReducer,
-  fs: firestoreReducer,
   themeUsers: themeUsersReducer,
   ChangeLayoutMode,
   authenticationStates: authenticationSlice,

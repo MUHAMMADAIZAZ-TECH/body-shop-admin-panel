@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
-import { Row, Col, Form, Input, Select, Upload, Modal, Checkbox } from 'antd';
+import { Row, Col, Form, Input, Upload, Modal, Checkbox } from 'antd';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -11,7 +11,7 @@ import { Main, BasicFormWrapper } from '../../styled';
 import { getSalon, updateSalon } from '../../../redux/salon/salonApis';
 import { getBase64 } from '../../../components/utilities/utilities';
 
-const { Option } = Select;
+// const { Option } = Select;
 
 const Edit = ({ match }) => {
   const dispatch = useDispatch();
@@ -158,12 +158,13 @@ const Edit = ({ match }) => {
                         initialValue=""
                         rules={[{ required: true, message: 'Please enter address' }]}
                       >
-                        <Select size="large" className="sDash_fullwidth-select" disabled>
+                         <Input placeholder="Enter Addressr" />
+                        {/* <Select size="large" className="sDash_fullwidth-select" disabled>
                           <Option value="">Please Select</Option>
                           <Option value="1">1</Option>
                           <Option value="2">2</Option>
                           <Option value="3">3</Option>
-                        </Select>
+                        </Select> */}
                       </Form.Item>
                       <Form.Item
                         name="availability_range"

@@ -40,7 +40,7 @@ function NewPassword() {
             label="New Password"
             name="newPassword"
           >
-            <Input placeholder="Enter password" maxLength={32} minLength={8}/>
+            <Input placeholder="Enter password" maxLength={32} minLength={8} type='password'/>
           </Form.Item>
           <Form.Item>
             <Button className="btn-reset" htmlType="submit" type="primary" size="large" id="recaptcha">
