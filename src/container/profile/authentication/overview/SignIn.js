@@ -15,13 +15,18 @@ function SignIn() {
   // const authStates = useSelector((state) => state.authenticationStates);
   const [form] = Form.useForm();
  
-  const handleSubmit2 = () => {
-    dispatch(
-      UserLogin({
-        username,
-        password,
-      }),
-    );
+  const handleSubmit2 = async () => {
+    try {
+      await form.validateFields(); // Validate all form fields
+      dispatch(
+        UserLogin({
+          username,
+          password,
+        }),
+      );
+    } catch (error) {
+      console.log('Validation error:', error);
+    }
   };
  
   const handleUsernameChange = useCallback((e) => {
@@ -41,13 +46,16 @@ function SignIn() {
           </Heading>
           <Form.Item
             name="username"
-            rules={[{ message: 'Please input your username or Email!', required: true }]}
+            rules={[{ message: 'Please Enter Your Email!', required: true }]}
             initialValue={username}
             label="Email Address"
           >
             <Input value={username} onChange={handleUsernameChange} placeholder='Email Address' type='email'/>
           </Form.Item>
-          <Form.Item name="password" initialValue={password} label="Password">
+          <Form.Item name="password"
+           rules={[{ message: 'Please Enter Your Password!', required: true }]}
+           initialValue={password} 
+           label="Password">
             <Input.Password value={password} onChange={handlePasswordChange} placeholder="Password" />
           </Form.Item>
           <div className="auth-form-action">
