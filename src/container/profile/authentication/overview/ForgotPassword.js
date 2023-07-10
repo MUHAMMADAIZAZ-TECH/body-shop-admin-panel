@@ -28,7 +28,7 @@ function ForgotPassword() {
   };
   return (
     <AuthWrapper>
-       <div id="recaptcha"/>
+      <div id="recaptcha" className='captcha'/>
       <div className="auth-contents">
         <Form name="forgotPass" onFinish={handleSubmit} layout="vertical">
           <Heading as="h3">Forgot Password?</Heading>

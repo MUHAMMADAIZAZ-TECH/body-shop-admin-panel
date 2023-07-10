@@ -5,8 +5,6 @@ import AuthLayout from '../container/profile/authentication/Index';
 
 const Login = lazy(() => import('../container/profile/authentication/overview/SignIn'));
 const SignUp = lazy(() => import('../container/profile/authentication/overview/Signup'));
-const FbLogin = lazy(() => import('../container/profile/authentication/overview/FbSignIn'));
-const FbSignUp = lazy(() => import('../container/profile/authentication/overview/FbSignup'));
 const ForgotPass = lazy(() => import('../container/profile/authentication/overview/ForgotPassword'));
 const NewPassword = lazy(() => import('../container/profile/authentication/overview/NewPassword'));
 function NotFound() {
@@ -27,8 +25,6 @@ function FrontendRoutes() {
         <Route exact path="/forgotPassword" component={ForgotPass} />
         <Route exact path="/register" component={SignUp} />
         <Route exact path="/" component={Login} />
-        <Route exact path="/fbRegister" component={FbSignUp} />
-        <Route exact path="/fbSignIn" component={FbLogin} />
         <Route exact path="*" component={NotFound} />
       </Suspense>
     </Switch>

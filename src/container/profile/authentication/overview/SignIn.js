@@ -1,19 +1,10 @@
 import React, { useState, useCallback } from 'react';
-// import { NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { Form, Input, Button } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
-// eslint-disable-next-line import/no-extraneous-dependencies
-// import { FacebookOutlined, TwitterOutlined } from '@ant-design/icons';
-// import { Auth0Lock } from 'auth0-lock';
 import { AuthWrapper } from './style';
-// import { login } from '../../../../redux/authentication/actionCreator';
-// import { Checkbox } from '../../../../components/checkbox/checkbox';
 import Heading from '../../../../components/heading/heading';
-// import { auth0options } from '../../../../config/auth0';
 import { UserLogin } from '../../../../redux/authentication/authApis';
-
-// const domain = process.env.REACT_APP_AUTH0_DOMAIN;
-// const clientId = process.env.REACT_APP_AUTH0_CLIENT_ID;
 
 function SignIn() {
   // const history = useHistory();
@@ -23,15 +14,7 @@ function SignIn() {
   const isLoading = useSelector((state) => state.authenticationStates.loading);
   // const authStates = useSelector((state) => state.authenticationStates);
   const [form] = Form.useForm();
-  // const [state, setState] = useState({
-  //   checked: null,
-  // });
-  // const lock = new Auth0Lock(clientId, domain, auth0options);
-
-  // const handleSubmit = useCallback(() => {
-  //   dispatch(login());
-  //   history.push('/admin');
-  // }, [history, dispatch]);
+ 
   const handleSubmit2 = () => {
     dispatch(
       UserLogin({
@@ -40,20 +23,7 @@ function SignIn() {
       }),
     );
   };
-  // const onChange = (checked) => {
-  //   setState({ ...state, checked });
-  // };
-  // console.log(username,password);
-  // lock.on('authenticated', (authResult) => {
-  //   lock.getUserInfo(authResult.accessToken, (error) => {
-  //     if (error) {
-  //       return;
-  //     }
-
-  //     handleSubmit();
-  //     lock.hide();
-  //   });
-  // });
+ 
   const handleUsernameChange = useCallback((e) => {
     setUsername(e.target.value); // Update the username state variable
   }, []);
@@ -64,9 +34,6 @@ function SignIn() {
 
   return (
     <AuthWrapper>
-      {/* <p className="auth-notice">
-        Don&rsquo;t have an account? <NavLink to="/register">Sign up now</NavLink>
-      </p> */}
       <div className="auth-contents">
         <Form name="login" form={form} onFinish={handleSubmit2} layout="vertical">
           <Heading as="h3">
@@ -84,45 +51,15 @@ function SignIn() {
             <Input.Password value={password} onChange={handlePasswordChange} placeholder="Password" />
           </Form.Item>
           <div className="auth-form-action">
-            {/* <Checkbox onChange={onChange} checked={state.checked}>
-              Keep me logged in
-            </Checkbox> */}
-            {/* <NavLink className="forgot-pass-link" to="/forgotPassword">
+            <NavLink className="forgot-pass-link" to="/forgotPassword">
               Forgot password?
-            </NavLink> */}
+            </NavLink>
           </div>
           <Form.Item>
             <Button className="btn-signin" htmlType="submit" type="primary" size="large">
               {isLoading ? 'Loading...' : 'Sign In'}
             </Button>
           </Form.Item>
-          {/* <p className="form-divider">
-            <span>Or</span>
-          </p>
-          <ul className="social-login">
-            <li>
-              <Link className="google-signup" to="#">
-                <img src={require('../../../../static/img/google.png')} alt="" />
-                <span>Sign in with Google</span>
-              </Link>
-            </li>
-            <li>
-              <Link className="facebook-sign" to="#">
-                <FacebookOutlined />
-              </Link>
-            </li>
-            <li>
-              <Link className="twitter-sign" to="#">
-                <TwitterOutlined />
-              </Link>
-            </li>
-          </ul>
-          <div className="auth0-login">
-            <Link to="#" onClick={() => lock.show()}>
-              Sign In with Auth0
-            </Link>
-            <Link to="/fbSignIn">Sign In With Firebase</Link>
-          </div> */}
         </Form>
       </div>
     </AuthWrapper>

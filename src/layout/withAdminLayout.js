@@ -11,9 +11,7 @@ import { connect } from 'react-redux';
 import propTypes from 'prop-types';
 import FontAwesome from 'react-fontawesome';
 import MenueItems from './MenueItems';
-// import TopMenu from './TopMenu';
-import { Div, SmallScreenAuthInfo, SmallScreenSearch, TopMenuSearch } from './style';
-import HeaderSearch from '../components/header-search/header-search';
+import { Div, SmallScreenAuthInfo } from './style';
 import AuthInfo from '../components/utilities/auth-info/info';
 import { changeRtlMode, changeLayoutMode, changeMenuMode } from '../redux/themeLayout/actionCreator';
 
@@ -29,8 +27,6 @@ const ThemeLayout = (WrappedComponent) => {
       this.state = {
         collapsed: false,
         hide: true,
-        searchHide: true,
-        activeSearch: false,
         customizerAction: false,
       };
       this.updateDimensions = this.updateDimensions.bind(this);
@@ -52,7 +48,7 @@ const ThemeLayout = (WrappedComponent) => {
     }
 
     render() {
-      const { collapsed, hide, searchHide, activeSearch, customizerAction } = this.state;
+      const { collapsed, hide, customizerAction } = this.state;
       const { ChangeLayoutMode, rtl, topMenu, changeRtl, changeLayout, changeMenuMode } = this.props;
 
       const left = !rtl ? 'left' : 'right';
@@ -80,23 +76,9 @@ const ThemeLayout = (WrappedComponent) => {
       const onShowHide = () => {
         this.setState({
           hide: !hide,
-          searchHide: true,
+          // searchHide: true,
         });
       };
-
-      const toggleSearch = () => {
-        this.setState({
-          activeSearch: !activeSearch,
-        });
-      };
-
-      // const handleSearchHide = (e) => {
-      //   e.preventDefault();
-      //   this.setState({
-      //     searchHide: !searchHide,
-      //     hide: true,
-      //   });
-      // };
 
       const footerStyle = {
         padding: '20px 30px 18px',
@@ -213,19 +195,6 @@ const ThemeLayout = (WrappedComponent) => {
                       <img src={require(`../static/img/icon/${collapsed ? 'right.svg' : 'left.svg'}`)} alt="menu" />
                     </Button>
                   ) : null}
-                  {/* <Link
-                    className={topMenu && window.innerWidth > 991 ? 'striking-logo top-menu' : 'striking-logo'}
-                    to="/"
-                  >
-                    <img
-                      src={
-                        !darkMode
-                          ? require(`../static/img/Logo_Dark.svg`).default
-                          : require(`../static/img/Logo_white.png`).default
-                      }
-                      alt=""
-                    />
-                  </Link> */}
                   <Link
                     className={topMenu && window.innerWidth > 991 ? 'striking-logo top-menu' : 'striking-logo'}
                     to="/"
@@ -251,29 +220,7 @@ const ThemeLayout = (WrappedComponent) => {
 
                 <Col lg={6} md={10} sm={0} xs={0}>
                   {topMenu && window.innerWidth > 991 ? (
-                    <TopMenuSearch>
-                      <div className="top-right-wrap d-flex">
-                        <Link
-                          className={`${activeSearch ? 'search-toggle active' : 'search-toggle'}`}
-                          onClick={() => {
-                            toggleSearch();
-                          }}
-                          to="#"
-                        >
-                          <FeatherIcon icon="search" />
-                          <FeatherIcon icon="x" />
-                        </Link>
-                        <div className={`${activeSearch ? 'topMenu-search-form show' : 'topMenu-search-form'}`}>
-                          <form action="">
-                            <span className="search-icon">
-                              <FeatherIcon icon="search" />
-                            </span>
-                            <input type="text" name="search" />
-                          </form>
-                        </div>
-                        <AuthInfo />
-                      </div>
-                    </TopMenuSearch>
+                   <AuthInfo />
                   ) : (
                     <AuthInfo />
                   )}
@@ -281,9 +228,6 @@ const ThemeLayout = (WrappedComponent) => {
 
                 <Col md={0} sm={18} xs={12}>
                   <div className="mobile-action">
-                    {/* <Link className="btn-search" onClick={handleSearchHide} to="#">
-                      {searchHide ? <FeatherIcon icon="search" /> : <FeatherIcon icon="x" />}
-                    </Link> */}
                     <Link className="btn-auth" onClick={onShowHide} to="#">
                       <FeatherIcon icon="more-vertical" />
                     </Link>
@@ -295,9 +239,6 @@ const ThemeLayout = (WrappedComponent) => {
               <Row>
                 <Col md={0} sm={24} xs={24}>
                   <div className="small-screen-headerRight">
-                    <SmallScreenSearch hide={searchHide} darkMode={darkMode}>
-                      <HeaderSearch rtl={rtl} />
-                    </SmallScreenSearch>
                     <SmallScreenAuthInfo hide={hide} darkMode={darkMode}>
                       <AuthInfo rtl={rtl} />
                     </SmallScreenAuthInfo>
@@ -439,37 +380,6 @@ const ThemeLayout = (WrappedComponent) => {
                     </li>
                   </ul>
                 </div>
-                {/* <div className="customizer__single">
-                  <h4>Navbar Type</h4>
-                  <ul className="customizer-list d-flex">
-                    <li className="customizer-list__item">
-                      <Link
-                        className={!topMenu ? 'active' : 'deactivate'}
-                        onClick={() => {
-                          showCustomizer();
-                          modeChangeSideNav();
-                        }}
-                        to="#"
-                      >
-                        <img src={require('../static/img/side.png')} alt="" />
-                        <FontAwesome name="check-circle" />
-                      </Link>
-                    </li>
-                    <li className="customizer-list__item top">
-                      <Link
-                        className={topMenu ? 'active' : 'deactivate'}
-                        onClick={() => {
-                          showCustomizer();
-                          modeChangeTopNav();
-                        }}
-                        to="#"
-                      >
-                        <img src={require(`../static/img/top.png`)} alt="" />
-                        <FontAwesome name="check-circle" />
-                      </Link>
-                    </li>
-                  </ul>
-                </div> */}
               </div>
             </div>
           </div>
