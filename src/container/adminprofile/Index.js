@@ -77,8 +77,9 @@ const AddNew = () => {
     }
   }, [form, MyProfileStates?.MyProfile]);
   const validateMobileNumber = (_, value) => {
-    if (value && !value.startsWith('+')) {
-      return Promise.reject(new Error('Mobile number must start with a plus sign (+)'));
+    const phonePattern = /^\+[0-9]{1,}$/; // Pattern for phone numbers starting with a plus sign
+    if (value && !phonePattern.test(value)) {
+      return Promise.reject(new Error('Invalid mobile phone number'));
     }
     return Promise.resolve();
   };

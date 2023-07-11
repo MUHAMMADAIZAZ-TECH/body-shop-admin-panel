@@ -8,6 +8,7 @@ import firebase from '../../../../config/database/firebase';
 
 function ForgotPassword() {
   const history = useHistory();
+  const [form] = Form.useForm();
   const handleforgotpassword = (values) =>{
     const recaptcha = new firebase.auth.RecaptchaVerifier('recaptcha');
     firebase.auth().signInWithPhoneNumber(values,recaptcha).then(function(e){
@@ -22,15 +23,28 @@ function ForgotPassword() {
       })
     })
   }
-  const handleSubmit = (values) => {
-    localStorage.setItem('mobileNo',JSON.stringify(values.phone_no))
-    handleforgotpassword(values.phone_no)
+  const handleSubmit = async (values) => {
+    try {
+      await form.validateFields(); // Validate all form fields
+      localStorage.setItem('mobileNo',JSON.stringify(values.phone_no))
+      handleforgotpassword(values.phone_no)
+    } catch (error) {
+      console.log('Validation error:', error);
+    }
+   
+  };
+  const validateMobileNumber = (_, value) => {
+    const phonePattern = /^\+[0-9]{1,}$/; // Pattern for phone numbers starting with a plus sign
+    if (value && !phonePattern.test(value)) {
+      return Promise.reject(new Error('Invalid mobile phone number'));
+    }
+    return Promise.resolve();
   };
   return (
     <AuthWrapper>
       <div id="recaptcha" className='captcha'/>
       <div className="auth-contents">
-        <Form name="forgotPass" onFinish={handleSubmit} layout="vertical">
+        <Form name="forgotPass" onFinish={handleSubmit} form={form} layout="vertical">
           <Heading as="h3">Forgot Password?</Heading>
           <p className="forgot-text">
             Enter your phone no you used when you joined and we’ll 
@@ -39,8 +53,12 @@ function ForgotPassword() {
           <Form.Item
             label="Phone No"
             name="phone_no"
+            rules={[
+              { required: true, message: 'Mobile number is required!' },
+              { validator: validateMobileNumber }
+            ]}
           >
-            <Input placeholder="+923232323232"/>
+            <Input placeholder="+440 2546 5236"/>
           </Form.Item>
           <Form.Item>
             <Button className="btn-reset" htmlType="submit" type="primary" size="large" id="recaptcha">
