@@ -163,7 +163,7 @@ export const getAvailibilityHourbysalon = createAsyncThunk('get/getAvailibilityH
 });
 export const createAvailibilityHours = createAsyncThunk('post/createAvailibilityHours', async (data,{rejectWithValue}) => {
   try {
-    const response = await DataService.post(`/api/v1/availabilityHours`, data);
+    const response = await DataService.post(`/api/v1/availabilityHours/admin`, data);
     return response.data;
   } catch (error) {
     return rejectWithValue(error);
@@ -171,7 +171,7 @@ export const createAvailibilityHours = createAsyncThunk('post/createAvailibility
 });
 export const updateAvailibilityHours = createAsyncThunk('update/updateAvailibilityHours', async (body,{rejectWithValue}) => {
   try {
-    const response = await DataService.patch(`/api/v1/availabilityHours/${body.id}`, body);
+    const response = await DataService.patch(`/api/v1/availabilityHours/admin/${body.id}`, body);
     return response.data;
   } catch (error) {
     return rejectWithValue(error);

@@ -30,8 +30,8 @@ const Edit = ({ match }) => {
         updateAvailibilityHours({
           id: match.params.id,
           salonId: values.salon_id,
-          closingTime: values.closingTime.format('HH:mm:ss'),
-          openingTime: values.openingTime.format('HH:mm:ss'),
+          closingTime: values.closingTime.format('hh:mm A'),
+          openingTime: values.openingTime.format('hh:mm A'),
           weekday: values.weekday,
         }),
       );
