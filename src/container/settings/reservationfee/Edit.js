@@ -30,7 +30,15 @@ const Edit = ({ match }) => {
     dispatch(getReservationFeesById(parseInt(match.params.id, 10)));
   }, [dispatch, match.params.id]);
 
-  const handleSubmit = (values) => dispatch(updateReservationFee({ id: match.params.id, ...values }));
+  const handleSubmit = async (values) => {
+    try {
+      await form.validateFields(); // Validate all form fields
+      console.log(values);
+      dispatch(updateReservationFee({ id: match.params.id, ...values }))
+    } catch (error) {
+      console.log('Validation error:', error);
+    }
+  };
 
   return (
     <>
@@ -57,31 +65,31 @@ const Edit = ({ match }) => {
                         name="country"
                         label="Country"
                         initialValue=""
-                        // rules={[{ required: true, message: 'Please enter country' }]}
+                        rules={[{ required: true, message: 'Please enter country' }]}
                       >
-                        <Input placeholder="Enter country" disabled/>
+                        <Input placeholder="Enter country"/>
                       </Form.Item>
                       <Form.Item
                         name="symbol"
                         label="Symbol"
                         initialValue=""
-                        // rules={[{ required: true, message: 'Please enter country' }]}
+                        rules={[{ required: true, message: 'Please enter country' }]}
                       >
-                        <Input placeholder="Enter symbol" disabled/>
+                        <Input placeholder="Enter symbol"/>
                       </Form.Item>
                     </Col>
                     <Col sm={12} xs={24} className="mb-25">
                       <Form.Item
                         name="currency"
                         label="Currency"
-                        // rules={[{ required: true, message: 'Please select content' }]}
+                        rules={[{ required: true, message: 'Please select content' }]}
                       >
-                        <Input placeholder="Enter currency" disabled/>
+                        <Input placeholder="Enter currency"/>
                       </Form.Item>
                       <Form.Item
                         name="amount"
                         label="Amount"
-                        // rules={[{ required: true, message: 'Please select content' }]}
+                        rules={[{ required: true, message: 'Please select content' }]}
                       >
                         <Input placeholder="Enter amount" type='number'/>
                       </Form.Item>

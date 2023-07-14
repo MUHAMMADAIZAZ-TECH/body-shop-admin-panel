@@ -148,7 +148,7 @@ const ViewPage = () => {
       key: 'price',
       sorter: (a, b) => a.price.length - b.price.length,
       sortDirections: ['descend', 'ascend'],
-      render: (price) => <span>{price} $</span>,
+      render: (price) => <span>{price} €</span>,
     },
     {
       title: 'Category Name',
