@@ -83,7 +83,7 @@ const ViewPage = () => {
       return dataSource.push({
         key: key + 1,
         code,
-        discount_value: discount_type === 'percentage' ? `${discount_value} %` : `${discount_value} €`,
+        discount_value: discount_type === 'percentage' ? ` % ${discount_value} ` : ` € ${discount_value} `,
         max_redemptions,
         redeemed_count,
         end_date,

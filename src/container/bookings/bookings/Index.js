@@ -339,7 +339,7 @@ const ViewPage = () => {
       title: 'Service Price',
       dataIndex: 'servicePrice',
       key: 'servicePrice',
-      sorter: (a, b) => a.code.length - b.code.length,
+      sorter: (a, b) => a.servicePrice.length - b.servicePrice.length,
       sortDirections: ['descend', 'ascend'],
       ...getColumnSearchProps(
         'Service Price',
@@ -352,12 +352,13 @@ const ViewPage = () => {
         setSearchText,
         setSearchedColumn,
       ),
+      render: (text) => <div> € {text} </div>,
     },
     {
       title: 'Reservation Fee',
       dataIndex: 'reservationFee',
       key: 'reservationFee',
-      sorter: (a, b) => a.code.length - b.code.length,
+      sorter: (a, b) => a.reservationFee.length - b.reservationFee.length,
       sortDirections: ['descend', 'ascend'],
       ...getColumnSearchProps(
         'Reservation Fee',
@@ -370,6 +371,7 @@ const ViewPage = () => {
         setSearchText,
         setSearchedColumn,
       ),
+      render: (text) => <div> € {text} </div>,
     },
     {
       title: 'Total',
@@ -388,7 +390,7 @@ const ViewPage = () => {
         setSearchText,
         setSearchedColumn,
       ),
-      render: (text) => <div>{text} €</div>,
+      render: (text) => <div> € {text} </div>,
     },
     {
       title: 'Booking At',
