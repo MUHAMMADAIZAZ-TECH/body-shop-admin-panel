@@ -213,7 +213,7 @@ const ViewBooking = ({ match }) => {
                   <div className="card user-card">
                     <Cards headless>
                       <figure>
-                        <Avatar src={bookingStates?.Booking?.user_photo} alt={require(`../../../static/img/users/1.png`)} size={120} />
+                        <Avatar src={bookingStates?.Booking?.user_photo} alt='' size={120} />
                       </figure>
                       <figcaption>
                         <div className="card__content">
