@@ -116,7 +116,7 @@ export const updateSalon = createAsyncThunk('update/updateSalon', async (body,{r
   [...formData.entries()].forEach(([key, value]) => {
     console.log(`${key}: ${value}`);
   });
-  const response = await DataService.patchFormData(`/api/v1/salons/${body.id}`, formData);
+  const response = await DataService.patchFormData(`/api/v1/salons/admin/${body.id}`, formData);
   return response.data;
     } catch (error) {
       return rejectWithValue(error);
